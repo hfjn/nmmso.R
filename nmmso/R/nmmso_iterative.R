@@ -58,5 +58,38 @@ extract_modes <- function(nmmso_state) {
     RES(i, ) = nnmso_state$active_modes(i)$swarm$mode_location
     RES_Y(i) = nnmso_state$active_modes(i)$swarm$mode_value
   }
-              
+  
+  return(list(RES, RES_Y))
 }
+
+# calculates the initial locations of the algorithm
+get_initial_locations(nmmso_state, mn, mx){
+  #point wise product as new locations
+  nnmso_state$active_modes[1]$swarm$new_location = rand(length(mx))*(mx-mn) + mn
+  nmmso_state$active_modes_changed[1] = 1
+}
+
+evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx){
+  
+  # from original:
+  ## new location is the only solution thus far in mode, so by definition is
+  ## also the mode estimate, and the only history thus far
+  y = feval(problem_func, swarm$new_location, problem_func_params)
+  #gbest location
+  swarm$mode_location = swarm$new_location
+  
+  #gbest value
+  swarm.mode_value = y
+  
+  # intialize containers for swarm elements
+  
+  # current locations of swarm
+  swarm$history_locations = matrix(0, length(swarm$mode_location))
+  swarm$history_values = matrix(1, swarm_size, 1) * -Inf
+  
+  swarm$pbest_locations = matrix(0, swarm_size, length(swarm$mode_location))
+  
+}
+
+# helper functions which imitates the behavior of the Matlab feval
+feval <-function(f,...){f(...)}
