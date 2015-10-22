@@ -91,5 +91,48 @@ evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, sw
   
 }
 
+merge_swarms <- function(nmmso_state, problem_function, problem_function_params, mn, mx){
+  
+}
+
+evaluate <- function(nmmso_state, chg, problem_function, problem_function_params){
+  
+}
+
+merge_swarms_together <- function(swarm1, swarm2){
+  
+}
+
+evaluate_mid <- function(nmmso_state, chg, problem_function, test_function_params){
+  
+}
+
+increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size){
+  
+}
+
+evaluate_new_locations <- function(nmmso_state, problem_function_params, I){
+  
+}
+
+evolve <- function(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size){
+  
+}
+
+hive <- function(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size){
+  
+}
+
+random_new <- function(nmmso_satte, problem_function, mn, mx, problem_function_params, swarm_size){
+  
+}
+
+UNI <- function(x1, x2){
+  
+}
+
+uniform_sphere_points <- function(n,d){
+  
+}
 # helper functions which imitates the behavior of the Matlab feval
 feval <-function(f,...){f(...)}
