@@ -1,3 +1,5 @@
+library(pracma)
+
 NMMSO_iterative(
   swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol, tol_val
 ) {
@@ -233,7 +235,19 @@ UNI <- function(x1, x2){
 }
 
 uniform_sphere_points <- function(n,d){
+  # function generates n points uniformly within the unit sphere in d dimensions
   
+  z = rnorm(n, d)
+  
+  r1 = sqrt(sum(z^2,2))
+  
+  X = mrdivide(z, repmat(r1,1,d))
+  
+  r = rnorm(1)^(1/d)
+  
+  X = X * matrix(r,1,d)
+  
+  return(X)
 }
 # helper functions which imitates the behavior of the Matlab feval
 feval <-function(f,...){f(...)}
