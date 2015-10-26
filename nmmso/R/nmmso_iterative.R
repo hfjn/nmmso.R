@@ -235,6 +235,8 @@ merge_swarms <-
 if (length(nmmso_state$active_modes) == 1) {
   nmmso_state$active_modes[1]$swarm$dist = apply(mx - mn, 2, min)
 }
+# return the values
+list(nmmso_state, number_of_mid_evals)
 }
 
 evaluate <-
@@ -419,13 +421,62 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
 
 evaluate_new_locations <-
   function(nmmso_state, problem_function_params, I) {
+    nmmso_state$active_modes_changed = matrix(0, length(nmmso_state$active_modes), 1)
+    for (i in 1:length(I)) {
+      nmmso_state = evaluate(nmmso_state, I[i], problem_function, problem_function_params)[1]
+      mode_shift = evaluate(nmmso_state, I[i], problem_function, problem_function_params)[2]
+      if (mode_shift == 1) {
+        nmmso_state$active_modes_changed[I[i]] = 1
+        nmmso_state$M_loc[I[i],] = nmmso_state$active_modes[I[i]]$swarm$new_location
+        nmmso_state$V_loc[I[i]] = nmmso_state$active_modes[I[i]]$swarm$mode_value
+        nmmso_state$active_modes[I[i]]$swarm$less_fit_move = 0
+      }
+    }
     
+    # return the values
+    list(nmmso_state, length(I))
   }
 
 evolve <-
   function(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size) {
+    n = length(nmmso_state$active_modes)
     
+    if (n > max_evol) {
+      if (runif(1) < 0.5) {
+        I = sort(nmmso_state$V_loc, decreasing = TRUE)
+      } else {
+        I = 1:n
+      }
+      I = I[i:max_evol]
+      n = max_evol
+    } else {
+      I = 1:n
+    }
+    
+    II = sample(n)
+    R = UNI(
+      nmmso_state$active_modes[I[II[1]]]$swarm$mode_location, nmmso_state$active_modes[I[II[2]]]$swarm$mode_location
+    )
+    
+    nmmso_state.M_loc = matrix(nmmso_state$M_loc, R)
+    
+    swarm$new_location = R
+    swarm = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)[1]
+    nmmso_state = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)[2]
+    
+    nmmso_state$V_loc = matrix(nmmso_state$V_loc, swarm$mode_value)
+    nmmso_state$active_modes[length(nmmso_state$active_modes) + 1]$swarm = swarm
+    
+    # Mark these as new
+    nmmso_state$active_modes_changed = matrix(nmmso_state$active_modes_changed, 1)
+    nmmso_state$converged_modes = matrix(nmmso_state$converged_modes, 0)
+    number_of_new_modes = 1
+    
+    # return values
+    list(nmmso_state, number_of_new_modes)
   }
+
+
 
 hive <-
   function(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size) {
@@ -521,7 +572,7 @@ hive <-
         nmmso_state$active_modes[r]$swarm$velocities[k,] = temp_velocity
 
         }else{
-          if(swarm$mode_value > nmmso_state$active_modes[r]$swarm$mode_value){
+          if (swarm$mode_value > nmmso_state$active_modes[r]$swarm$mode_value) {
             # discovered better than original, so replace more accordingly
             nmmso_state$active_modes[r]$swarm$mode_value = swarm$mode_value
             nmmso_state$active_modes[r]$swarm$mode_location = swarm$mode_location
