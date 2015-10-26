@@ -119,24 +119,24 @@ evaluate <- function(nmmso_state, chg, problem_function, problem_function_params
   y = feval(problem_func, nmmso_state$active_modes(chg$swarm$new_location, problem_function_params))
   mode_shift = 0
   
-  if(y > nmmso_state$active_modes(chg)$swarm$mode_value){
-    nmmso_state$active_modes(chg)$swarm$mode_location = nmmso_state$active_modes(chg)$swarm$new_location
-    nmmso_state$active_modes(chg)$swarm$mode_value = y
+  if(y > nmmso_state$active_modes[chg]$swarm$mode_value){
+    nmmso_state$active_modes[chg]$swarm$mode_location = nmmso_state$active_modes[chg]$swarm$new_location
+    nmmso_state$active_modes[chg]$swarm$mode_value = y
     mode_shift = 1
   }
   
-  nmmso_state$active_modes(chg)$swarm$history_location[nmmso_state$active_modes(chg)$swarm$shifted_loc,] = nmmso_state$active_modes(chg)$swarm$new_location
-  nnmso_state$active_modes(chg)$swarm$history_vaues[nmmso_state$active_modes(chg)$swarm$shifted_loc] = y
+  nmmso_state$active_modes[chg]$swarm$history_location[nmmso_state$active_modes[chg]$swarm$shifted_loc,] = nmmso_state$active_modes[chg]$swarm$new_location
+  nnmso_state$active_modes[chg]$swarm$history_vaues[nmmso_state$active_modes[chg]$swarm$shifted_loc] = y
   
   # if better than personal best for swarm member - then replace
-  if(y > nmmso_state$active_modes(chg)$swarm$pbest_values[nmmso_state$active_modes(chg)$swarm$shifted_loc]){
-    nmmso_state$active_modes(chg)$swarm$pbest_values[nmmso_state$active_modes(chg)$swarm$shifted_loc] = y
-    nmmso_state$active_modes(chg)$swarm$pbest_location[nmmso_state$active_modes(chg)$swarm$shifted_loc, ] = nmmso_state$active_modes(chg).swarm.new_location 
+  if(y > nmmso_state$active_modes[chg]$swarm$pbest_values[nmmso_state$active_modes[chg]$swarm$shifted_loc]){
+    nmmso_state$active_modes[chg]$swarm$pbest_values[nmmso_state$active_modes[chg]$swarm$shifted_loc] = y
+    nmmso_state$active_modes[chg]$swarm$pbest_location[nmmso_state$active_modes[chg]$swarm$shifted_loc, ] = nmmso_state$active_modes[chg].swarm.new_location 
   }
   
   # change the x and y of the curren active mode
-  nmmso_state$active_modes(chg)$X[nmmso_state$index,] = nmmso_state$active_modes(chg)$swarm$new_location
-  nmmso_state$active_modes(chg)$Y[nmmso_state$index] = y
+  nmmso_state$active_modes[chg]$X[nmmso_state$index,] = nmmso_state$active_modes[chg]$swarm$new_location
+  nmmso_state$active_modes[chg]$Y[nmmso_state$index] = y
   nmmso_state$index = nmmso_state$index + 1
   
   # return the result
@@ -149,6 +149,27 @@ merge_swarms_together <- function(swarm1, swarm2){
 
 evaluate_mid <- function(nmmso_state, chg, problem_function, test_function_params){
   
+  # comment from original:
+  # new_location is the only solution thus far in mode, so by definition is
+  # also the mode estimate, and the only history thus far
+  
+   y = feval(problem_function, nmmso_state$active_modes[chg]$swarm$new_location, test_function_params)
+   mode_shift = 0
+   
+   if (y > nmmso_state$active_modes[chg]$swarm$mode_value){
+     nmmso_state$active_modes[chg]$swarm$mode_location = nmmso_state$active_modes[chg]$swarm$new_location
+     nmmso_state$active_modes[chg]$swarm$mode_value = y
+     mode_shift = mode_shift + 1
+   }
+   
+   nmmso_state$X[nmmso_state$index,] = nmmso_state$active_modes[chg]$swarm$new_location
+   nmmso_state$Y[nmmso_state$index] = y
+   nmmso_state$index = nmmso_state$index + 1
+   
+   # return the values
+   list(nmmso_state, mode_shift, y)
+   
+   
 }
 
 increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size){
