@@ -83,12 +83,34 @@ evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, sw
   
   # intialize containers for swarm elements
   
-  # current locations of swarm
+  ## current locations of swarm
   swarm$history_locations = matrix(0, length(swarm$mode_location))
   swarm$history_values = matrix(1, swarm_size, 1) * -Inf
   
+  ## pbest locations
   swarm$pbest_locations = matrix(0, swarm_size, length(swarm$mode_location))
+  swarm$pbest_values = matrix(1, swarm_size, 1) * -Inf
   
+  ## velocities
+  swarm$velocities = rand(size(mx))*(mx-mn)+mn
+  swarm$number_of_particles = 1
+  
+  ## History Locations
+  swarm$history_locations[1, ] = swarm$mode_location
+  swarm$history_valus[1] = y
+  
+  ## pbest Locations
+  swarm$pbest_locations[1,] = swarm.mode_location
+  swarm$pbest_values[1] = y
+  
+  
+  # track all the changes
+  nmmso_state$X[nmmso_state$index, ] = swarm$new_location
+  nmmso_state$Y[nmmso_state$index, ] = y
+  nmmso_state$index = nmmso_state$index + 1
+  
+  # return the result
+  list(nmmso_state, swarm)
 }
 
 merge_swarms <- function(nmmso_state, problem_function, problem_function_params, mn, mx){
