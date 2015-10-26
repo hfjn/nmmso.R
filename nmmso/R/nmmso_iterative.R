@@ -290,25 +290,27 @@ random_new <- function(nmmso_satte, problem_function, mn, mx, problem_function_p
   
 }
 
+# simulates binary crossover
 UNI <- function(x1, x2){
-  
+  l = length(x1)
+  x_c = x1
+  x_d = x2
+  r = which(runif(l,1)>0.5)
+  if(length(r) >= 0){
+    r = sample(1)
+    r= r[1]
+    print(r)
+  }
+  x_c[r] = x2[r]
+  x_d[r] = x1[r]
+  list(x_c, x_d)   
 }
 
-# WIP
+# Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division
 uniform_sphere_points <- function(n,d){
   # function generates n points uniformly within the unit sphere in d dimensions
-  
-  z = rnorm(n, d)
-  
-  r1 = sqrt(sum(z^2,2))
-  
-  X = mrdivide(z, repmat(r1,1,d))
-  
-  r = rnorm(1)^(1/d)
-  
-  X = X * matrix(r,1,d)
-  
-  return(X)
+  z <- matrix(rnorm(n*d), nrow=n, ncol=d)
+  z * (runif(n)^(1/d) / sqrt(rowSums(z^2)))
 }
 # helper functions which imitates the behavior of the Matlab feval
 feval <-function(f,...){f(...)}
