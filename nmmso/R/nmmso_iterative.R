@@ -13,9 +13,9 @@ library(pracma)
 #' @param nmmso_state
 #' @param max_evol
 #' @param tol_val
-NMMSO_iterative(
-  swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol, tol_val
-) {
+#' @return
+#'
+NMMSO_iterative <- function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol, tol_val) {
   # test if all variables are correctly initialized
   # TODO: Test this
   if (evaluations < 0) {
@@ -52,14 +52,105 @@ NMMSO_iterative(
     
     # get initial locations
     nnmso_state = get_initial_locations(nmmso_state, mn, mx)
-    # the active modes function is never implemented in matlab. is it a list?
+    
+    # initialize active modes as a list and give the sub "Modes" lists aswell
     nnmso_state$active_modes <- list()
     nnmso_state$active_modes[1] <- list()
+    
+    # get first evaluation
     result <-
       evaluate_first(problem_function, problem_function_params, nnmso_state, swarm_size, mn, mx)
-    nnmso_state$active_modes[1]$swarm = matrix(0, 1,1)
+    swarm = result$swarm
+    nmmso_state = result$nmmso_state
+    nmmso_state$active_modes[1]$swarm = swarm
+    
+    # track number of evaluations taken
+    evaluations = 1
+    
+    # keep modes in matrices for efficiency on some computations
+    nmmso_state$M_loc = nmmso_state$active_modes[1]$swarm$mode_location
+    nmmso_state$V_loc = nmmso_state$active_modes[1]$swarm$mode_value
+    nmmso_state$tol_val = tol_val
   }
   
+  # only run when limited evaluations is not already done
+  if(evaluations < max_evaluations){
+    
+    # first see if modes should be merged together
+    number_of_mid_evals = 0
+    while(sum(nmmso_state$active_modes_changed) > 0){
+      result = merge_swarms(nmmso_state, problem_function, problem_function_params, mn, mx)
+      nmmso_state = result$nmmso_state
+      merge_evals = result$merge_evals
+      
+      # track function evals used
+      number_of_mid_evals = number_of_mid_evals + merge_evals 
+    }
+    
+    # Now increment the swarms
+    # if we have more than max_evol, then only increment a subset
+    limit = min(max_evol, length(nmmso_state$active_modes))
+    
+    # have to select a subset
+    if (limit > max_evol){
+      # select fittest
+      if (runif(1) < 0.5){
+        result = sort(nmmso_state$V_loc, decreasing = TRUE, index.return = TRUE)
+        indices = result$ix
+      }
+      
+      # select at random
+      else{
+        indices = sample(length(nmmso_state$V_loc))
+      }
+      
+    }else{
+      # increment all
+      indices = 1:limit
+    }
+    I2 = indice[1:limit]
+    
+    # increment
+    for(jj=1 in 1:length(I2)){
+      nmmso_state = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm, swarm_size)
+    }
+    
+    # evaluate new member / new locations of swarm member
+    result = evaluate_new_locations(nmmso, problem_function, problem_function_params, I2)
+    nmmso_state = result$nmmso_state
+    number_of_new_locations = result$number_of_new_locations
+    
+    # attempt to split off a member of one of the swarms to seed a new swarm (if detected to be on another peak)
+    result = hive(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size)
+    nmmso_state = result$nmmso_state
+    number_of_hive_samples = result$number_of_hive_sample
+    
+    # create speculative new swarm, either at random in design space, or via crossover
+    if(runif(1) < 0.5 || length(nmmso_state$active_modes) == 1 || length(mx) == 1){
+      number_of_evol_modes = 0
+      result = random_new(nmmso,state,problem_function, mn, mx, problem_function_params, swarm_size)
+      nmmso_state = result$nmmso_state
+      number_rand_modes = result$number_rand_modes
+    }else{
+      number_rand_modes = 0
+      result = evolve(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size)
+      nmmso_state = result$nmmso_state
+      number_of_evol_modes = result$number_of_evol_modes
+    }
+    
+    # update the total number of function evaluations used, with those required at each of the algorithm stages
+    evaluations = evalutions + number_of_mid_evals + number_of_new_locations + number_of_evol_modes + number_rand_modes + number_of_hive_samples
+    
+    sprintf("Number of swarms %s, evals %s, max mode est. %s", length(nmmso_state$active_modes), evaluations, max(nmmso_state$V_loc))
+    
+    
+  }else{
+    sprintf("Evaluations taken already exhausted!")
+  }
+  
+  result = extract_modes(nmmso_state)
+  mode_loc = result$mode_loc
+  mode_y = result$mode_y
 }
 
 # extracts the modes from the given nmmso_state
@@ -78,14 +169,14 @@ extract_modes <- function(nmmso_state) {
 }
 
 # calculates the initial locations of the algorithm
-get_initial_locations(nmmso_state, mn, mx) {
+get_initial_locations <- function(nmmso_state, mn, mx) {
   #point wise product as new locations
   nnmso_state$active_modes[1]$swarm$new_location = rand(length(mx)) * (mx -
                                                                          mn) + mn
   nmmso_state$active_modes_changed[1] = 1
 }
 
-evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx) {
+evaluate_first <- function(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx) {
   # from original:
   ## new location is the only solution thus far in mode, so by definition is
   ## also the mode estimate, and the only history thus far
@@ -148,8 +239,7 @@ merge_swarms <-
           reject = 0
           temp_vel = mn - 1
           while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
-            temp_vel = uniform_sphere_points(1, length(nmmso_state$active_modes[I[i]]$swarm$new_location))
-            * (nmmso_state$active_modes[I[i]]$swarm$dist / 2)
+            temp_vel = uniform_sphere_points(1, length(nmmso_state$active_modes[I[i]]$swarm$new_location))*(nmmso_state$active_modes[I[i]]$swarm$dist / 2)
             reject = reject + 1
             if (reject > 20) {
               size = dim(nmmso_state$active_modes[I[i]]$swarm$new_location)
@@ -167,7 +257,8 @@ merge_swarms <-
       for (i in seq(n,-1, 2)) {
         I = which(to_compare[, 1] == to_compare[i, 1])
         repeat_matrix = kronecker(matrix(1, length(I), 1, to_compare[i,]))
-        if (# TODO: check the repeat_matrix with Matlab) {
+        if (# TODO: check the repeat_matrix with Matlab
+          ) {
           to_compare[i,] = matrix()
       }
     }
@@ -242,14 +333,14 @@ merge_swarms <-
         nmmso_state$active_modes_changed[delete_index[i]] = matrix()
       }
     }
+    if (length(nmmso_state$active_modes) == 1) {
+      nmmso_state$active_modes[1]$swarm$dist = apply(mx - mn, 2, min)
+    }
+    # return the values
+    list(nmmso_state, number_of_mid_evals)
   }
 
-if (length(nmmso_state$active_modes) == 1) {
-  nmmso_state$active_modes[1]$swarm$dist = apply(mx - mn, 2, min)
-}
-# return the values
-list(nmmso_state, number_of_mid_evals)
-}
+
 
 evaluate <-
   function(nmmso_state, chg, problem_function, problem_function_params) {
@@ -338,7 +429,7 @@ merge_swarms_together <- function(swarm1, swarm2) {
     temp_p_v = rbind(swarm$pbest_values[1:n1], swarm$pbest_values[1:n2])
     temp_vel = rbind(swarm1$velocities[1:n1,], swarm2$velocities[1:n2,])
     
-    result <- sort(temp_h_v, decresing = TRUE, index.return = TRUE)
+    result <- sort(temp_h_v, decreasing = TRUE, index.return = TRUE)
     swarm1$history_locations = temp_h_loc(result$ix(1:max_size),)
     swarm1$history_values = temp_h_v(result$ix(1:max_size),)
     swarm1$pbest_location = temp_p_loc(results$ix(1:max_size),)
@@ -581,7 +672,7 @@ hive <-
             temp_vel = runif(size(R)) * (mx  -  mn) + mn
           } # resolve repeated rejection
         }
-        nmmso_state$active_modes[r]$swarm$velocities[k,] = temp_velocity
+nmmso_state$active_modes[r]$swarm$velocities[k,] = temp_velocity
 
         }else{
           if (swarm$mode_value > nmmso_state$active_modes[r]$swarm$mode_value) {
@@ -594,52 +685,54 @@ hive <-
       }
       list(nmmso_state, number_of_new_samples)
     }
+  }
+}
+
+
+
+
+random_new <-
+  function(nmmso_state, problem_function, mn, mx, problem_function_params, swarm_size) {
+    number_rand_modes = 1
+    x = runif(size(mx)) * (mx - mn) + mn
     
+    nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, matrix(1, number_rand_modes, 1))
+    nnmso_state$converged_modes = rbind(nmmso_state$converged_modes, matrix(0, number_rand_modes, 1))
     
+    result = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)
+    swarm = result$swarm
+    nmmso_state = result$nmmso_state
     
+    nmmso_state$active_modes[end + 1]$swarm = swarm
+    nmmso_state$M_loc = rbind(nmmso_state$M_loc, x)
+    nmmso_state$V_loc = rbind(nmmso_state$V_loc, nnmso_state$active_modes[end]$swarm$mode_value)
     
-    random_new <-
-      function(nmmso_state, problem_function, mn, mx, problem_function_params, swarm_size) {
-        number_rand_modes = 1
-        x = runif(size(mx)) * (mx - mn) + mn
-        
-        nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, matrix(1, number_rand_modes, 1))
-        nnmso_state$converged_modes = rbind(nmmso_state$converged_modes, matrix(0, number_rand_modes, 1))
-        
-        result = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)
-        swarm = result$swarm
-        nmmso_state = result$nmmso_state
-        
-        nmmso_state$active_modes[end + 1]$swarm = swarm
-        nmmso_state$M_loc = rbind(nmmso_state$M_loc, x)
-        nmmso_state$V_loc = rbind(nmmso_state$V_loc, nnmso_state$active_modes[end]$swarm$mode_value)
-        
-        list(nmmso_state, number_rand_modes)
-      }
-    
-    # simulates binary crossover
-    UNI <- function(x1, x2) {
-      l = length(x1)
-      x_c = x1
-      x_d = x2
-      r = which(runif(l,1) > 0.5)
-      if (length(r) >= 0) {
-        r = sample(1)
-        r = r[1]
-        print(r)
-      }
-      x_c[r] = x2[r]
-      x_d[r] = x1[r]
-      list(x_c, x_d)
-    }
-    
-    # Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division
-    uniform_sphere_points <- function(n,d) {
-      # function generates n points uniformly within the unit sphere in d dimensions
-      z <- matrix(rnorm(n * d), nrow = n, ncol = d)
-      z * (runif(n) ^ (1 / d) / sqrt(rowSums(z ^ 2)))
-    }
-    # helper functions which imitates the behavior of the Matlab feval
-    feval <- function(f,...) {
-      f(...)
-    }
+    list(nmmso_state, number_rand_modes)
+  }
+
+# simulates binary crossover
+UNI <- function(x1, x2) {
+  l = length(x1)
+  x_c = x1
+  x_d = x2
+  r = which(runif(l,1) > 0.5)
+  if (length(r) >= 0) {
+    r = sample(1)
+    r = r[1]
+    print(r)
+  }
+  x_c[r] = x2[r]
+  x_d[r] = x1[r]
+  list(x_c, x_d)
+}
+
+# Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division
+uniform_sphere_points <- function(n,d) {
+  # function generates n points uniformly within the unit sphere in d dimensions
+  z <- matrix(rnorm(n * d), nrow = n, ncol = d)
+  z * (runif(n) ^ (1 / d) / sqrt(rowSums(z ^ 2)))
+}
+# helper functions which imitates the behavior of the Matlab feval
+feval <- function(f,...) {
+  f(...)
+}
