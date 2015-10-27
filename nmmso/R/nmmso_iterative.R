@@ -1,6 +1,18 @@
 library(flexclust)
 library(pracma)
 
+#' @title Holds the general program
+#'
+#' @param swarm_size
+#' @param problem_function
+#' @param problem_function_params
+#' @param max_evaluations
+#' @param mn
+#' @param mx
+#' @param evaluations
+#' @param nmmso_state
+#' @param max_evol
+#' @param tol_val
 NMMSO_iterative(
   swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol, tol_val
 ) {
