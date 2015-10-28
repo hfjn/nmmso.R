@@ -173,8 +173,7 @@ extract_modes <- function(nmmso_state) {
 # calculates the initial locations of the algorithm
 get_initial_locations <- function(nmmso_state, mn, mx) {
   #point wise product as new locations
-  nnmso_state$active_modes[1]$swarm$new_location = rand(length(mx)) * (mx -
-                                                                         mn) + mn
+  nnmso_state$active_modes[1]$swarm$new_location = rand(length(mx)) * (mx - mn) + mn
   nmmso_state$active_modes_changed[1] = 1
   
   return(nmmso_state)
@@ -277,8 +276,7 @@ merge_swarms <-
         dist2(
           nmmso_state$active_modes(to_compare[i, 1])$swarm$mode_location, nmmso_state$active_modes[to_compare[i, 2]]$swarm$mode_location
         )
-      )
-      < nmmso_state$tol_val) {
+      ) < nmmso_state$tol_val) {
         to_merge = matrix(to_merge, i)
       } else {
         mid_loc = 0.5
@@ -292,7 +290,9 @@ merge_swarms <-
         }
         
         nmmso_state$active_modes[to_compare[i, 2]]$swarm$new_location = mid_loc
-        #evaluate_mid
+        nmmso_state = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)[1]
+        mode_shift = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)[2]
+        y = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)[3]
         
         if (mode_shift == 1) {
           nmmso_state$M_loc[to_compare[i, 2],] = nmmso_state$active_modes[to_compare[i, 2]]$swarm$mode_location
@@ -677,7 +677,7 @@ hive <-
             temp_vel = runif(size(R)) * (mx  -  mn) + mn
           } # resolve repeated rejection
         }
-nmmso_state$active_modes[r]$swarm$velocities[k,] = temp_velocity
+        nmmso_state$active_modes[r]$swarm$velocities[k,] = temp_velocity
 
         }else{
           if (swarm$mode_value > nmmso_state$active_modes[r]$swarm$mode_value) {
