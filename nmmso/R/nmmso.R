@@ -5,10 +5,10 @@ NMMSO = function(swarm_size, problem_function, problem_function_params, max_eval
   }
   
   # At start no evaluations used, and NMMSO state is empty
-  mode_loc_after = matrix()
-  mode_y_after = matrix()
-  evaluations_after = matrix()
-  nmmso_state = matrix()
+  mode_loc_after = list()
+  mode_y_after = list()
+  evaluations_after = list()
+  nmmso_state = list()
   evaluations_after = 0
   
   while(evaluations_after < max_evaluations) {
