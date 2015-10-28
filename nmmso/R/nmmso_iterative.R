@@ -273,8 +273,7 @@ merge_swarms <-
       ) < nmmso_state$tol_val) {
         to_merge = matrix(to_merge, i)
       } else {
-        mid_loc = 0.5
-        * (
+        mid_loc = 0.5 * (
           nmmso_state$active_modes[to_compare[i, 1]]$swarm$mode_location - nmmso_state$active_modes[to_compare[i, 2]]$swarm$mode_location
         )
         + nmmso_state$active_modes[to_compare[i, 2]]$swarm$mode_location
@@ -364,7 +363,7 @@ evaluate <-
     # if better than personal best for swarm member - then replace
     if (y > nmmso_state$active_modes[chg]$swarm$pbest_values[nmmso_state$active_modes[chg]$swarm$shifted_loc]) {
       nmmso_state$active_modes[chg]$swarm$pbest_values[nmmso_state$active_modes[chg]$swarm$shifted_loc] = y
-      nmmso_state$active_modes[chg]$swarm$pbest_location[nmmso_state$active_modes[chg]$swarm$shifted_loc,] = nmmso_state$active_modes[chg].swarm.new_location
+      nmmso_state$active_modes[chg]$swarm$pbest_location[nmmso_state$active_modes[chg]$swarm$shifted_loc,] = nmmso_state$active_modes[chg]$swarm.new_location
     }
     
     # change the x and y of the curren active mode
@@ -476,63 +475,50 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
       new_location = nmmso_state$active_modes[chg]$swarm$mode_location + uniform_sphere_points(1, length(new_location)) * (d /
                                                                                                                              2)
     }else{
-      #otherwise move and existing particle
+      #otherwise move an existing particle
       shifted = 1
       nmmso_state$active_modes(chg)$swarm$shifted_loc = r(1)
       
-      temp_velocity = omega * nmmso_state$active_modes[chg]$swarm$velocities[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + 2.0
-      * matrix(
+      temp_velocity = omega * nmmso_state$active_modes[chg]$swarm$velocities[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + 2.0 * matrix(
         runif(size(new_location ^ 2),size(new_location)) * (
-          nmmso_state$active_modes[chg]$swarm$mode_location - nnmso_state$active_modes[chg]$swarm$history_locations[nnmso_state$active_modes[chg]$swarm$shifted_loc,]
-          + 2.0 * matrix(size(new_location ^ 2), size(new_location)) * (
-            nnmso_state$active_modes[chg]$swarm$pbest_location[nnmso_state$active_modes[chg]$swarm$shifted_loc,] - nnmso_state$active_modes(chg)$swarm$history_locations$[nnmso_state$active_modes(chg)$chg$swarm$shifted_loc,]
-          )
-          
+          nmmso_state$active_modes[chg]$swarm$mode_location - nnmso_state$active_modes[chg]$swarm$history_locations[nnmso_state$active_modes[chg]$swarm$shifted_loc,] + 2.0 * matrix(size(new_location ^ 2), size(new_location)) * (nnmso_state$active_modes[chg]$swarm$pbest_location[nnmso_state$active_modes[chg]$swarm$shifted_loc,] - nnmso_state$active_modes(chg)$swarm$history_locations[nnmso_state$active_modes(chg)$chg$swarm$shifted_loc,]
+          )))
+      if (reject > 20) {
+        I_max = which(((nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity) > mx) == 1)
+        I_min = which(((nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity) < mn) == 1)
+        
+        if (length(I_max) >= 0) {
+          temp_velocity(I_max) = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$active_modes[chg]$swarm$history_locations[nnmso_state$active_modes[chg]$swarm$shifted_loc, I_max])
+        }
+        if (length(I_min) >= 0) {
+          temp_velocity(I_min) = runif(1, length(I_min)) * ((nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,I_min] - mn(I_min)) * -1)
+        }
+        new_location = nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity
+        reject = reject + 1
+      }
+      
+      reject = 0
+      if (shifted == 1) {
+        #if moved, update velocity with that used
+        nmmso_state$active_modes[chg]$swarm$velocities[nmmso_state$active_modes[chg]$swarm$shifted_loc,] = temp_velocity
+      }else{
+        nmmso_state$active_modes[chg]$swarm$number_of_particles = nmmso_state$active_modes[chg]$swarm_number_of_particles + 1
+        nmmso_state$active_modes[chg]$swarm$shifted_loc = nmmso_state$active_modes[chg]$swarm$number_of_particles
+        temp_vel = mn - 1
+        while (sum(temp_vel < mn) > 0 ||
+               sum(temp_vel > mx) > 0) {
+          temp_vel = uniform_sphere_points(1,length(new_location)) * (d / 2);
+          reject = reject + 1;
           if (reject > 20) {
-            I_max = which(((
-              nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity
-            ) > mx
-            ) == 1)
-            I_min = which(((
-              nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity
-            ) < mn
-            ) == 1)
-            
-            if (length(I_max) >= 0) {
-              temp_velocity(I_max) = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$active_modes[chg]$swarm$history_locations[nnmso_state$active_modes[chg]$swarm$shifted_loc, I_max])
-            }
-            if (length(I_min) >= 0) {
-              temp_velocity(I_min) = runif(1, length(I_min)) * ((
-                nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,I_min] -
-                  mn(I_min)
-              ) * -1)
-            }
-            new_location = nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity
-            reject = reject + 1
+            # resolve if keep rejecting
+            temp_vel = rand(size(new_location)) * (mx - mx) + mn;
           }
-          
-          reject = 0
-          if (shifted == 1) {
-            #if moved, update velocity with that used
-            nmmso_state$active_modes[chg]$swarm$velocities[nmmso_state$active_modes[chg]$swarm$shifted_loc,] = temp_velocity
-          }else{
-            nmmso_state$active_modes[chg]$swarm$number_of_particles = nmmso_state$active_modes[chg]$swarm_number_of_particles + 1
-            nmmso_state$active_modes[chg]$swarm$shifted_loc = nmmso_state$active_modes[chg]$swarm$number_of_particles
-            temp_vel = mn - 1
-            while (sum(temp_vel < mn) > 0 ||
-                   sum(temp_vel > mx) > 0) {
-              temp_vel = uniform_sphere_points(1,length(new_location)) * (d / 2);
-              reject = reject + 1;
-              if (reject > 20) {
-                # resolve if keep rejecting
-                temp_vel = rand(size(new_location)) * (mx - mx) + mn;
-              }
-            }
-            nmmso_state$active_modes[chg]$swarm$velocites[nnms_state$active_modes[chg]$swarm$shifted_loc,] = temp_vel
-          }
-          nmmso_state$active_modes[chg]$swarm$new_location = new_location
-          
-          list("nmmso_state" = nmmso_state, "cs" = cs)
+        }
+        nmmso_state$active_modes[chg]$swarm$velocites[nnms_state$active_modes[chg]$swarm$shifted_loc,] = temp_vel
+      }
+      nmmso_state$active_modes[chg]$swarm$new_location = new_location
+      
+      list("nmmso_state" = nmmso_state, "cs" = cs)
           
     }
     
@@ -703,8 +689,7 @@ hive <-
           nmmso_state$active_modes[r]$swarm$pbest_values[k,] = mid_loc_val
           
           temp_vel = mn - 1
-          while (sum(temp_vel < mn) > 0)
-            || sum(temp_vel > mx) > 0) {
+          while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
           temp  -  vel = uniform_sphere_pints(1, length(R)) * (d  /  2)
           reject = reject +  1
           if (reject > 20) {
@@ -722,7 +707,7 @@ hive <-
         }
         number_of_new_samples = number_of_new_samples + 1
       }
-      list("nmmso_state" = mmso_state,"number_of_new_samples" number_of_new_samples)
+      list("nmmso_state" = mmso_state,"number_of_new_samples" = number_of_new_samples)
     }
   }
 }
