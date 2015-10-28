@@ -27,7 +27,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   # TODO: Test this
   if (max_evol <= 0) {
     print('Max_eval cannot be nagative or zero, default max_eval used, set at 100')
-    max_evol = 100;
+    max_evol = 100
   }
   
   if (evaluations == 0) {
