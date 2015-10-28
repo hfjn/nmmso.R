@@ -142,6 +142,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
 
+#' @title 
+#' @param nmmso_state
 # extracts the modes from the given nmmso_state
 extract_modes <- function(nmmso_state) {
   RES = matrix(0, length(
@@ -209,6 +211,12 @@ evaluate_first <- function(swarm, problem_function, problem_function_params, nmm
   list("nmmso_state" = nmmso_state, "swarm" = swarm)
 }
 
+#' @title 
+#' @param nmmso_state
+#' @param problem_function
+#' @param problem_function_params
+#' @param mn
+#' @param mx
 merge_swarms <-
   function(nmmso_state, problem_function, problem_function_params, mn, mx) {
     I = which(nmmso_state$active_modes_changed == 1)
@@ -332,7 +340,11 @@ merge_swarms <-
   }
 
 
-
+#' @title 
+#' @param nmmso_state
+#' @param chg
+#' @param problem_function
+#' @param problem_function_params
 evaluate <-
   function(nmmso_state, chg, problem_function, problem_function_params) {
     y = feval(
@@ -364,6 +376,11 @@ evaluate <-
     list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)
   }
 
+#' @title 
+#' @param nmmso_state
+#' @param chg
+#' @param problem_function
+#' @param test_function_params
 evaluate_mid <-
   function(nmmso_state, chg, problem_function, test_function_params) {
     # comment from original:
@@ -389,6 +406,10 @@ evaluate_mid <-
     list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)
   }
 
+#' @title Joins two swarm to one
+#' @param swarm1 the first swarm
+#' @param swarm2 the second swarm
+#' @return the joined swarm
 merge_swarms_together <- function(swarm1, swarm2) {
   # merge swarm 1 and 2, while keeping best elements of both
   
@@ -431,7 +452,11 @@ merge_swarms_together <- function(swarm1, swarm2) {
   return(swarm1)
 }
 
-
+#' @title 
+#' @param nmmso_state
+#' @param chg
+#' @param mn
+#' @param swarm_size
 increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
   cs = 0
   new_location = mn - 1
@@ -514,6 +539,10 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
   }
 }
 
+#' @title 
+#' @param nmmso_state
+#' @param problem_function_params
+#' @param I
 evaluate_new_locations <-
   function(nmmso_state, problem_function_params, I) {
     nmmso_state$active_modes_changed = matrix(0, length(nmmso_state$active_modes), 1)
@@ -532,6 +561,14 @@ evaluate_new_locations <-
     list("nmmso_state" = nmmso_state, "number_of_new_location" = length(I))
   }
 
+#' @title
+#' @param nmmso_state
+#' @param problem_function
+#' @param mn
+#' @param mx
+#' @param problem_function_params
+#' @param max_evol
+#' @param swarm_size
 evolve <-
   function(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size) {
     n = length(nmmso_state$active_modes)
@@ -572,7 +609,15 @@ evolve <-
   }
 
 
-
+#' @title 
+#' @param nmmso_state
+#' @param problem_function
+#' @param mn
+#' @param mx
+#' @param problem_function_params
+#' @param max_evol
+#' @param swarm_size
+#' @return 
 hive <-
   function(nmmso_state, problem_function, mn, mx, problem_function_params, max_evol, swarm_size) {
     number_of_new_samples = 0
@@ -681,7 +726,13 @@ hive <-
 
 
 
-
+#' @title 
+#' @param nmmso_state
+#' @param problem_function
+#' @param mn
+#' @param mx
+#' @param problem_function_params
+#' @param swarm_size
 random_new <-
   function(nmmso_state, problem_function, mn, mx, problem_function_params, swarm_size) {
     number_rand_modes = 1
@@ -701,6 +752,10 @@ random_new <-
     list("nmmso_state" = nmmso_state, "number_rand_modes" = number_rand_modes)
   }
 
+#' @title 
+#' @param 
+#' @param 
+#' @return 
 # simulates binary crossover
 UNI <- function(x1, x2) {
   l = length(x1)
@@ -717,12 +772,19 @@ UNI <- function(x1, x2) {
   list("x_c" = x_c, "x_d" = x_d)
 }
 
+#' @title 
+#' @param n
+#' @param
+#' @return 
 # Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division
 uniform_sphere_points <- function(n,d) {
   # function generates n points uniformly within the unit sphere in d dimensions
   z <- matrix(rnorm(n * d), nrow = n, ncol = d)
   z * (runif(n) ^ (1 / d) / sqrt(rowSums(z ^ 2)))
 }
+
+#' @title 
+#' @param 
 # helper functions which imitates the behavior of the Matlab feval
 feval <- function(f,...) {
   f(...)
