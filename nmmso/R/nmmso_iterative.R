@@ -26,7 +26,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   # test if max_evol is smaller than 0, which is not usable
   # TODO: Test this
   if (max_evol <= 0) {
-    print('Max_eval cannot be nagative or zero, default max_eval used, set at 100')
+    sprintf('Max_eval cannot be nagative or zero, default max_eval used, set at 100')
     max_evol = 100
   }
   
@@ -254,9 +254,8 @@ merge_swarms <-
       # Remove duplicates
       for (i in seq(n,-1, 2)) {
         I = which(to_compare[, 1] == to_compare[i, 1])
-        repeat_matrix = kronecker(matrix(1, length(I), 1, to_compare[i,]))
-        if (# TODO: check the repeat_matrix with Matlab
-          ) {
+        repeat_matrix = repmat(to_compare[i, ], length(I), 1)
+        if (sum(sum(repeat_matrix == to_compare[I, ]) == 2) > 1) {
           to_compare[i,] = matrix()
       }
     }
@@ -281,13 +280,14 @@ merge_swarms <-
         + nmmso_state$active_modes[to_compare[i, 2]]$swarm$mode_location
         
         if (sum(mid_loc < mn) > 0 || sum(mid_loc > mx) > 0) {
-          stop('Mid point out of range!')
+          sprintf('Mid point out of range!')
         }
         
         nmmso_state$active_modes[to_compare[i, 2]]$swarm$new_location = mid_loc
-        nmmso_state = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)[1]
-        mode_shift = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)[2]
-        y = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)[3]
+        evaluate_mid = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function, problem_function_params)
+        nmmso_state = evaluate_mid$nmmso_state
+        mode_shift = evaluate_mid$mode_shift
+        y = evaluate_mid$y
         
         if (mode_shift == 1) {
           nmmso_state$M_loc[to_compare[i, 2],] = nmmso_state$active_modes[to_compare[i, 2]]$swarm$mode_location
@@ -547,8 +547,10 @@ evaluate_new_locations <-
   function(nmmso_state, problem_function_params, I) {
     nmmso_state$active_modes_changed = matrix(0, length(nmmso_state$active_modes), 1)
     for (i in 1:length(I)) {
-      nmmso_state = evaluate(nmmso_state, I[i], problem_function, problem_function_params)[1]
-      mode_shift = evaluate(nmmso_state, I[i], problem_function, problem_function_params)[2]
+      evaluate = evaluate(nmmso_state, I[i], problem_function, problem_function_params)
+      nmmso_state = evaluate$nmmso_state
+      mode_shift = evaluate$mode_shift
+      
       if (mode_shift == 1) {
         nmmso_state$active_modes_changed[I[i]] = 1
         nmmso_state$M_loc[I[i],] = nmmso_state$active_modes[I[i]]$swarm$new_location
@@ -593,8 +595,9 @@ evolve <-
     nmmso_state.M_loc = matrix(nmmso_state$M_loc, R)
     
     swarm$new_location = R
-    swarm = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)[1]
-    nmmso_state = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)[2]
+    evaluate_first = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)
+    swarm = evaluate_first$swarm
+    nmmso_state = evaluate_first$nmmso_state
     
     nmmso_state$V_loc = matrix(nmmso_state$V_loc, swarm$mode_value)
     nmmso_state$active_modes[length(nmmso_state$active_modes) + 1]$swarm = swarm

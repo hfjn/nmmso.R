@@ -1,6 +1,6 @@
 NMMSO = function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, max_evol = 100, tol_val = 10 ^ -6) {
   if(max_evol <= 0) {
-    print('Max_eval cannot be negative or zero, default max_eval used, set at 100')
+    sprintf('Max_eval cannot be negative or zero, default max_eval used, set at 100')
     max_evol = 100
   }
   
