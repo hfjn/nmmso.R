@@ -5,3 +5,7 @@ test_that("uniform sphere points is working correctly", {
   expect_equal(length(Y), 100)
   expect_equal(typeof(Y), "double")
 })
+
+test_that("nmmso_iterative main function is working correctly", {
+  expect_error()
+})

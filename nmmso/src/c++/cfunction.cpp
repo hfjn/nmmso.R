@@ -6,7 +6,9 @@
  *           : xiaodong_(DOT)_li_(AT)_rmit_(DOT)_edu_(DOT)_au 
  * ***************************************************************************/
 #include "cfunction.h"
+#include <Rcpp.h>
 
+using namespace Rcpp;
 using namespace std;
 
 /******************************************************************************
@@ -478,7 +480,7 @@ tFitness CF4::evaluate(const double *x)
  * Variable ranges: x in [0, 30
  * No. of global peaks: 2
  * No. of local peaks:  3. 
- *****************************************************************************/
+ *********************
 tFitness five_uneven_peak_trap(const double *x, const int &dim)
 {
 	tFitness result=-1.0;
