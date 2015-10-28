@@ -111,7 +111,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
     I2 = indice[1:limit]
     
     # increment
-    for(jj=1 in 1:length(I2)){
+    for(jj in 1:length(I2)){
       nmmso_state = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm, swarm_size)
     }
     
@@ -151,6 +151,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   result = extract_modes(nmmso_state)
   mode_loc = result$mode_loc
   mode_y = result$mode_y
+  
+  list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
 
 # extracts the modes from the given nmmso_state
@@ -165,7 +167,7 @@ extract_modes <- function(nmmso_state) {
     RES_Y(i) = nnmso_state$active_modes(i)$swarm$mode_value
   }
   
-  return(list(RES, RES_Y))
+  list("RES" = RES, "RES_Y" = RES_Y)
 }
 
 # calculates the initial locations of the algorithm
@@ -174,6 +176,8 @@ get_initial_locations <- function(nmmso_state, mn, mx) {
   nnmso_state$active_modes[1]$swarm$new_location = rand(length(mx)) * (mx -
                                                                          mn) + mn
   nmmso_state$active_modes_changed[1] = 1
+  
+  return(nmmso_state)
 }
 
 evaluate_first <- function(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx) {
@@ -216,7 +220,7 @@ evaluate_first <- function(swarm, problem_function, problem_function_params, nmm
   nmmso_state$index = nmmso_state$index + 1
   
   # return the result
-  list(nmmso_state, swarm)
+  list("nmmso_state" = nmmso_state, "swarm" = swarm)
 }
 
 merge_swarms <-
@@ -337,7 +341,7 @@ merge_swarms <-
       nmmso_state$active_modes[1]$swarm$dist = apply(mx - mn, 2, min)
     }
     # return the values
-    list(nmmso_state, number_of_mid_evals)
+    list("nmmso_state" = nmmso_state, "number_of_mid_evals" = number_of_mid_evals)
   }
 
 
@@ -370,7 +374,7 @@ evaluate <-
     nmmso_state$index = nmmso_state$index + 1
     
     # return the result
-    list(nmmso_state, mode_shift, y)
+    list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)
   }
 
 evaluate_mid <-
@@ -395,7 +399,7 @@ evaluate_mid <-
     nmmso_state$index = nmmso_state$index + 1
     
     # return the values
-    list(nmmso_state, mode_shift, y)
+    list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)
   }
 
 merge_swarms_together <- function(swarm1, swarm2) {
@@ -437,6 +441,7 @@ merge_swarms_together <- function(swarm1, swarm2) {
     swarm$velocities = temp_vel(results$ix(1:max_size),)
     
   }
+  return(swarm1)
 }
 
 
@@ -515,7 +520,7 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
           }
           nmmso_state$active_modes[chg]$swarm$new_location = new_location
           
-          list(nmmso_state, cs)
+          list("nmmso_state" = nmmso_state, "cs" = cs)
           
     }
     
@@ -537,7 +542,7 @@ evaluate_new_locations <-
     }
     
     # return the values
-    list(nmmso_state, length(I))
+    list("nmmso_state" = nmmso_state, "number_of_new_location" = length(I))
   }
 
 evolve <-
@@ -576,7 +581,7 @@ evolve <-
     number_of_new_modes = 1
     
     # return values
-    list(nmmso_state, number_of_new_modes)
+    list("nmmso_state" = nmmso_state,"number_of_new_modes" = number_of_new_modes)
   }
 
 
@@ -683,7 +688,7 @@ nmmso_state$active_modes[r]$swarm$velocities[k,] = temp_velocity
         }
         number_of_new_samples = number_of_new_samples + 1
       }
-      list(nmmso_state, number_of_new_samples)
+      list("nmmso_state" = mmso_state,"number_of_new_samples" number_of_new_samples)
     }
   }
 }
@@ -707,7 +712,7 @@ random_new <-
     nmmso_state$M_loc = rbind(nmmso_state$M_loc, x)
     nmmso_state$V_loc = rbind(nmmso_state$V_loc, nnmso_state$active_modes[end]$swarm$mode_value)
     
-    list(nmmso_state, number_rand_modes)
+    list("nmmso_state" = nmmso_state, "number_rand_modes" = number_rand_modes)
   }
 
 # simulates binary crossover
@@ -723,7 +728,7 @@ UNI <- function(x1, x2) {
   }
   x_c[r] = x2[r]
   x_d[r] = x1[r]
-  list(x_c, x_d)
+  list("x_c" = x_c, "x_d" = x_d)
 }
 
 # Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division

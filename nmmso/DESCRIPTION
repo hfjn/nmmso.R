@@ -9,4 +9,3 @@ Maintainer: Who to complain to <jhoffjann@gmail.com>
 Description: The original Matlab code base can be found here: https://github.com/fieldsend/ieee_cec_2014_nmmso
 License: What license is it under?
 Suggests: testthat
-Depends: flexclust, pracma
