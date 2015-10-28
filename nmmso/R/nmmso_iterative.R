@@ -15,18 +15,12 @@ library(pracma)
 #' @param tol_val
 #' @return
 #'
-NMMSO_iterative <- function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol, tol_val) {
+NMMSO_iterative <- function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
+  
   # test if all variables are correctly initialized
   # TODO: Test this
   if (evaluations < 0) {
     stop('A algorithm can only be run a positive number of times')
-  }
-  
-  # test if max_evol has a value otherwise assign one
-  # TODO: Test this
-  if (is.null(max_evol)) {
-    print('default max_evol used, set at 100')
-    max_evol = 100
   }
   
   # test if max_evol is smaller than 0, which is not usable
@@ -35,13 +29,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
     print('Max_eval cannot be nagative or zero, default max_eval used, set at 100')
     max_evol = 100;
   }
-  
-  # test if tol_val is existing, otherwise create it
-  if (is.null(tol_val)) {
-    tol_val = 10 ^ -6
-  }
-  
-  
   
   if (evaluations == 0) {
     # preallocate matrices for speed
@@ -621,8 +608,8 @@ hive <-
       # distance away; otherwise will be merged riht in aigain at the next iteration
       
       # might need better distance function which takes two separate matrices
-      if (sqrt(dist(
-        R, nnmso_state$active_modes[r]$swarm$mode_location, method = "euclidean"
+      if (sqrt(dist2(
+        R, nnmso_state$active_modes[r]$swarm$mode_location
       )) > nnmso_state$tol_val) {
         mid_loc = 0.5 * (nnmso_state$active_modes[r]$swarm$mode_location - R) +
           R
@@ -659,8 +646,7 @@ hive <-
           
           # remove from existing swarm and replace with mid eval
           # see above, probably not the right distance function
-          d = sqrt(dist(nmmso_state$active_modes[r]$swarm$mode_location, R), method =
-                     "euclidean")
+          d = sqrt(dist2(nmmso_state$active_modes[r]$swarm$mode_location, R))
           
           nmmso_state$active_modes[r]$swarm$history_location[k,] = mid_loc
           nmmso_state$active_modes[r]$swarm$history_values[k,] = mid_loc_val
