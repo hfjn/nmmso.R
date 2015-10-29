@@ -1,9 +1,9 @@
 /******************************************************************************
  * Version: 1.0
- * Last modified on: 21 January, 2013 
+ * Last modified on: 21 January, 2013
  * Developers: Michael G. Epitropakis, Xiaodong Li.
- *      email: mge_(AT)_cs_(DOT)_stir_(DOT)_ac_(DOT)_uk 
- *           : xiaodong_(DOT)_li_(AT)_rmit_(DOT)_edu_(DOT)_au 
+ *      email: mge_(AT)_cs_(DOT)_stir_(DOT)_ac_(DOT)_uk
+ *           : xiaodong_(DOT)_li_(AT)_rmit_(DOT)_edu_(DOT)_au
  * ***************************************************************************/
 #ifndef __CEC2013_FUNCTIONS_H__
 #define __CEC2013_FUNCTIONS_H__
@@ -15,17 +15,17 @@
 #include <cstdlib>
 #include <cmath>
 #include <algorithm>
-#include <values.h>
+#include <limits.h>
 #include <cassert>
 //TODO: random number generator
 #include "rand2.h"
 
 /* Just to define M_PI */
 #define _USE_MATH_DEFINES
-#define INF MAXDOUBLE
+#define INF std::numeric_limits<double>::max()
 
 /* Define tFitness */
-#ifndef _TFITNESS 
+#ifndef _TFITNESS
 #define _TFITNESS 1
 // This should be a real number i.e. float, double, long double
 typedef long double tFitness; 	// Fitness type
@@ -47,8 +47,8 @@ public:
 	~CFunction();
 
 	virtual tFitness evaluate(const double *x) = 0;
-	double get_lbound(const int &ivar) const { return lbound_[ivar]; } 
-	double get_ubound(const int &ivar) const { return ubound_[ivar]; } 
+	double get_lbound(const int &ivar) const { return lbound_[ivar]; }
+	double get_ubound(const int &ivar) const { return ubound_[ivar]; }
 
 protected:
 //public:
