@@ -18,13 +18,11 @@ library(pracma)
 NMMSO_iterative <- function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
   
   # test if all variables are correctly initialized
-  # TODO: Test this
   if (evaluations < 0) {
     stop('A algorithm can only be run a positive number of times')
   }
   
   # test if max_evol is smaller than 0, which is not usable
-  # TODO: Test this
   if (max_evol <= 0) {
     sprintf('Max_eval cannot be nagative or zero, default max_eval used, set at 100')
     max_evol = 100
@@ -753,17 +751,16 @@ UNI <- function(x1, x2) {
   if (length(r) >= 0) {
     r = sample(1)
     r = r[1]
-    print(r)
   }
   x_c[r] = x2[r]
   x_d[r] = x1[r]
-  list("x_c" = x_c, "x_d" = x_d)
+  return(list("x_c" = x_c, "x_d" = x_d))
 }
 
 #' @title 
 #' @param n
 #' @param
-#' @return 
+#' @return NMMSO
 # Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division
 uniform_sphere_points <- function(n,d) {
   # function generates n points uniformly within the unit sphere in d dimensions
