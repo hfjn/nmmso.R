@@ -387,12 +387,12 @@ merge_swarms <-
 
 #' @title evaluate
 #' 
-#' @param nmmso_state
-#' @param chg
-#' @param problem_function
-#' @param problem_function_params
+#' @param nmmso_state Structure holding state of swarm.
+#' @param chg 
+#' @param problem_function String containing name of function to be optimised.
+#' @param problem_function_params Meta-parameters needed by problem function.
 #' @return 
-#' nmmso_state =
+#' nmmso_state = Structure holding state of swarm.
 #' mode_shift =
 #' y = 
 #' 
@@ -428,11 +428,18 @@ evaluate <-
     list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)
   }
 
-#' @title 
+#' @title evaluate_mid
+#' 
 #' @param nmmso_state
 #' @param chg
 #' @param problem_function
 #' @param test_function_params
+#' @return 
+#' nmmso_state =
+#' mode_shift = 
+#' y = 
+#' 
+#' @export
 evaluate_mid <-
   function(nmmso_state, chg, problem_function, test_function_params) {
     # comment from original:
@@ -458,10 +465,14 @@ evaluate_mid <-
     list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)
   }
 
-#' @title Joins two swarm to one
-#' @param swarm1 the first swarm
-#' @param swarm2 the second swarm
-#' @return the joined swarm
+#' @title merge_swarms_together
+#' @description Joins two swarms into one.
+#' 
+#' @param swarm1 The first swarm.
+#' @param swarm2 The second swarm.
+#' @return The joined swarm
+#' 
+#' @export
 merge_swarms_together <- function(swarm1, swarm2) {
   # merge swarm 1 and 2, while keeping best elements of both
   
@@ -525,8 +536,7 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
          sum (new_location > mx) > 0) {
     # if swarm not at maximum capacity add a new particle
     if (nmmso_state$active_modes[chg]$swarm$number_of_particles < swarm_size) {
-      new_location = nmmso_state$active_modes[chg]$swarm$mode_location + uniform_sphere_points(1, length(new_location)) * (d /
-                                                                                                                             2)
+      new_location = nmmso_state$active_modes[chg]$swarm$mode_location + uniform_sphere_points(1, length(new_location)) * (d / 2)
     }else{
       #otherwise move an existing particle
       shifted = 1
