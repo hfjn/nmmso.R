@@ -30,21 +30,23 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   
   if (evaluations == 0) {
     # preallocate matrices for speed
-    nnmso_state$X <- matrix(0, max_evaluations + 500, length(mx))
-    nnmso_state$Y <- matrix(0, max_evaluations + 500, 1)
+    nmmso_state$X <- matrix(0, max_evaluations + 500, length(mx))
+    nmmso_state$Y <- matrix(0, max_evaluations + 500, 1)
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
     
-    # get initial locations
-    nnmso_state = get_initial_locations(nmmso_state, mn, mx)
-    
     # initialize active modes as a list and give the sub "Modes" lists aswell
-    nnmso_state$active_modes <- list()
-    nnmso_state$active_modes[1] <- list()
+    nmmso_state$active_modes <- list()
+    nmmso_state$active_modes[1] <- list()
+    
+    nmmso_state$active_modes[1]$swarm <- list()
+    
+    # get initial locations
+    nmmso_state = get_initial_locations(nmmso_state, mn, mx)
     
     # get first evaluation
     result <-
-      evaluate_first(problem_function, problem_function_params, nnmso_state, swarm_size, mn, mx)
+      evaluate_first(problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)
     swarm = result$swarm
     nmmso_state = result$nmmso_state
     nmmso_state$active_modes[1]$swarm = swarm
@@ -145,13 +147,13 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
 # extracts the modes from the given nmmso_state
 extract_modes <- function(nmmso_state) {
   RES = matrix(0, length(
-    nnmso_state$active_modes, length(nnmso_state$active_modes[1]$swarm$mode_location)
+    nmmso_state$active_modes, length(nmmso_state$active_modes[1]$swarm$mode_location)
   ))
   RES_Y = matrix(0, length(nmmso_state$active_modes), 1)
   
   for (i in 1:length(nmmso_state$active_modes)) {
-    RES(i,) = nnmso_state$active_modes(i)$swarm$mode_location
-    RES_Y(i) = nnmso_state$active_modes(i)$swarm$mode_value
+    RES(i,) = nmmso_state$active_modes(i)$swarm$mode_location
+    RES_Y(i) = nmmso_state$active_modes(i)$swarm$mode_value
   }
   
   list("RES" = RES, "RES_Y" = RES_Y)
@@ -160,7 +162,8 @@ extract_modes <- function(nmmso_state) {
 # calculates the initial locations of the algorithm
 get_initial_locations <- function(nmmso_state, mn, mx) {
   #point wise product as new locations
-  nnmso_state$active_modes[1]$swarm$new_location = rand(length(mx)) * (mx - mn) + mn
+  nmmso_state$active_modes[1]$swarm <- list()
+  nmmso_state$active_modes[1]$swarm$new_location = matrix(runif(length(mx^2) , length(mx))) * (mx - mn) + mn
   nmmso_state$active_modes_changed[1] = 1
   
   return(nmmso_state)
@@ -356,7 +359,7 @@ evaluate <-
     }
     
     nmmso_state$active_modes[chg]$swarm$history_location[nmmso_state$active_modes[chg]$swarm$shifted_loc,] = nmmso_state$active_modes[chg]$swarm$new_location
-    nnmso_state$active_modes[chg]$swarm$history_vaues[nmmso_state$active_modes[chg]$swarm$shifted_loc] = y
+    nmmso_state$active_modes[chg]$swarm$history_vaues[nmmso_state$active_modes[chg]$swarm$shifted_loc] = y
     
     # if better than personal best for swarm member - then replace
     if (y > nmmso_state$active_modes[chg]$swarm$pbest_values[nmmso_state$active_modes[chg]$swarm$shifted_loc]) {
@@ -479,17 +482,17 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
       
       temp_velocity = omega * nmmso_state$active_modes[chg]$swarm$velocities[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + 2.0 * matrix(
         runif(size(new_location ^ 2),size(new_location)) * (
-          nmmso_state$active_modes[chg]$swarm$mode_location - nnmso_state$active_modes[chg]$swarm$history_locations[nnmso_state$active_modes[chg]$swarm$shifted_loc,] + 2.0 * matrix(size(new_location ^ 2), size(new_location)) * (nnmso_state$active_modes[chg]$swarm$pbest_location[nnmso_state$active_modes[chg]$swarm$shifted_loc,] - nnmso_state$active_modes(chg)$swarm$history_locations[nnmso_state$active_modes(chg)$chg$swarm$shifted_loc,]
+          nmmso_state$active_modes[chg]$swarm$mode_location - nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + 2.0 * matrix(size(new_location ^ 2), size(new_location)) * (nmmso_state$active_modes[chg]$swarm$pbest_location[nmmso_state$active_modes[chg]$swarm$shifted_loc,] - nmmso_state$active_modes(chg)$swarm$history_locations[nmmso_state$active_modes(chg)$chg$swarm$shifted_loc,]
           )))
       if (reject > 20) {
-        I_max = which(((nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity) > mx) == 1)
-        I_min = which(((nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity) < mn) == 1)
+        I_max = which(((nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity) > mx) == 1)
+        I_min = which(((nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity) < mn) == 1)
         
         if (length(I_max) >= 0) {
-          temp_velocity(I_max) = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$active_modes[chg]$swarm$history_locations[nnmso_state$active_modes[chg]$swarm$shifted_loc, I_max])
+          temp_velocity(I_max) = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc, I_max])
         }
         if (length(I_min) >= 0) {
-          temp_velocity(I_min) = runif(1, length(I_min)) * ((nnmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,I_min] - mn(I_min)) * -1)
+          temp_velocity(I_min) = runif(1, length(I_min)) * ((nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,I_min] - mn(I_min)) * -1)
         }
         new_location = nmmso_state$active_modes[chg]$swarm$history_locations[nmmso_state$active_modes[chg]$swarm$shifted_loc,] + temp_velocity
         reject = reject + 1
@@ -641,14 +644,14 @@ hive <-
       
       # might need better distance function which takes two separate matrices
       if (sqrt(dist2(
-        R, nnmso_state$active_modes[r]$swarm$mode_location
-      )) > nnmso_state$tol_val) {
-        mid_loc = 0.5 * (nnmso_state$active_modes[r]$swarm$mode_location - R) +
+        R, nmmso_state$active_modes[r]$swarm$mode_location
+      )) > nmmso_state$tol_val) {
+        mid_loc = 0.5 * (nmmso_state$active_modes[r]$swarm$mode_location - R) +
           R
         
         swarm$new_location = mid_loc
         result = evaluate_first(
-          swarm, problem_function, problem_function_params, nnmso_state, swarm_size, mn, mx
+          swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx
         )
         swarm = result$swarm
         nmmso_state = result$nmmso_state
@@ -725,7 +728,7 @@ random_new <-
     x = runif(size(mx)) * (mx - mn) + mn
     
     nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, matrix(1, number_rand_modes, 1))
-    nnmso_state$converged_modes = rbind(nmmso_state$converged_modes, matrix(0, number_rand_modes, 1))
+    nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, matrix(0, number_rand_modes, 1))
     
     result = evaluate_first(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx)
     swarm = result$swarm
@@ -733,7 +736,7 @@ random_new <-
     
     nmmso_state$active_modes[end + 1]$swarm = swarm
     nmmso_state$M_loc = rbind(nmmso_state$M_loc, x)
-    nmmso_state$V_loc = rbind(nmmso_state$V_loc, nnmso_state$active_modes[end]$swarm$mode_value)
+    nmmso_state$V_loc = rbind(nmmso_state$V_loc, nmmso_state$active_modes[end]$swarm$mode_value)
     
     list("nmmso_state" = nmmso_state, "number_rand_modes" = number_rand_modes)
   }

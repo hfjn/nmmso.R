@@ -38,3 +38,21 @@ test_that("UNI", {
   result <- UNI(x1, x2)
   expect_true(any(result$x_c > 5) && any(result$x_d < 6))
 })
+
+#'
+#'
+#'
+test_that("get_intital_locations"{
+  nmmso_state = list()
+  mx = 1
+  mn = 2
+  # preallocate matrices for speed
+  nmmso_state$X <- matrix(0, 100 + 500, length(mx))
+  nmmso_state$Y <- matrix(0, 100 + 500, 1)
+  nmmso_state$index = 1
+  nmmso_state$converged_modes = 0
+  
+  # initialize active modes as a list and give the sub "Modes" lists aswell
+  nmmso_state$active_modes <- list()
+  nmmso_state$active_modes[1] <- list()
+})
