@@ -1,20 +1,29 @@
 library(flexclust)
 library(pracma)
 
-#' @title Holds the general program
+#' @title Implementation of the Niching Migratory Multi-Swarm Optimser.
 #'
-#' @param swarm_size
-#' @param problem_function
-#' @param problem_function_params
-#' @param max_evaluations
-#' @param mn
-#' @param mx
-#' @param evaluations
-#' @param nmmso_state
-#' @param max_evol
-#' @param tol_val
+#' @param swarm_size Maximum number of elements (particles) per swarm.
+#' @param problem_function String containing name of function to be optimised.
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param max_evaluations Maximum number of evaluations to be taken through the problem function.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @param evaluations Number of evaluations expended already. If set at 0, this will initialise the swarm_state structure and run the 
+#' algorithm for a single generation, otherwise it will run it for a single generation from the evaluations number inputted.
+#' @param nmmso_state Structure holding state of swarm. Can be empty or omitted if evaluations set at zero, must be provided if evals > 0.
+#' @param max_evol Maximum number of swarms to update in a generation. If not provided this is set at 100.
+#' @param tol_val Tolerance value for merging automatically (default 10^-6).
 #' @return
+#' mode_loc = Design space location of current mode estimates (swarm gbests), note that at least one is likely to be very poor due to the 
+#' new swarm spawning at the end of each generation, and that these will be a combination of both global and local mode estimate.
+#' mode_y = Function evalutions corresponding to the mode estimates.
+#' evaluations = Number of problem function evaluations until this point.
+#' nmmso_state = Structure holding the state of the swarms. Unless you want to pick apart the details of how the algorithm searchs the space, 
+#' then the only two elements you will probably be interested in are X and Y which are preallocated matrices to hold all locations visited 
+#' (therefore nmmso_state.X(1:evaluations,:) will hold all the design space locations visited by the optimiser thus far.
 #'
+#' @export
 NMMSO_iterative <- function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
   
   # test if all variables are correctly initialized
@@ -30,8 +39,9 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   
   if (evaluations == 0) {
     # preallocate matrices for speed
-    nmmso_state$X <- matrix(0, max_evaluations + 500, length(mx))
-    nmmso_state$Y <- matrix(0, max_evaluations + 500, 1)
+    nmmso_state = list()
+    nnmso_state$X <- matrix(0, max_evaluations + 500, length(mx))
+    nnmso_state$Y <- matrix(0, max_evaluations + 500, 1)
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
     
@@ -142,9 +152,15 @@ NMMSO_iterative <- function(swarm_size, problem_function, problem_function_param
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
 
-#' @title 
-#' @param nmmso_state
-# extracts the modes from the given nmmso_state
+#' @title extract_modes
+#' @description Get the mode estimate locations.
+#' 
+#' @param nmmso_state Structure holding state of swarm.
+#' @return 
+#' RES = Modes from the given nmmso_state for the X-axis.
+#' RES_Y = Modes from the given nmmso_state for the Y-axis.
+#' 
+#' @export
 extract_modes <- function(nmmso_state) {
   RES = matrix(0, length(
     nmmso_state$active_modes, length(nmmso_state$active_modes[1]$swarm$mode_location)
@@ -159,7 +175,15 @@ extract_modes <- function(nmmso_state) {
   list("RES" = RES, "RES_Y" = RES_Y)
 }
 
-# calculates the initial locations of the algorithm
+#' @title get_initial_locations
+#' @description Calculates the initial locations of the algorithm.
+#' 
+#' @param nmmso_state Structure holding state of swarm.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @return nmmso_state = Structure with the new locations.
+#' 
+#' @export
 get_initial_locations <- function(nmmso_state, mn, mx) {
   #point wise product as new locations
   nmmso_state$active_modes[1]$swarm <- list()
@@ -169,6 +193,21 @@ get_initial_locations <- function(nmmso_state, mn, mx) {
   return(nmmso_state)
 }
 
+#' @title evaluate_first
+#' @description Calculates the first evaluation of the swarms.
+#' 
+#' @param swarm Swarm object
+#' @param problem_function String containing name of function to be optimised.
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param nmmso_state Structure holding state of swarm.
+#' @param swarm_size Maximum number of elements (particles) per swarm.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @return 
+#' swarm = Swarm with new locations and values.
+#' nmmso_state = Structure with the new locations after evaluation.
+#' 
+#' @export
 evaluate_first <- function(swarm, problem_function, problem_function_params, nmmso_state, swarm_size, mn, mx) {
   # from original:
   ## new location is the only solution thus far in mode, so by definition is
@@ -212,12 +251,18 @@ evaluate_first <- function(swarm, problem_function, problem_function_params, nmm
   list("nmmso_state" = nmmso_state, "swarm" = swarm)
 }
 
-#' @title 
-#' @param nmmso_state
-#' @param problem_function
-#' @param problem_function_params
-#' @param mn
-#' @param mx
+#' @title merge_swarms
+#' 
+#' @param nmmso_state Structure holding state of swarm.
+#' @param problem_function String containing name of function to be optimised.
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @return 
+#' nmmso_state = Structure holding state of swarm.
+#' number_of_mid_evals = Number of evaluations done for the merging.
+#' 
+#' @export
 merge_swarms <-
   function(nmmso_state, problem_function, problem_function_params, mn, mx) {
     I = which(nmmso_state$active_modes_changed == 1)
@@ -340,11 +385,18 @@ merge_swarms <-
   }
 
 
-#' @title 
+#' @title evaluate
+#' 
 #' @param nmmso_state
 #' @param chg
 #' @param problem_function
 #' @param problem_function_params
+#' @return 
+#' nmmso_state =
+#' mode_shift =
+#' y = 
+#' 
+#' @export
 evaluate <-
   function(nmmso_state, chg, problem_function, problem_function_params) {
     y = feval(

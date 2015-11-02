@@ -1,3 +1,8 @@
+# maximum swarm_size = 10*D (D is number of design parameters)
+# max_inc = 100
+# c1, c2 = 2.0
+# X = 1.0
+
 NMMSO = function(swarm_size, problem_function, problem_function_params, max_evaluations, mn, mx, max_evol = 100, tol_val = 10 ^ -6) {
   if(max_evol <= 0) {
     sprintf('Max_eval cannot be negative or zero, default max_eval used, set at 100')
