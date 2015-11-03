@@ -1,3 +1,7 @@
+source("./R/nmmso_iterative.R")
+source("./R/nmmso.R")
+source("./R/cec_2015_problem_data.R")
+
 set.seed = 20151102
 
 # still missing
