@@ -67,5 +67,19 @@ test_that("get_initial_locations",{
 
 test_that("evaluate_first",{
   result <- evaluate_first(nmmso_state$active_modes[[1]]$swarm, fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
-  
 })
+
+nmmso_state = result$nmmso_state
+swarm = result$swarm
+nmmso_state$active_modes[[1]]$swarm = swarm
+
+# track number of evaluations taken
+evaluations = 1
+
+# keep modes in matrices for efficiency on some computations
+nmmso_state$M_loc = nmmso_state$active_modes[1]$swarm$mode_location
+nmmso_state$V_loc = nmmso_state$active_modes[1]$swarm$mode_value
+nmmso_state$tol_val = 10^-6
+
+result = merge_swarms(nmmso_state, fit, as.numeric(mn[2]), as.numeric(mx[2]))
+result
