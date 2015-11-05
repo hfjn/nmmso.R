@@ -5,9 +5,10 @@
  *      email: mge_(AT)_cs_(DOT)_stir_(DOT)_ac_(DOT)_uk 
  *           : xiaodong_(DOT)_li_(AT)_rmit_(DOT)_edu_(DOT)_au 
  * ***************************************************************************/
+#include "Rcpp.h"
 #include "cfunction.h"
 
-using namespace std;
+using namespace Rcpp;
 
 /******************************************************************************
  * Some declarations
@@ -479,6 +480,7 @@ tFitness CF4::evaluate(const double *x)
  * No. of global peaks: 2
  * No. of local peaks:  3. 
  *****************************************************************************/
+// [[Rcpp::export]]
 tFitness five_uneven_peak_trap(const double *x, const int &dim)
 {
 	tFitness result=-1.0;
