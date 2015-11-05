@@ -5,10 +5,11 @@
  *      email: mge_(AT)_cs_(DOT)_stir_(DOT)_ac_(DOT)_uk 
  *           : xiaodong_(DOT)_li_(AT)_rmit_(DOT)_edu_(DOT)_au 
  * ***************************************************************************/
-#include "Rcpp.h"
-#include "cfunction.h"
-
+#include <Rcpp.h>
 using namespace Rcpp;
+using namespace std;
+
+#include "cfunction.h"
 
 /******************************************************************************
  * Some declarations

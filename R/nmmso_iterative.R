@@ -166,8 +166,8 @@ extract_modes <- function(nmmso_state) {
   RES_Y = matrix(0, length(nmmso_state$active_modes), 1)
   
   for (i in 1:length(nmmso_state$active_modes)) {
-    RES(i,) = nmmso_state$active_modes[i]$swarm$mode_location
-    RES_Y(i) = nmmso_state$active_modes[i]$swarm$mode_value
+    RES[i,] = nmmso_state$active_modes[i]$swarm$mode_location
+    RES_Y[i] = nmmso_state$active_modes[i]$swarm$mode_value
   }
   
   list("RES" = RES, "RES_Y" = RES_Y)
@@ -184,8 +184,11 @@ extract_modes <- function(nmmso_state) {
 #' @export
 get_initial_locations <- function(nmmso_state, mn, mx) {
   #point wise product as new locations
-  nmmso_state$active_modes[1]$swarm <- list()
-  nmmso_state$active_modes[1]$swarm$new_location = matrix(runif(length(mx^2) , length(mx))) * (mx - mn) + mn
+  #nmmso_state$active_modes[1]$swarm <- list()
+  
+  new_location = matrix(runif(length(mx)^2 , length(mx))) * (mx - mn) + mn
+  # create first stage of swarm
+  nmmso_state$active_modes = list(list(swarm = list(new_location = new_location)))
   nmmso_state$active_modes_changed[1] = 1
   
   return(nmmso_state)
@@ -210,7 +213,7 @@ evaluate_first <- function(swarm, problem_function, problem_function_params, nmm
   # from original:
   ## new location is the only solution thus far in mode, so by definition is
   ## also the mode estimate, and the only history thus far
-  y = feval(problem_func, swarm$new_location, problem_func_params)
+  y = feval(problem_function, list(swarm$new_location, problem_function_params))
   #gbest location
   swarm$mode_location = swarm$new_location
   
@@ -238,7 +241,6 @@ evaluate_first <- function(swarm, problem_function, problem_function_params, nmm
   ## pbest Locations
   swarm$pbest_locations[1,] = swarm.mode_location
   swarm$pbest_values[1] = y
-  
   
   # track all the changes
   nmmso_state$X[nmmso_state$index,] = swarm$new_location
@@ -398,7 +400,7 @@ merge_swarms <-
 evaluate <-
   function(nmmso_state, chg, problem_function, problem_function_params) {
     y = feval(
-      problem_func, nmmso_state$active_modes[chg$swarm$new_location, problem_function_params]
+      problem_function, list(nmmso_state$active_modes[chg$swarm$new_location, problem_function_params])
     )
     mode_shift = 0
     
@@ -445,7 +447,7 @@ evaluate_mid <-
     # also the mode estimate, and the only history thus far
     
     y = feval(
-      problem_function, nmmso_state$active_modes[chg]$swarm$new_location, test_function_params
+      problem_function, list(nmmso_state$active_modes[chg]$swarm$new_location, test_function_params)
     )
     mode_shift = 0
     
@@ -836,5 +838,5 @@ uniform_sphere_points <- function(n,d) {
 #' @param 
 # helper functions which imitates the behavior of the Matlab feval
 feval <- function(f,...) {
-  f(...)
+  do.call(f, ...)
 }

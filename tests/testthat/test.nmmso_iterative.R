@@ -1,4 +1,5 @@
 context("nmmso_iterative")
+("../R/cec_2015_problem_data.R")
 
 #'
 #'
@@ -42,10 +43,8 @@ test_that("UNI", {
 #'
 #'
 #'
-test_that("get_intital_locations"{
+test_that("get_initial_locations",{
   nmmso_state = list()
-  mx = 1
-  mn = 2
   # preallocate matrices for speed
   nmmso_state$X <- matrix(0, 100 + 500, length(mx))
   nmmso_state$Y <- matrix(0, 100 + 500, 1)
@@ -53,6 +52,13 @@ test_that("get_intital_locations"{
   nmmso_state$converged_modes = 0
   
   # initialize active modes as a list and give the sub "Modes" lists aswell
-  nmmso_state$active_modes <- list()
-  nmmso_state$active_modes[1] <- list()
+  nmmso_state = list(X = matrix(0, max_evaluations + 500, length(mx)), Y = matrix(0, max_evaluations + 500, 1))
+  nmmso_state$index = 1
+  nmmso_state$converged_modes = 0
+  
+  # initialize active modes as a list and give the sub "Modes" lists aswell
+  nmmso_state$active_modes <- list(list(swarm = list()))
+  
+  nmmso_state = get_initial_locations(nmmso_state, as.numeric(mn[2]), as.numeric(mx[2]))
+  expect_true(nmmso_state$active_modes[[1]]$swarm$new_location[1,1] == 1)
 })

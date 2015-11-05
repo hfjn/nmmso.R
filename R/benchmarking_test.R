@@ -4,11 +4,11 @@ source("./R/cec_2015_problem_data.R")
 
 set.seed = 20151102
 
-# still missing
-cec_2015_problem_data
-
 # using the CEC test problems
-problem_used = niching_func
+#problem_used = niching_func
+
+# test-function
+fit <- function(x) sin(5 * pi * x)^6
 
 eval_list = list()
 c_list = list()
@@ -22,5 +22,7 @@ count = matrix(0, 5, 1)
 state = list()
 
 evals = 0
+index = 2
 
-while(evals < gens(index) %% cound)
+NMMSO_iterative(10*length(mx[2]),fit, 2,gens[2], as.numeric(mn[2]), as.numeric(mx[2]), evaluations = 0, state)
+                
