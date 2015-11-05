@@ -52,12 +52,9 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     nmmso_state = get_initial_locations(nmmso_state, mn, mx)
     
     # get first evaluation
-    result <-
-      evaluate_first(nmmso_state$active_modes[[1]]$swarm, problem_function, nmmso_state, swarm_size, mn, mx)
+    result = evaluate_first(nmmso_state$active_modes[[1]]$swarm, problem_function, nmmso_state, swarm_size, mn, mx)
+    nmmso_state = result$nmmso_state
     swarm = result$swarm
-    str(result)
-    nmmso_state <- result$nmmso_state
-    sprintf("done")
     nmmso_state$active_modes[[1]]$swarm = swarm
     
     # track number of evaluations taken
@@ -76,6 +73,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     number_of_mid_evals = 0
     while(sum(nmmso_state$active_modes_changed) > 0){
       result = merge_swarms(nmmso_state, problem_function, mn, mx)
+      str(result)
       nmmso_state = result$nmmso_state
       merge_evals = result$merge_evals
       
@@ -383,9 +381,10 @@ merge_swarms <-
       nmmso_state$active_modes[[1]]$swarm$dist = apply(mx - mn, 2, min)
     }
     # return the values
+    
+    }
     list("nmmso_state" = nmmso_state, "number_of_mid_evals" = number_of_mid_evals)
-  }
-
+}
 
 #' @title evaluate
 #' 

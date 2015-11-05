@@ -66,6 +66,6 @@ test_that("get_initial_locations",{
 })
 
 test_that("evaluate_first",{
-  evaluate_first(nmmso_state$active_modes[[1]]$swarm, fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
+  result <- evaluate_first(nmmso_state$active_modes[[1]]$swarm, fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
   
 })
