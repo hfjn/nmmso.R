@@ -17,7 +17,8 @@ source("./R/random_new.R")
 source("./R/uniform_sphere_points.R")
 source("./R/UNI.R")
 
-#' @title Implementation of the Niching Migratory Multi-Swarm Optimser.
+#' @title NMMSO_iterative
+#' @description Implementation of the Niching Migratory Multi-Swarm Optimser.
 #'
 #' @param swarm_size Maximum number of elements (particles) per swarm.
 #' @param problem_function String containing name of function to be optimised.

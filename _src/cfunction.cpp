@@ -481,7 +481,6 @@ tFitness CF4::evaluate(const double *x)
  * No. of global peaks: 2
  * No. of local peaks:  3. 
  *****************************************************************************/
-// [[Rcpp::export]]
 tFitness five_uneven_peak_trap(const double *x, const int &dim)
 {
 	tFitness result=-1.0;
@@ -512,6 +511,7 @@ tFitness five_uneven_peak_trap(const double *x, const int &dim)
  * No. of global peaks: 5
  * No. of local peaks:  0. 
  *****************************************************************************/
+//[[Rcpp::export]]
 tFitness equal_maxima(const double *x, const int &dim)
 {
 	tFitness s = sin(5.0 * M_PI * x[0]);

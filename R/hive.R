@@ -1,14 +1,18 @@
-#' @title 
-#' @param nmmso_state
-#' @param problem_function
-#' @param mn
-#' @param mx
-#' @param problem_function_params
-#' @param max_evol
-#' @param swarm_size
+#' @title hive
+#'
+#' @param nmmso_state Structure holding state of swarm.
+#' @param problem_function String containing name of function to be optimised.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param max_evol Maximum number of swarms to update in a generation. If not provided this is set at 100.
+#' @param swarm_size Maximum number of elements (particles) per swarm.
 #' @return 
-hive <-
-  function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
+#' nmmso_state = Structure holding state of swarm after calculations.
+#' number_of_new_samples = Number of samples created after hive.
+#'
+#' @export
+hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     number_of_new_samples = 0
     LL = length(nmmso_state$active_modes)
     fit_I = sample(LL)
@@ -59,7 +63,7 @@ hive <-
         
         if (swarm$mode_value < R_v) {
           reject = 0
-          # allocate new swarm
+          # allocate new swarm into the nmmso_state
           swarm$mode_location = R # gbest location
           swarm$mode_value = R_v # gbest value
           

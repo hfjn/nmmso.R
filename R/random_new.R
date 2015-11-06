@@ -1,12 +1,17 @@
-#' @title 
-#' @param nmmso_state
-#' @param problem_function
-#' @param mn
-#' @param mx
-#' @param problem_function_params
-#' @param swarm_size
-random_new <-
-  function(nmmso_state, problem_function, mn, mx, swarm_size) {
+#' @title random_new
+#'
+#' @param nmmso_state Structure holding state of swarm.
+#' @param problem_function String containing name of function to be optimised.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param swarm_size Maximum number of elements (particles) per swarm.
+#' @return
+#' nmmso_state = Structure holding state of swarm.
+#' number_rand_modes = Number of random modes (Apparently always 1).
+#'
+#' @export
+random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
     number_rand_modes = 1
     x = matrix(runif(length(mx)^2, length(mx))) * (mx - mn) + mn
 

@@ -1,9 +1,15 @@
-#' @title 
-#' @param nmmso_state
-#' @param problem_function_params
-#' @param I
-evaluate_new_locations <-
-  function(nmmso_state, problem_function, I) {
+#' @title evaluate_new_locations
+#'
+#' @param nmmso_state Structure holding state of swarm.
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param I Vector of indixes for new locations.
+#' @return
+#' nmmso_state = Structure holding state of swarm.
+#' number_of_new_location = The length of the I vector.
+#'
+#' @export
+evaluate_new_locations <- function(nmmso_state, problem_function, I) {
+    # at this point should be unflagged
     nmmso_state$active_modes_changed = matrix(0, length(nmmso_state$active_modes), 1)
     for (i in 1:length(I)) {
       evaluate = evaluate(nmmso_state, I[i], problem_function)

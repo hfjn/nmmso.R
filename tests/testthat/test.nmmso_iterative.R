@@ -46,6 +46,13 @@ test_that("nmmso_iterative main function is working correctly", {
   expect_error(NMMSO_iterative(100, sqrt, 100, max_evaluations = 100, mn = 1, mx = 2, evaluations = 0, max_evol = -1))
 })
 
+#'
+#'
+#'
+test_that("random_new", {
+  
+})
+
 
 #'
 #'
@@ -62,11 +69,16 @@ test_that("UNI", {
 #'
 test_that("get_initial_locations",{
   nmmso_state = get_initial_locations(nmmso_state, as.numeric(mn[2]), as.numeric(mx[2]))
-  expect_true(nmmso_state$active_modes[[1]]$swarm$new_location[1,1] == 1)
+  expect_true(length(nmmso_state$active_modes[[1]]$swarm$new_location[1,1]) > 0)
+  expect_true(nmmso_state$active_modes_changed == 1)
 })
 
 test_that("evaluate_first",{
   result <- evaluate_first(nmmso_state$active_modes[[1]]$swarm, fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
+  #nmmso_state = result$nmmso_state
+  #swarm = result$swarm
+  
+  #swarm$mode_location
 })
 
 nmmso_state = result$nmmso_state
@@ -82,4 +94,4 @@ nmmso_state$V_loc = nmmso_state$active_modes[1]$swarm$mode_value
 nmmso_state$tol_val = 10^-6
 
 result = merge_swarms(nmmso_state, fit, as.numeric(mn[2]), as.numeric(mx[2]))
-result
+#result
