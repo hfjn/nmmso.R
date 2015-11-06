@@ -9,6 +9,7 @@
 #' nmmso_state = Structure holding state of swarm.
 #' number_of_mid_evals = Number of evaluations done for the merging.
 #' 
+#' @export
 merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
   # only concern ourselves with modes that have actually shifted, or are new
   # since the last generation, as no need to check others
