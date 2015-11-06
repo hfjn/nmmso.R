@@ -1,10 +1,10 @@
 library(flexclust)
 library(pracma)
 
-
 source("./R/evaluate.R")
 source("./R/evaluate_first.R")
 source("./R/evaluate_mid.R")
+source("./R/evaluate_new_locations.R")
 source("./R/evolve.R")
 source("./R/extract_modes.R")
 source("./R/feval.R")
@@ -118,11 +118,11 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
       # increment all
       indices = 1:limit
     }
-    I2 = indice[1:limit]
+    I2 = indices[1:limit]
     
     # increment
     for(jj in 1:length(I2)){
-      nmmso_state = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm, swarm_size)
+      nmmso_state = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
     }
     
     # evaluate new member / new locations of swarm member

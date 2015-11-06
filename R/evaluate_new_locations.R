@@ -3,7 +3,7 @@
 #' @param problem_function_params
 #' @param I
 evaluate_new_locations <-
-  function(nmmso_state,  I) {
+  function(nmmso_state, problem_function, I) {
     nmmso_state$active_modes_changed = matrix(0, length(nmmso_state$active_modes), 1)
     for (i in 1:length(I)) {
       evaluate = evaluate(nmmso_state, I[i], problem_function)
