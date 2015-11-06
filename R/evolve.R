@@ -1,13 +1,17 @@
-#' @title
-#' @param nmmso_state
-#' @param problem_function
-#' @param mn
-#' @param mx
-#' @param problem_function_params
-#' @param max_evol
-#' @param swarm_size
-evolve <-
-  function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
+#' @title evolve
+#'
+#' @param nmmso_state Structure holding state of swarm.
+#' @param problem_function String containing name of function to be optimised.
+#' @param mn Minimum design parameter values (a vector with param_num elements).
+#' @param mx Maximum design parameter values (a vector with param_num elements).
+#' @param problem_function_params Meta-parameters needed by problem function.
+#' @param max_evol Maximum number of swarms to update in a generation. If not provided this is set at 100.
+#' @param swarm_size Maximum number of elements (particles) per swarm.
+#' @return
+#' nmmso_state = Structure holding state of swarm.
+#'
+#' @export
+evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     n = length(nmmso_state$active_modes)
     
     if (n > max_evol) {
@@ -23,6 +27,7 @@ evolve <-
     }
     
     II = sample(n)
+    # uniform crossover of two mode elements, either fittest two, or random two
     R = UNI(
       nmmso_state$active_modes[[I[II[1]]]]$swarm$mode_location, nmmso_state$active_modes[[I[II[2]]]]$swarm$mode_location
     )
@@ -43,6 +48,6 @@ evolve <-
     number_of_new_modes = 1
     
     # return values
-    list("nmmso_state" = nmmso_state,"number_of_new_modes" = number_of_new_modes)
+    list("nmmso_state" = nmmso_state)
   }
     

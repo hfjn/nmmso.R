@@ -6,8 +6,8 @@
 #' @param problem_function_params Meta-parameters needed by problem function.
 #' @return 
 #' nmmso_state = Structure holding state of swarm.
-#' mode_shift =
-#' y = 
+#' mode_shift = Numeric flag that determines the number of evaluations done for future locations.
+#' y = Result of evaluating the problem_function.
 #' 
 #' @export
 evaluate <-

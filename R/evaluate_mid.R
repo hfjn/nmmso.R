@@ -1,18 +1,17 @@
 #' @title evaluate_mid
 #' 
-#' @param nmmso_state
+#' @param nmmso_state Structure holding state of swarm.
 #' @param chg
-#' @param problem_function
-#' @param test_function_params
+#' @param problem_function String containing name of function to be optimised.
+#' @param test_function_params Meta-parameters needed by problem function.
 #' @return 
-#' nmmso_state =
-#' mode_shift = 
-#' y = 
+#' nmmso_state = Structure holding state of swarm.
+#' mode_shift = Numeric flag that determines the number of evaluations done for future locations.
+#' y = Result of evaluating the problem_function.
 #' 
 #' @export
 evaluate_mid <-
   function(nmmso_state, chg, problem_function) {
-    # comment from original:
     # new_location is the only solution thus far in mode, so by definition is
     # also the mode estimate, and the only history thus far
     
