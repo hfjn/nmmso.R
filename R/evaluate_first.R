@@ -20,7 +20,6 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   y = feval(problem_function, as.numeric(swarm$new_location))
   #gbest location
   swarm$mode_location = swarm$new_location
-  
   #gbest value
   swarm$mode_value = y
   
@@ -45,7 +44,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   ## pbest Locations
   swarm$pbest_locations[1,] = swarm$mode_location
   swarm$pbest_values[1] = y
-  
+
   # track all the changes
   nmmso_state$X[nmmso_state$index,] = swarm$new_location
   nmmso_state$Y[nmmso_state$index,] = y

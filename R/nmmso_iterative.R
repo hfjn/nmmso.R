@@ -48,7 +48,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
   
   # test if max_evol is smaller than 0, which is not usable
   if (max_evol <= 0) {
-    sprintf('Max_eval cannot be nagative or zero, default max_eval used, set at 100')
+    sprintf('Max_eval cannot be negative or zero, default max_eval used, set at 100')
     max_evol = 100
   }
   
@@ -57,6 +57,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     nmmso_state = list(X = matrix(0, max_evaluations + 500, length(mx)), Y = matrix(0, max_evaluations + 500, 1))
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
+    
     ## TODO: This isn't exactly nice. But so far M_loc is never created
     nmmso_state$M_loc = matrix(0, max_evaluations + 500, length(mx))
     
@@ -152,7 +153,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     }
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
-    evaluations = evalutions + number_of_mid_evals + number_of_new_locations + number_of_evol_modes + number_rand_modes + number_of_hive_samples
+    evaluations = evaluations + number_of_mid_evals + number_of_new_locations + number_of_evol_modes + number_rand_modes + number_of_hive_samples
     
     sprintf("Number of swarms %s, evals %s, max mode est. %s", length(nmmso_state$active_modes), evaluations, max(nmmso_state$V_loc))
     
