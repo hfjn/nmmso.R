@@ -57,7 +57,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     nmmso_state = list(X = matrix(0, max_evaluations + 500, length(mx)), Y = matrix(0, max_evaluations + 500, 1))
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
-    
+
     ## TODO: This isn't exactly nice. But so far M_loc is never created
     nmmso_state$M_loc = matrix(0, max_evaluations + 500, length(mx))
     
@@ -137,7 +137,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     # attempt to split off a member of one of the swarms to seed a new swarm (if detected to be on another peak)
     result = hive(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     nmmso_state = result$nmmso_state
-    number_of_hive_samples = result$number_of_hive_sample
+    number_of_hive_samples = result$number_of_new_samples
     
     # create speculative new swarm, either at random in design space, or via crossover
     if(runif(1) < 0.5 || length(nmmso_state$active_modes) == 1 || length(mx) == 1){
@@ -153,8 +153,13 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     }
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
-    evaluations = evaluations + number_of_mid_evals + number_of_new_locations + number_of_evol_modes + number_rand_modes + number_of_hive_samples
-    
+    print(number_of_mid_evals)
+    print(number_of_new_locations)
+    print(number_of_evol_modes)
+    print(number_rand_modes)
+    print(number_of_hive_samples)
+    evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
+    print(evaluations)
     sprintf("Number of swarms %s, evals %s, max mode est. %s", length(nmmso_state$active_modes), evaluations, max(nmmso_state$V_loc))
     
     
@@ -163,8 +168,8 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
   }
   
   result = extract_modes(nmmso_state)
-  mode_loc = result$mode_loc
-  mode_y = result$mode_y
+  mode_loc = result$RES
+  mode_y = result$RES_Y
   
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
