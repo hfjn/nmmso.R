@@ -4,7 +4,7 @@ Title: R Implementation of the NMMSO algorithm
 Version: 1.0
 Date: 2015-10-19
 Authors@R: c(person("Daniel", "Carriola",
-  email = "dcarriola@gmail.com", role = c("aut")), person("Jannik", "Hoffjann", email="jhoffjann@gmail.com", role = c("aut", "cre")))
+  email = "daniel.carriola@gmail.com", role = c("aut")), person("Jannik", "Hoffjann", email="jhoffjann@gmail.com", role = c("aut", "cre")))
 Maintainer: Who to complain to <jhoffjann@gmail.com>
 Description: The original Matlab code base can be found here: https://github.com/fieldsend/ieee_cec_2014_nmmso
 License: What license is it under?
