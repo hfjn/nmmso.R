@@ -24,5 +24,5 @@ state = list()
 evals = 0
 index = 2
 
-result = NMMSO_iterative(10*length(mx[2]),fit, gens[2], as.numeric(mn[2]), as.numeric(mx[2]), evaluations = 0, state)
+result = NMMSO(swarm_size = 10*length(mx[2]), problem_function = fit, max_evaluations = gens[2], mn = as.numeric(mn[2]), mx = as.numeric(mx[2]))
                 

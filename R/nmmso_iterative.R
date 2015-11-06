@@ -40,7 +40,7 @@ source("./R/UNI.R")
 #' (therefore nmmso_state.X(1:evaluations,:) will hold all the design space locations visited by the optimiser thus far.
 #'
 #' @export
-NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
+NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
 
   # test if all variables are correctly initialized
   if (evaluations < 0) {
@@ -154,13 +154,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     }
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
-    print(number_of_mid_evals)
-    print(number_of_new_locations)
-    print(number_of_evol_modes)
-    print(number_rand_modes)
-    print(number_of_hive_samples)
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
-    print(evaluations)
     sprintf("Number of swarms %s, evals %s, max mode est. %s", length(nmmso_state$active_modes), evaluations, max(nmmso_state$V_loc))
     
     

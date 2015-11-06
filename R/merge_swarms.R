@@ -19,17 +19,15 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
   number_of_mid_evals = 0
   # only compare if there is a changed mode, and more than on mode in system
   if (n >= 1 && (length(nmmso_state$active_modes) > 1)) {
-    to_compare = matrix(0, 2)
+    to_compare = matrix(0, n, 2)
     to_compare[, 1] = I
-    for (i in 1:n) {
-      
-      # calculate euclidean distance
-      d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)
-      
+    for (i in 1:n) {      
+      # calculate euclidean distance      
+      d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
-      tmp = which(to_compare[i, 2] == min(to_compare[i, 2]))
-      
+      tmp = min(d)
+      to_compare[i, 2] = which.min(d)
       # track euclidean distance to nearest neighbour mode
       nmmso_state$active_modes[[I[i]]]$swarm$dist = sqrt(tmp)
       
@@ -63,7 +61,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     # column elements on same row
     
     # Remove duplicates
-    for (i in seq(n,-1, 2)) {
+    for (i in seq(n,-1, -2)) {
       # get indices of all with first index element same
       I = which(to_compare[, 1] == to_compare[i, 1])
       repeat_matrix = repmat(to_compare[i, ], length(I), 1)
@@ -74,13 +72,13 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     }
     
     # Check for merging
-    n = length(to_compare)
+    n = nrow(to_compare)
     to_merge = matrix()
     number_of_mid_evals = 0
     
     for (i in 1:n) {
       # merge if sufficiently close
-      if (sqrt(dist2(mmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)) < nmmso_state$tol_val) {
+      if (sqrt(dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)) < nmmso_state$tol_val) {
         # can't preallocate, as don't know the size
         to_merge = matrix(to_merge, i)
       } else {
@@ -119,6 +117,9 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     # merge those marked pairs, and flag the lower one for deletion
     delete_index = matrix(0, dim(to_merge))
     for (i in 1:length(to_merge)) {
+      str(to_compare)
+      str(to_merge)
+      # little sanity check
       if (to_compare[to_merge[i], 2] == to_compare[to_merge[i], 1]) {
         stop('Indices should not be equal')
       }
@@ -139,7 +140,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     # remove one of the merged pair
     prev_merge = -1
     delete_index = apply(delete_index, 2, sort)
-    for (i in seq(length(delete_index),-1, 1)) {
+    for (i in seq(length(delete_index),-1, -1)) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
         nmmso_state$active_modes[[delete_index[i]]] = matrix()

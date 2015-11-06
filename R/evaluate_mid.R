@@ -16,7 +16,7 @@ evaluate_mid <-
     # also the mode estimate, and the only history thus far
     
     y = feval(
-      problem_function, list(nmmso_state$active_modes[[chg]]$swarm$new_location)
+      problem_function, nmmso_state$active_modes[[chg]]$swarm$new_location
     )
     mode_shift = 0
     
