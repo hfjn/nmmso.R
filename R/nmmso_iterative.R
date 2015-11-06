@@ -40,7 +40,7 @@ source("./R/UNI.R")
 #'
 #' @export
 NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
-  
+
   # test if all variables are correctly initialized
   if (evaluations < 0) {
     stop('A algorithm can only be run a positive number of times')
@@ -84,15 +84,13 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
   
   # only run when limited evaluations is not already done
   if(evaluations < max_evaluations){
-    
+
     # first see if modes should be merged together
     number_of_mid_evals = 0
     while(sum(nmmso_state$active_modes_changed) > 0){
       result = merge_swarms(nmmso_state, problem_function, mn, mx)
-      str(result)
       nmmso_state = result$nmmso_state
       merge_evals = result$merge_evals
-      
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
@@ -119,14 +117,17 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
       indices = 1:limit
     }
     I2 = indices[1:limit]
-    
+
+    ######################
     # increment
     for(jj in 1:length(I2)){
-      nmmso_state = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
+      result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
     }
-    
+    str(result)
+    nmmso_state = result$nmmso_state
+    cs = result$cs
     # evaluate new member / new locations of swarm member
-    result = evaluate_new_locations(nmmso, problem_function,  I2)
+    result = evaluate_new_locations(nmmso_state, problem_function,  I2)
     nmmso_state = result$nmmso_state
     number_of_new_locations = result$number_of_new_locations
     

@@ -12,8 +12,9 @@
 #' @export
 evaluate <-
   function(nmmso_state, chg, problem_function) {
+    print(nmmso_state$active_modes[[1]])
     y = feval(
-      problem_function, list(nmmso_state$active_modes[chg$swarm$new_location])
+      problem_function, nmmso_state$active_modes[[chg]]$swarm$new_location
     )
     mode_shift = 0
     

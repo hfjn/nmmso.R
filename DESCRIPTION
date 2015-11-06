@@ -11,3 +11,4 @@ License: What license is it under?
 LinkingTo: Rcpp
 Imports: Rcpp, testthat, pracma, flexclust
 Suggests:
+
