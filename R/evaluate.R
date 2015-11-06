@@ -12,7 +12,6 @@
 #' @export
 evaluate <-
   function(nmmso_state, chg, problem_function) {
-    print(nmmso_state$active_modes[[1]])
     y = feval(
       problem_function, nmmso_state$active_modes[[chg]]$swarm$new_location
     )
@@ -34,8 +33,9 @@ evaluate <-
     }
     
     # change the x and y of the curren active mode
-    nmmso_state$active_modes[[chg]]$X[nmmso_state$index,] = nmmso_state$active_modes[[chg]]$swarm$new_location
-    nmmso_state$active_modes[[chg]]$Y[nmmso_state$index] = y
+    # check back with matlab
+    nmmso_state$X[nmmso_state$index,] = nmmso_state$active_modes[[chg]]$swarm$new_location
+    nmmso_state$Y[nmmso_state$index] = y
     nmmso_state$index = nmmso_state$index + 1
     
     # return the result

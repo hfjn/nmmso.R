@@ -23,8 +23,7 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
     }else{
       #otherwise move an existing particle
       shifted = 1
-      nmmso_state$active_modes[[chg]]$swarm$shifted_loc = r[1]
-      print(nmmso_state$active_modes[[chg]]$swarm$shifted_loc)      
+      nmmso_state$active_modes[[chg]]$swarm$shifted_loc = r[1]     
       # splitted up the crazy temp_velocity calculation in 6 parts
       x1 = nmmso_state$active_modes[[chg]]$swarm$velocities[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,]
       x2 = matrix(runif(size(new_location ^ 2),size(new_location)))
@@ -58,7 +57,6 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
     number_of_particles = nmmso_state$active_modes[[chg]]$swarm$number_of_particles
     nmmso_state$active_modes[[chg]]$swarm$number_of_particles = (number_of_particles + 1)
     nmmso_state$active_modes[[chg]]$swarm$shifted_loc = nmmso_state$active_modes[[chg]]$swarm$number_of_particles
-    str(nmmso_state)
     temp_vel = mn - 1
     while (sum(temp_vel < mn) > 0 ||
      sum(temp_vel > mx) > 0) {

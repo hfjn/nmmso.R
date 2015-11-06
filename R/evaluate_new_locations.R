@@ -12,9 +12,9 @@ evaluate_new_locations <-
       
       if (mode_shift == 1) {
         nmmso_state$active_modes_changed[I[i]] = 1
-        nmmso_state$M_loc[I[i],] = nmmso_state$active_modes[[I[i]]]$swarm$new_location
-        nmmso_state$V_loc[I[i]] = nmmso_state$active_modes[[I[i]]]$swarm$mode_value
-        nmmso_state$active_modes[[I[i]]]$swarm$less_fit_move = 0
+        nmmso_state$M_loc = nmmso_state$active_modes[[I[i]]]$swarm$new_location
+        nmmso_state$V_loc = nmmso_state$active_modes[[I[i]]]$swarm$mode_value
+        nmmso_state$active_modes[[1]]$swarm$less_fit_move = 0
       }
     }
     

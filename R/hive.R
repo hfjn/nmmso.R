@@ -16,7 +16,7 @@ hive <-
     limit = min(max_evol, LL)
     
     I2 = fit_I[1:limit]
-    CI = rep(0, length(I2))
+    CI = matrix(0, length(I2))
     
     # first identify those swarms who are at capacity, and therefore maybe considered for splitting off a member
     for (i in 1:length(I2)) {
@@ -24,13 +24,12 @@ hive <-
         CI[i] = 1
       }
     }
-    
     CI = which(CI == 1)
     # only check on full swarms
-    if (length(CI) == 0) {
+    if (length(CI) != 0) {
       # select swarm at random
       r = sample(length(CI))
-      r = CI(r[1])
+      r = CI[r[1]]
       
       # select and active swarm member at random
       k = sample(nmmso_state$active_models[[r]]$swarm$number_of_particles)
@@ -106,7 +105,7 @@ hive <-
           }
         }
         number_of_new_samples = number_of_new_samples + 1
-      }
-      list("nmmso_state" = mmso_state,"number_of_new_samples" = number_of_new_samples)
+      }      
     }
+    list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)
   }

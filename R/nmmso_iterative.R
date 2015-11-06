@@ -57,6 +57,8 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     nmmso_state = list(X = matrix(0, max_evaluations + 500, length(mx)), Y = matrix(0, max_evaluations + 500, 1))
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
+    ## TODO: This isn't exactly nice. But so far M_loc is never created
+    nmmso_state$M_loc = matrix(0, max_evaluations + 500, length(mx))
     
     # initialize active modes as a list and give the sub "Modes" lists aswell
     nmmso_state$active_modes <- list(list(swarm = list()))
@@ -123,7 +125,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     for(jj in 1:length(I2)){
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
     }
-    str(result)
+    
     nmmso_state = result$nmmso_state
     cs = result$cs
     # evaluate new member / new locations of swarm member
@@ -139,7 +141,7 @@ NMMSO_iterative <- function(swarm_size, problem_function,  max_evaluations, mn, 
     # create speculative new swarm, either at random in design space, or via crossover
     if(runif(1) < 0.5 || length(nmmso_state$active_modes) == 1 || length(mx) == 1){
       number_of_evol_modes = 0
-      result = random_new(nmmso,state,problem_function, mn, mx,  swarm_size)
+      result = random_new(nmmso_state, problem_function, mn, mx, swarm_size)
       nmmso_state = result$nmmso_state
       number_rand_modes = result$number_rand_modes
     }else{

@@ -18,7 +18,6 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   ## new location is the only solution thus far in mode, so by definition is
   ## also the mode estimate, and the only history thus far
   y = feval(problem_function, as.numeric(swarm$new_location))
-  print(y)
   #gbest location
   swarm$mode_location = swarm$new_location
   
@@ -38,7 +37,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   ## velocities
   swarm$velocities = matrix(runif(length(mx)^2, length(mx))) * (mx - mn) + mn
   swarm$number_of_particles = 1
-  
+
   ## History Locations
   swarm$history_locations[1,] = swarm$mode_location
   swarm$history_values[1] = y
