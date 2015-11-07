@@ -67,7 +67,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           swarm$mode_location = R # gbest location
           swarm$mode_value = R_v # gbest value
           
-          swarm$history_location[1,] = R
+          swarm$history_locations[1,] = R
           swarm$history_values[1] = R_v
           
           swarm$pbest_locations[1,] = R
@@ -85,7 +85,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           # see above, probably not the right distance function
           d = sqrt(dist2(nmmso_state$active_modes[[r]]$swarm$mode_location, R))
           
-          nmmso_state$active_modes[[r]]$swarm$history_location[k,] = mid_loc
+          nmmso_state$active_modes[[r]]$swarm$history_locations[k,] = mid_loc
           nmmso_state$active_modes[[r]]$swarm$history_values[k,] = mid_loc_val
           
           nmmso_state$active_modes[[r]]$swarm$pbest_locations[k,] = mid_loc

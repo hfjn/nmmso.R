@@ -34,7 +34,7 @@ increment_swarm <- function(nmmso_state, chg, mn, mx, swarm_size) {
       x2 = matrix(runif(size(new_location ^ 2),size(new_location)))
       x3 = nmmso_state$active_modes[[chg]]$swarm$mode_location
       x4 = nmmso_state$active_modes[[chg]]$swarm$history_locations[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,]
-      x5 = nmmso_state$active_modes[[chg]]$swarm$pbest_location[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,]
+      x5 = nmmso_state$active_modes[[chg]]$swarm$pbest_locations[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,]
       x6 = nmmso_state$active_modes[[chg]]$swarm$history_locations[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,]
 
       temp_velocity = omega *  x1 + 2.0 * x2 * (x3 - x4 + 2.0 * matrix(size(new_location ^ 2), size(new_location)) * (x5 - x6))

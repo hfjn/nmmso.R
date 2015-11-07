@@ -23,13 +23,13 @@ evaluate <-
       mode_shift = 1
     }
     
-    nmmso_state$active_modes[[chg]]$swarm$history_location[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,] = nmmso_state$active_modes[[chg]]$swarm$new_location
-    nmmso_state$active_modes[[chg]]$swarm$history_vaues[nmmso_state$active_modes[[chg]]$swarm$shifted_loc] = y
+    nmmso_state$active_modes[[chg]]$swarm$history_locations[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,] = nmmso_state$active_modes[[chg]]$swarm$new_location
+    nmmso_state$active_modes[[chg]]$swarm$history_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc] = y
     
     # if better than personal best for swarm member - then replace
     if (y > nmmso_state$active_modes[[chg]]$swarm$pbest_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc]) {
       nmmso_state$active_modes[[chg]]$swarm$pbest_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc] = y
-      nmmso_state$active_modes[[chg]]$swarm$pbest_location[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,] = nmmso_state$active_modes[[chg]]$swarm$new_location
+      nmmso_state$active_modes[[chg]]$swarm$pbest_locations[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,] = nmmso_state$active_modes[[chg]]$swarm$new_location
     }
     
     # change the x and y of the curren active mode
