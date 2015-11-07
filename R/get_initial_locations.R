@@ -8,10 +8,10 @@
 #' 
 #' @export
 get_initial_locations <- function(nmmso_state, mn, mx) {
-  #point wise product as new locations
-  #nmmso_state$active_modes[1]$swarm <- list()
-  
-  new_location = (matrix(runif(length(mx)^2 , length(mx))) * (mx - mn) + mn)[1]
+  #point wise product as new locations  
+  new_location = (matrix(runif(length(mx)^2 , length(mx))) * (mx - mn) + mn)
+  # TODO there was an assignment think about
+  # [1]
   # create first stage of swarm
   nmmso_state$active_modes = list(list("swarm" = list("new_location" = new_location)))
   nmmso_state$active_modes_changed[1] = 1

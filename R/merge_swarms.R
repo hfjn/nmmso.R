@@ -17,6 +17,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
   nmmso_state$active_modes_changed = nmmso_state$active_modes_changed * 0 # reset
   n = length(I)
   number_of_mid_evals = 0
+
   # only compare if there is a changed mode, and more than on mode in system
   if (n >= 1 && (length(nmmso_state$active_modes) > 1)) {
     to_compare = matrix(0, n, 2)
@@ -24,8 +25,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in 1:n) {      
       # calculate euclidean distance     
       # TODO: M_loc is always a vector, so this is not working
-      str(I)
-      str(nmmso_state)
       d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
@@ -47,7 +46,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
           # the bounds, so will make do with a random legal velocity in bounds
           if (reject > 20) {
             size = dim(nmmso_state$active_modes[[I[i]]]$swarm$new_location)
-            temp_vel = matrix(runif(size, min = (mx - mn), max = mn), size)
+            temp_vel = matrix(runif(size ^2), size) * (mx-mn) + mn
           }
         }
         nmmso_state$active_modes[[I[i]]]$swarm$velocities[1,] = temp_vel
@@ -68,9 +67,14 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       for (i in seq(n,-1, -2)) {
         # get indices of all with first index element same 
         I = which(to_compare[, 1] == to_compare[i, 1])
+        # replicate matrix
         repeat_matrix = repmat(to_compare[i, ], length(I), 1)
         # if more than one vector duplication
-        if (sum(sum(repeat_matrix == to_compare[I, ]) == 2) > 1) {
+
+        # compare to matlab line 259, reconstructed it due to complications
+        inner = apply((repeat_matrix == to_compare[I, ]), 2, sum)
+        
+        if (sum(inner == 2) > 1) {
           to_compare[i,] = matrix()
         }
       }
@@ -160,5 +164,5 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     nmmso_state$active_modes[[1]]$swarm$dist = min(mx - mn)
   }
   # return the values
-  list("nmmso_state" = nmmso_state, "number_of_mid_evals" = number_of_mid_evals)
+  list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
 }

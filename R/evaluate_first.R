@@ -26,12 +26,12 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   # intialize containers for swarm elements
   
   ## current locations of swarm
-  swarm$history_locations = matrix(0, swarm_size + 1, length(swarm$mode_location))
-  swarm$history_values = matrix(1, swarm_size + 1, 1) * -Inf
+  swarm$history_locations = matrix(0, swarm_size, length(swarm$mode_location))
+  swarm$history_values = matrix(1, swarm_size, 1) * -Inf
   
   ## pbest locations
-  swarm$pbest_locations = matrix(0, swarm_size + 1, length(swarm$mode_location))
-  swarm$pbest_values = matrix(1, swarm_size + 1, 1) * -Inf
+  swarm$pbest_locations = matrix(0, swarm_size, length(swarm$mode_location))
+  swarm$pbest_values = matrix(1, swarm_size, 1) * -Inf
   
   ## velocities
   swarm$velocities = matrix(runif(length(mx)^2, length(mx))) * (mx - mn) + mn
@@ -47,7 +47,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
 
   # track all the changes
   nmmso_state$X[nmmso_state$index,] = swarm$new_location
-  nmmso_state$Y[nmmso_state$index,] = y
+  nmmso_state$Y[nmmso_state$index] = y
   nmmso_state$index = nmmso_state$index + 1
   
   # return the result

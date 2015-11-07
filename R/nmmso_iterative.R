@@ -60,13 +60,10 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     nmmso_state$converged_modes = 0
 
     ## TODO: This isn't exactly nice. But so far M_loc is never created
-    nmmso_state$M_loc = matrix(0, max_evaluations + 500, length(mx))
+    # nmmso_state$M_loc = matrix(0, max_evaluations + 500, length(mx))
     
     # initialize active modes as a list and give the sub "Modes" lists aswell
-    nmmso_state$active_modes <- list(list(swarm = list()))
-    # nmmso_state$active_modes[1] <- list()
-    
-    # nmmso_state$active_modes[1]$swarm <- list()
+    #nmmso_state$active_modes <- list(list("swarm" = list()))
     
     # get initial locations
     nmmso_state = get_initial_locations(nmmso_state, mn, mx)
@@ -88,7 +85,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   
   # only run when limited evaluations is not already done
   if(evaluations < max_evaluations){
-
     # first see if modes should be merged together
     number_of_mid_evals = 0
     while(sum(nmmso_state$active_modes_changed) > 0){
@@ -109,18 +105,16 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       if (runif(1) < 0.5){
         result = sort(nmmso_state$V_loc, decreasing = TRUE, index.return = TRUE)
         indices = result$ix
-      }
-      
+      }      
       # select at random
       else{
         indices = sample(length(nmmso_state$V_loc))
-      }
-      
+      }      
     }else{
       # increment all
       indices = 1:limit
     }
-    I2 = indices[1:limit]
+    I2 = indices
 
     # increment
     for(jj in 1:length(I2)){
