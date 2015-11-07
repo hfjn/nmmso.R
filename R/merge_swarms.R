@@ -23,7 +23,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     to_compare = matrix(0, n, 2)
     to_compare[, 1] = I
     for (i in 1:n) {      
-      # calculate euclidean distance      
+      # calculate euclidean distance     
+      # TODO: M_loc is always a vector, so this is not working
       d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
@@ -61,95 +62,98 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     
     # column elements on same row
     
-    # Remove duplicates
-    for (i in seq(n,-1, -2)) {
-      # get indices of all with first index element same
-      I = which(to_compare[, 1] == to_compare[i, 1])
-      repeat_matrix = repmat(to_compare[i, ], length(I), 1)
-      # if more than one vector duplication
-      if (sum(sum(repeat_matrix == to_compare[I, ]) == 2) > 1) {
-        to_compare[i,] = matrix()
+    # Remove duplicates for matrices with more than one row
+    if(!is.null(nrow(to_compare))){
+      for (i in seq(n,-1, -2)) {
+        # get indices of all with first index element same 
+        I = which(to_compare[, 1] == to_compare[i, 1])
+        repeat_matrix = repmat(to_compare[i, ], length(I), 1)
+        # if more than one vector duplication
+        if (sum(sum(repeat_matrix == to_compare[I, ]) == 2) > 1) {
+          to_compare[i,] = matrix()
+        }
       }
-    }
     
-    # Check for merging
-    n = nrow(to_compare)
-    to_merge = c()
-    number_of_mid_evals = 0
-    
-    for (i in 1:n) {
-      # merge if sufficiently close
-      if (sqrt(dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)) < nmmso_state$tol_val) {
-        # can't preallocate, as don't know the size
-        to_merge = cbind(to_merge, i)
-      } else {
-        # evaluate exact mid point between modes, and add to mode 2
-        # history
-        mid_loc = 0.5 * (
-          nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location - nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
-        )
-        + nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
-        
+      # Check for merging
+      n = nrow(to_compare)
+      to_merge = c()
+      number_of_mid_evals = 0
+      
+      for (i in 1:n) {
+        # merge if sufficiently close
+        str(to_compare)
+        if (sqrt(dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)) < nmmso_state$tol_val) {
+          # can't preallocate, as don't know the size
+          to_merge = cbind(to_merge, i)
+        } else {
+          # evaluate exact mid point between modes, and add to mode 2
+          # history
+          mid_loc = 0.5 * (
+            nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location - nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
+          )
+          + nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
+          
+          # little sanity check
+          if (sum(mid_loc < mn) > 0 || sum(mid_loc > mx) > 0) {
+            sprintf('Mid point out of range!')
+          }
+          
+          nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$new_location = mid_loc
+          evaluate_mid = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function)
+          nmmso_state = evaluate_mid$nmmso_state
+          mode_shift = evaluate_mid$mode_shift
+          y = evaluate_mid$y
+          
+          if (mode_shift == 1) {
+            nmmso_state$M_loc[to_compare[i, 2],] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
+            nmmso_state$V_loc[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
+            to_merge = cbind(to_merge, i)
+            # track that the mode value has improved
+            nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
+            #better than mode 1 current mode, so merge
+          } else if (nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value < y) {
+            to_merge = cbind(to_merge, i)
+          }
+          
+          number_of_mid_evals = number_of_mid_evals + 1
+        }
+      
+      # merge those marked pairs, and flag the lower one for deletion
+      delete_index = matrix(0, dim(to_merge))
+      for (i in 1:length(to_merge)) {
         # little sanity check
-        if (sum(mid_loc < mn) > 0 || sum(mid_loc > mx) > 0) {
-          sprintf('Mid point out of range!')
+        if (to_compare[to_merge[i], 2] == to_compare[to_merge[i], 1]) {
+          stop('Indices should not be equal')
         }
-        
-        nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$new_location = mid_loc
-        evaluate_mid = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function)
-        nmmso_state = evaluate_mid$nmmso_state
-        mode_shift = evaluate_mid$mode_shift
-        y = evaluate_mid$y
-        
-        if (mode_shift == 1) {
-          nmmso_state$M_loc[to_compare[i, 2],] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
-          nmmso_state$V_loc[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
-          to_merge = cbind(to_merge, i)
-          # track that the mode value has improved
+        # if peak of mode 1 is higher than mode 2, then replace
+        if (nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm$mode_value > nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm$mode_value) {
+          delete_index[i] = to_compare[to_merge[i], 2]
+          nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm)
+          # track that the mode value has merge and should be compared again
+          nmmso_state$active_modes_changed[[to_compare[i, 1]]] = 1
+        } else {
+          delete_index[i] = to_compare[to_merge[i], 1]
+          nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm)
+          # track that the mode value has merge and should be compared again
           nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
-          #better than mode 1 current mode, so merge
-        } else if (nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value < y) {
-          to_merge = cbind(to_merge, i)
         }
-        
-        number_of_mid_evals = number_of_mid_evals + 1
       }
     }
-    # merge those marked pairs, and flag the lower one for deletion
-    delete_index = matrix(0, dim(to_merge))
-    for (i in 1:length(to_merge)) {
-      # little sanity check
-      if (to_compare[to_merge[i], 2] == to_compare[to_merge[i], 1]) {
-        stop('Indices should not be equal')
-      }
-      # if peak of mode 1 is higher than mode 2, then replace
-      if (nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm$mode_value > nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm$mode_value) {
-        delete_index[i] = to_compare[to_merge[i], 2]
-        nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm)
-        # track that the mode value has merge and should be compared again
-        nmmso_state$active_modes_changed[[to_compare[i, 1]]] = 1
-      } else {
-        delete_index[i] = to_compare[to_merge[i], 1]
-        nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm)
-        # track that the mode value has merge and should be compared again
-        nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
-      }
-    }
-    
     # remove one of the merged pair
     prev_merge = -1
-    delete_index = apply(delete_index, 2, sort)
-    for (i in seq(length(delete_index),-1, -1)) {
+    delete_index = sort(delete_index)
+    for (i in seq(length(delete_index), 1, -1)) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
-        nmmso_state$active_modes[[delete_index[i]]] = matrix()
-        nmmso_state$M_loc[delete_index[i],] = matrix()
-        nmmso_state$V_loc[delete_index[i]] = matrix()
-        nmmso_state$converged_modes[delete_index[i]] = matrix()
-        nmmso_state$active_modes_changed[delete_index[i]] = matrix()
+        nmmso_state$active_modes = nmmso_state$active_modes[-delete_index[i]]
+        ## TODO: in original M_loc is a matrix, deleted this for sanity reasoins
+        nmmso_state$M_loc = nmmso_state$M_loc[-delete_index[i]] 
+        nmmso_state$V_loc = nmmso_state$V_loc[-delete_index[i]]
+        nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
+        nmmso_state$active_modes_changed = nmmso_state$active_modes_changed[-delete_index[i]]
       }
     }
-    
+  } 
   }
   # only one mode, so choose dist for it (smallest design dimension)
   if (length(nmmso_state$active_modes) == 1) {

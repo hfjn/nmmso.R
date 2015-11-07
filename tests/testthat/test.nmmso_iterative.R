@@ -89,8 +89,8 @@ nmmso_state$active_modes[[1]]$swarm = swarm
 evaluations = 1
 
 # keep modes in matrices for efficiency on some computations
-nmmso_state$M_loc = nmmso_state$active_modes[1]$swarm$mode_location
-nmmso_state$V_loc = nmmso_state$active_modes[1]$swarm$mode_value
+nmmso_state$M_loc = nmmso_state$active_modes[[1]]$swarm$mode_location
+nmmso_state$V_loc = nmmso_state$active_modes[[1]]$swarm$mode_value
 nmmso_state$tol_val = 10^-6
 
 result = merge_swarms(nmmso_state, fit, as.numeric(mn[2]), as.numeric(mx[2]))

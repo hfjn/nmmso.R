@@ -81,8 +81,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     evaluations = 1
     
     # keep modes in matrices for efficiency on some computations
-    nmmso_state$M_loc = nmmso_state$active_modes[1]$swarm$mode_location
-    nmmso_state$V_loc = nmmso_state$active_modes[1]$swarm$mode_value
+    nmmso_state$M_loc = nmmso_state$active_modes[[1]]$swarm$mode_location
+    nmmso_state$V_loc = nmmso_state$active_modes[[1]]$swarm$mode_value
     nmmso_state$tol_val = tol_val
   }
   
@@ -122,7 +122,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     }
     I2 = indices[1:limit]
 
-    ######################
     # increment
     for(jj in 1:length(I2)){
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
