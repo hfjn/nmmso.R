@@ -15,7 +15,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
   # since the last generation, as no need to check others
   I = which(nmmso_state$active_modes_changed == 1)
   nmmso_state$active_modes_changed = nmmso_state$active_modes_changed * 0 # reset
-  
   n = length(I)
   number_of_mid_evals = 0
   # only compare if there is a changed mode, and more than on mode in system
@@ -25,6 +24,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in 1:n) {      
       # calculate euclidean distance     
       # TODO: M_loc is always a vector, so this is not working
+      str(I)
+      str(nmmso_state)
       d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
@@ -81,7 +82,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       
       for (i in 1:n) {
         # merge if sufficiently close
-        str(to_compare)
         if (sqrt(dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)) < nmmso_state$tol_val) {
           # can't preallocate, as don't know the size
           to_merge = cbind(to_merge, i)

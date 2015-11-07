@@ -43,18 +43,13 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
       
       # only look at splitting off member who is greater than tol_value
       # distance away; otherwise will be merged riht in aigain at the next iteration
-      
-      # might need better distance function which takes two separate matrices
-      if (sqrt(dist2(
-        R, nmmso_state$active_modes[[r]]$swarm$mode_location
-      )) > nmmso_state$tol_val) {
-        mid_loc = 0.5 * (nmmso_state$active_modes[[r]]$swarm$mode_location - R) +
-          R
-        
+      print(R)
+      print(nmmso_state$active_modes[[r]]$swarm$mode_location)
+      print(dist2(R, nmmso_state$active_modes[[r]]$swarm$mode_location))
+      if (sqrt(dist2(R, nmmso_state$active_modes[[r]]$swarm$mode_location)) > nmmso_state$tol_val) {
+        mid_loc = 0.5 * (nmmso_state$active_modes[[r]]$swarm$mode_location - R) + R        
         swarm$new_location = mid_loc
-        result = evaluate_first(
-          swarm, problem_function,  nmmso_state, swarm_size, mn, mx
-        )
+        result = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
         swarm = result$swarm
         nmmso_state = result$nmmso_state
         mid_loc_val = swarm$mode_value
