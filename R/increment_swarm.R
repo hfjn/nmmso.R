@@ -12,7 +12,6 @@
 increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   cs = 0
   new_location = mn - 1
-  str(nmmso_state)
   d = nmmso_state$active_modes[[index]]$swarm$dist
   
   shifted = 0
