@@ -20,6 +20,12 @@ nmmso_state$active_modes <- list(list(swarm = list()))
 
 #'
 #'
+test_that("add_row", {
+  
+})
+
+#'
+#'
 test_that("uniform sphere points is working correctly", {
   Y <- uniform_sphere_points(10, 10)
   expect_equal(length(Y), 100)
