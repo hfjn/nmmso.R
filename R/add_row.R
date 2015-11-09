@@ -6,6 +6,3 @@ add_row <- function(x, n, a){
 	}
 	rbind(x, a)
 }
-
-x <- 1:5
-test <- add_row(x, 10, x)
