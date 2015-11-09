@@ -16,6 +16,7 @@ source("./R/merge_swarms_together.R")
 source("./R/random_new.R")
 source("./R/uniform_sphere_points.R")
 source("./R/UNI.R")
+source("./R/add_row.R")
 
 #' @title NMMSO_iterative
 #' @description Implementation of the Niching Migratory Multi-Swarm Optimser.

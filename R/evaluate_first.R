@@ -46,7 +46,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   swarm$pbest_values[1] = y
 
   # track all the changes
-  nmmso_state$X <- add_row(nmmso_state$X, nmmso_state$index, swarm$new_location]
+  nmmso_state$X <- add_row(nmmso_state$X, nmmso_state$index, swarm$new_location)
   nmmso_state$Y[nmmso_state$index] = y
   nmmso_state$index = nmmso_state$index + 1
   
