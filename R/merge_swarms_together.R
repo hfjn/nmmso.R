@@ -14,8 +14,10 @@ merge_swarms_together <- function(swarm1, swarm2) {
   max_size = nrow(swarm1$history_locations)
   
   if (n1 + n2 <= max_size) {
+    str(swarm1)
+    str(swarm2)
     swarm1$number_of_particles = n1 + n2
-    
+    str(swarm1)
     # simples situation, where the combined active members of both
     # populations are below the total size they can grow to
     

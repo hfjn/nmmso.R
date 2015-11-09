@@ -74,6 +74,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
         temp_vel = rand(size(new_location)) * (mx - mx) + mn;
       }
     }
+    str(nmmso_state)
     print(nmmso_state$active_modes[[index]]$swarm$velocities)
     print(nmmso_state$active_modes[[index]]$swarm$shifted_loc)
     print(temp_vel)
