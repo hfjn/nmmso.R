@@ -50,7 +50,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   
   # test if max_evol is smaller than 0, which is not usable
   if (max_evol <= 0) {
-    sprintf('Max_eval cannot be negative or zero, default max_eval used, set at 100')
+    cat("Max_eval cannot be negative or zero, default max_eval used, set at 100 \n")
     max_evol = 100
   }
   
@@ -88,18 +88,19 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   if(evaluations < max_evaluations){
     # first see if modes should be merged together
     number_of_mid_evals = 0
+    cat("in! \n")
     while(sum(nmmso_state$active_modes_changed) > 0){
+
       result = merge_swarms(nmmso_state, problem_function, mn, mx)
       nmmso_state = result$nmmso_state
       merge_evals = result$merge_evals
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
-    
+    cat("out! \n")
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
     limit = min(max_evol, length(nmmso_state$active_modes))
-    
     # have to select a subset
     if (limit > max_evol){
       # select fittest
@@ -116,10 +117,12 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       indices = 1:limit
     }
     I2 = indices
-
+    print(I2)
     # increment
     for(jj in 1:length(I2)){
+      cat("in increment \m")
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
+      cat("out increment \n")
     }
     
     nmmso_state = result$nmmso_state
@@ -149,11 +152,11 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
-    sprintf("Number of swarms %s, evals %s, max mode est. %s", length(nmmso_state$active_modes), evaluations, max(nmmso_state$V_loc))
+    cat("Number of swarms", length(nmmso_state$active_modes)," evals", evaluations, "max mode est.", max(nmmso_state$V_loc , "\n"))
     
     
   }else{
-    sprintf("Evaluations taken already exhausted!")
+    cat("Evaluations taken already exhausted! \n")
   }
   
   result = extract_modes(nmmso_state)

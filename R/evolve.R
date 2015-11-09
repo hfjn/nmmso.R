@@ -32,8 +32,6 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
       nmmso_state$active_modes[[I[II[1]]]]$swarm$mode_location, nmmso_state$active_modes[[I[II[2]]]]$swarm$mode_location
     )
     
-    print(R)
-    cat("----- R")
     nmmso_state.M_loc = rbind(nmmso_state$M_loc, R)
     
     swarm$new_location = R

@@ -20,10 +20,15 @@ add_row <- function(original, row_index, new_object){
 	# otherwise add dependent on case
 	if(row_index <= size(original)[2]) {
 		  original[row_index, ] <- new_object
-	} else if(row_index >= 2) {
-		while(size(original)[2] < row_index - 1) {
+	} else if(row_index >= 2) { ## if greater or equal than 2
+		## if no matrix so far
+		if(is.null(nrow(original)))
+			original <- rbind(original, 0)
+		## add until index reached
+		while(nrow(original) < row_index - 1) {
 		  original <- rbind(original, 0)
 		}
+		# add new object
 	  original <- rbind(original, new_object)
 	}
 	else if(row_index == 2){
