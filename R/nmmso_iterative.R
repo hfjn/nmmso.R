@@ -80,8 +80,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # keep modes in matrices for efficiency on some computations
     nmmso_state$M_loc = nmmso_state$active_modes[[1]]$swarm$mode_location
-    cat("first M_loc ")
-    print(nmmso_state$M_loc)
     nmmso_state$V_loc = nmmso_state$active_modes[[1]]$swarm$mode_value
     nmmso_state$tol_val = tol_val
   }

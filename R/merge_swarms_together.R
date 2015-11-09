@@ -19,13 +19,13 @@ merge_swarms_together <- function(swarm1, swarm2) {
     # simples situation, where the combined active members of both
     # populations are below the total size they can grow to
     
-    swarm1$history_locations = rbind(swarm1$history_locations, swarm2$history_locations) # current location of swarm
-    swarm1$history_values = rbind(swarm1$history_values, swarm2$history_values) # current values of swarm
+    swarm1$history_locations = rbind(swarm1$history_locations[1:n1,],swarm2$history_locations[1:n2,]) # current location of swarm
+    swarm1$history_values = cbind(swarm1$history_values[1:n1], swarm2$history_values[1:n2]) # current values of swarm
     
-    swarm1$pbest_locations = rbind(swarm1$pbest_locations, swarm2$pbest_locations) # current best locations of swarm
-    swarm1$pbest_values = rbind(swarm1$pbest_values, swarm2$pbest_values) # current best locations of swarm
+    swarm1$pbest_locations = rbind(swarm1$pbest_locations[1:n1,], swarm2$pbest_locations[1:n2,]) # current best locations of swarm
+    swarm1$pbest_values = cbind(swarm1$pbest_values[1:n1], swarm2$pbest_values[1:n2]) # current best locations of swarm
     
-    swarm1$velocities = rbind(swarm1$velocities, swarm2$velocities) # current velocities of swarm
+    swarm1$velocities = rbind(swarm1$velocities[1:n1,], swarm2$velocities[1:n2,]) # current velocities of swarm
   }else{
     # select best out of combined population, based on current location
     
