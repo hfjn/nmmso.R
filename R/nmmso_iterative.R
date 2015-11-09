@@ -80,6 +80,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # keep modes in matrices for efficiency on some computations
     nmmso_state$M_loc = nmmso_state$active_modes[[1]]$swarm$mode_location
+    cat("first M_loc ")
+    print(nmmso_state$M_loc)
     nmmso_state$V_loc = nmmso_state$active_modes[[1]]$swarm$mode_value
     nmmso_state$tol_val = tol_val
   }
@@ -149,7 +151,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
-    cat("Number of swarms", length(nmmso_state$active_modes)," evals", evaluations, "max mode est.", max(nmmso_state$V_loc , "\n"))
+    cat("Number of swarms", length(nmmso_state$active_modes)," evals ", evaluations, " max mode est. ", max(nmmso_state$V_loc))
+    cat("\n")
         
   }else{
     cat("Evaluations taken already exhausted! \n")
