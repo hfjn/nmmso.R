@@ -5,15 +5,15 @@
 
 using namespace Rcpp;
 
-// five_uneven_peak_trap
-tFitness five_uneven_peak_trap(const double *x, const int &dim);
-RcppExport SEXP nmmso_five_uneven_peak_trap(SEXP *xSEXP, SEXP &dimSEXP) {
+// equal_maxima
+tFitness equal_maxima(const double *x, const int &dim);
+RcppExport SEXP nmmso_equal_maxima(SEXP *xSEXP, SEXP &dimSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< const double >::type *x(*xSEXP);
     Rcpp::traits::input_parameter< const int >::type &dim(&dimSEXP);
-    __result = Rcpp::wrap(five_uneven_peak_trap(*x, &dim));
+    __result = Rcpp::wrap(equal_maxima(*x, &dim));
     return __result;
 END_RCPP
 }
