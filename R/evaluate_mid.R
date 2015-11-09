@@ -26,7 +26,7 @@ evaluate_mid <-
       mode_shift = mode_shift + 1
     }
     
-    nmmso_state$X[nmmso_state$index] = nmmso_state$active_modes[[chg]]$swarm$new_location
+    nmmso_state$X[nmmso_state$index,] = nmmso_state$active_modes[[chg]]$swarm$new_location
     nmmso_state$Y[nmmso_state$index] = y
     nmmso_state$index = nmmso_state$index + 1
     

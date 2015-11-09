@@ -68,8 +68,10 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           swarm$pbest_locations = add_row(swarm$pbest_locations, 1, R)
           swarm$pbest_values[1] = R_v
           
-          nmmso_state$M_loc = rbind(nmmso_state$M_loc, R)
-          nmmso_state$V_loc = rbind(nmmso_state$V_loc, R_v)
+          nmmso_state$mode_locations[nmmso_state$mode_locations_index,] = R
+          nmmso_state$mode_locations_index = nmmso_state$mode_locations_index + 1
+          nmmso_state$mode_values[nmmso_state$mode_values_index] = R_v
+          nmmso_state$mode_values_index = nmmso_state$mode_values_index + 1
 
           nmmso_state$active_modes[[end + 1]]$swarm = swarm_size
           

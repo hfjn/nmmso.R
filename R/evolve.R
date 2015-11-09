@@ -16,7 +16,7 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     
     if (n > max_evol) {
       if (runif(1) < 0.5) {
-        I = sort(nmmso_state$V_loc, decreasing = TRUE)
+        I = sort(nmmso_state$mode_values, decreasing = TRUE)
       } else {
         I = 1:n
       }
@@ -32,14 +32,15 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
       nmmso_state$active_modes[[I[II[1]]]]$swarm$mode_location, nmmso_state$active_modes[[I[II[2]]]]$swarm$mode_location
     )
     
-    nmmso_state.M_loc = rbind(nmmso_state$M_loc, R)
+    nmmso_state$mode_locations[nmmso_state$mode_locations_index,,] = R
+    nmmso_state$mode_locations_index = nmmso_state$mode_locations_index + 1
     
     swarm$new_location = R
     evaluate_first = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
     swarm = evaluate_first$swarm
     nmmso_state = evaluate_first$nmmso_state
     
-    nmmso_state$V_loc = rbind(nmmso_state$V_loc, swarm$mode_value)
+    nmmso_state$mode_values = rbind(nmmso_state$mode_values, swarm$mode_value)
     nmmso_state$active_modes[[length(nmmso_state$active_modes) + 1]]$swarm = swarm
     
     # Mark these as new
