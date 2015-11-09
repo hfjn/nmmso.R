@@ -26,10 +26,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in 1:n) {      
       # calculate euclidean distance     
       # TODO: M_loc is always a vector, so this is not working
-      print(I[i])
-      print("=======")
-      str(nmmso_state)
-      print("-------")
       d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
@@ -86,7 +82,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       # Check for merging
       if(!is.null(nrow(to_compare))) {
         n = nrow(to_compare)
-        to_merge = c()
+        to_merge = NULL
         number_of_mid_evals = 0
         
         for (i in 1:n) {
@@ -94,7 +90,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
           distance = dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)
           if (sqrt(distance) < nmmso_state$tol_val) {
             # can't preallocate, as don't know the size
-            to_merge = cbind(to_merge, i)
+            to_merge = rbind(to_merge, i)
             #print(to_merge)
           } else {
             # evaluate exact mid point between modes, and add to mode 2
@@ -118,12 +114,12 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
             if (mode_shift == 1) {
               nmmso_state$M_loc[to_compare[i, 2],] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
               nmmso_state$V_loc[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
-              to_merge = cbind(to_merge, i)
+              to_merge = rbind(to_merge, i)
               # track that the mode value has improved
               nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
               #better than mode 1 current mode, so merge
             } else if (nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value < y) {
-              to_merge = cbind(to_merge, i)
+                to_merge = rbind(to_merge, i)
             }
             
             number_of_mid_evals = number_of_mid_evals + 1
