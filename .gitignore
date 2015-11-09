@@ -1,5 +1,7 @@
 # Created by https://www.gitignore.io/api/osx,python,java,c,r
 
+.sublime-workspace
+
 ### OSX ###
 .DS_Store
 .AppleDouble

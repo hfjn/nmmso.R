@@ -27,9 +27,9 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       # calculate euclidean distance     
       # TODO: M_loc is always a vector, so this is not working
       print(I[i])
-      print("=======")
+      cat("=======")
       str(nmmso_state)
-      print("-------")
+      cat("-------")
       d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
