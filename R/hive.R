@@ -59,10 +59,10 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           swarm$mode_location = R # gbest location
           swarm$mode_value = R_v # gbest value
           
-          swarm$history_locations[1,] = R
+          swarm$history_locations = add_rows(swarm$history_locations, 1, R)
           swarm$history_values[1] = R_v
           
-          swarm$pbest_locations[1,] = R
+          swarm$pbest_locations = add_rows(swarm$pbest_locations, 1, R)
           swarm$pbest_values[1] = R_v
           
           nmmso_state$M_loc = rbind(nmmso_state$M_loc, R)
@@ -91,7 +91,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
               temp_vel = runif(size(R)) * (mx  -  mn) + mn
             } # resolve repeated rejection
           }
-          nmmso_state$active_modes[[r]]$swarm$velocities[k,] = temp_velocity
+          nmmso_state$active_modes[[r]]$swarm$velocities = add_rows(nmmso_state$active_modes[[r]]$swarm$velocities, k, temp_velocity)
           
         }else{
           if (swarm$mode_value > nmmso_state$active_modes[[r]]$swarm$mode_value) {

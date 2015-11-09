@@ -26,13 +26,10 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in 1:n) {      
       # calculate euclidean distance     
       # TODO: M_loc is always a vector, so this is not working
-<<<<<<< HEAD
-=======
       print(I[i])
       cat("=======")
       str(nmmso_state)
       cat("-------")
->>>>>>> origin/dev
       d = dist2(nmmso_state$M_loc[I[i],], nmmso_state$M_loc)      
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
@@ -57,7 +54,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
             temp_vel = matrix(runif(size ^2), size) * (mx-mn) + mn
           }
         }
-        nmmso_state$active_modes[[I[i]]]$swarm$velocities[1,] = temp_vel
+        nmmso_state$active_modes[[I[i]]]$swarm$velocities = add_row(nmmso_state$active_modes[[I[i]]]$swarm$velocities, 1, temp_vel)
       }
     }
     
@@ -119,7 +116,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
             y = evaluate_mid$y
             
             if (mode_shift == 1) {
-              nmmso_state$M_loc[to_compare[i, 2],] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
+              nmmso_state$M_loc = add_row(nmmso_state$M_loc, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location) 
               nmmso_state$V_loc[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
               to_merge = rbind(to_merge, i)
               # track that the mode value has improved

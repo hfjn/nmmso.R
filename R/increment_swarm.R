@@ -58,7 +58,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   
   if (shifted == 1) {
     #if moved, update velocity with that used
-    nmmso_state$active_modes[[index]]$swarm$velocities[nmmso_state$active_modes[index]$swarm$shifted_loc,] = temp_velocity
+    nmmso_state$active_modes[[index]]$swarm$velocities = add_rows(nmmso_state$active_modes[[index]]$swarm$velocities, nmmso_state$active_modes[index]$swarm$shifted_loc, temp_velocity)
   }else{
     # otherwise initialise velocity in sphere based on distance from gbest to next closest mode
     number_of_particles = nmmso_state$active_modes[[index]]$swarm$number_of_particles
@@ -79,7 +79,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
     if(nmmso_state$active_modes[[index]]$swarm$shifted_loc > length(nmmso_state$active_modes[[index]]$swarm$velocities))
       nmmso_state$active_modes[[index]]$swarm$velocities = rbind(nmmso_state$active_modes[[index]]$swarm$velocities, temp_vel)
     else
-      nmmso_state$active_modes[[index]]$swarm$velocities[nmmso_state$active_modes[[index]]$swarm$shifted_loc,] = temp_vel
+      nmmso_state$active_modes[[index]]$swarm$velocities = add_row(nmmso_state$active_modes[[index]]$swarm$velocities,nmmso_state$active_modes[[index]]$swarm$shifted_loc ,temp_vel)
   }
   nmmso_state$active_modes[[index]]$swarm$new_location = new_location
   
