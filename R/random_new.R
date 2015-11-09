@@ -21,6 +21,8 @@ random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
     #create new swarm
     swarm <- list("new_location" = x[1,])
 
+    print("before evaluate_first")
+
     result = evaluate_first(swarm, problem_function, nmmso_state, swarm_size, mn, mx)
 
     swarm = result$swarm
