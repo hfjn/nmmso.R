@@ -34,7 +34,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   swarm$pbest_values = matrix(1, swarm_size, 1) * -Inf
   
   ## velocities
-  swarm$velocities = matrix(runif(length(mx)^2, length(mx))) * (mx - mn) + mn
+  swarm$velocities = matrix(runif(size(mx)[1]*size(mx)[2]), size(mx)[1]) * (mx - mn) + mn
   swarm$number_of_particles = 1
 
   ## History Locations

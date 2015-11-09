@@ -14,7 +14,7 @@
 random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
     number_rand_modes = 1
 
-    x = matrix(runif(length(mx)^2, length(mx))) * (mx - mn) + mn
+    x = matrix(runif(size(mx)[1]*size(mx)[2]), size(mx)[1]) * (mx - mn) + mn
 
     nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, matrix(1, number_rand_modes, 1))
     nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, matrix(0, number_rand_modes, 1))

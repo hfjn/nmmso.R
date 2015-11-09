@@ -9,7 +9,7 @@
 #' @export
 get_initial_locations <- function(nmmso_state, mn, mx) {
   #point wise product as new locations  
-  new_location = (matrix(runif(length(mx)^2 , length(mx))) * (mx - mn) + mn)
+  new_location = matrix(runif(size(mx)[1]*size(mx)[2]), size(mx)[1]) * (mx - mn) + mn)
   # TODO there was an assignment think about
   # [1]
   # create first stage of swarm

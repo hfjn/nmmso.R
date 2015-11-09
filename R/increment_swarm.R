@@ -31,7 +31,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       nmmso_state$active_modes[[index]]$swarm$shifted_loc = r[1]     
       # splitted up the crazy temp_velocity calculation in 6 parts
       x1 = nmmso_state$active_modes[[index]]$swarm$velocities[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
-      x2 = matrix(runif(length(new_location)^2,length(new_location)))
+      x2 = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1])
       x3 = nmmso_state$active_modes[[index]]$swarm$mode_location
       x4 = nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
       x5 = nmmso_state$active_modes[[index]]$swarm$pbest_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
@@ -71,7 +71,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       reject = reject + 1;
       if (reject > 20) {
         # resolve if keep rejecting
-        temp_vel = rand(size(new_location)) * (mx - mx) + mn;
+        temp_vel = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1] * (mx - mx) + mn;
       }
     }
     str(nmmso_state)

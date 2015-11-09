@@ -47,8 +47,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
           # rejecting lots, so likely in a corner of design space where a significant volume of the sphere lies outside
           # the bounds, so will make do with a random legal velocity in bounds
           if (reject > 20) {
-            size = dim(nmmso_state$active_modes[[I[i]]]$swarm$new_location)
-            temp_vel = matrix(runif(size ^2), size) * (mx-mn) + mn
+            new_location_size = nmmso_state$active_modes[[I[i]]]$swarm$new_location
+            temp_vel = matrix(runif(size(new_location_size)[1]*size(new_location_size)[2]), size(new_location_size)[1]) * (mx-mn) + mn
           }
         }
         nmmso_state$active_modes[[I[i]]]$swarm$velocities = add_row(nmmso_state$active_modes[[I[i]]]$swarm$velocities, 1, temp_vel)
