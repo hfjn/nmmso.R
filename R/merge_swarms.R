@@ -71,7 +71,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     #str(nmmso_state)
     # Remove duplicates for matrices with more than one row
     if(!is.null(nrow(to_compare))){
-      cat("second for \n")
       for (i in seq(n, 2, -1)) { #change in the decrement for (from n to 2 by -2)
         # get indices of all with first index element same 
         I = which(to_compare[, 1] == to_compare[i, 1])
@@ -92,8 +91,9 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         to_merge = NULL
         number_of_mid_evals = 0
         
-        cat("third for \n")
         for (i in 1:n) {
+          str(nmmso_state)
+          print(to_compare)
           # merge if sufficiently close
           distance = dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)
           if (sqrt(distance) < nmmso_state$tol_val) {
@@ -120,7 +120,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
             y = evaluate_mid$y
             
             if (mode_shift == 1) {
-              nmmso_state$M_loc = add_row(nmmso_state$M_loc, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location) 
+              nmmso_state$M_loc = add_row(nmmso_state$M_loc, I[i], nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location) 
               nmmso_state$V_loc[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
               to_merge = rbind(to_merge, i)
               # track that the mode value has improved
@@ -135,7 +135,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         }
         # merge those marked pairs, and flag the lower one for deletion
         delete_index = matrix(0, dim(to_merge))
-        cat("fourth for \n")
         for (i in 1:length(to_merge)) {
           # little sanity check
           if (to_compare[to_merge[i], 2] == to_compare[to_merge[i], 1]) {
@@ -158,7 +157,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         # remove one of the merged pair
         prev_merge = -1
         delete_index = sort(delete_index)
-        cat("sixth for \n")
         for (i in seq(length(delete_index), 1, -1)) {
           if (delete_index[i] != prev_merge) {
             prev_merge = delete_index[i]
