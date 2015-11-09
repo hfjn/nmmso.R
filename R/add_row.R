@@ -13,29 +13,15 @@
 
 add_row <- function(original, row_index, new_object){
 
-	# just like in matlab break in case column dimension do not match
-	if(size(original)[2] != size(new_object)[2])
-		stop("Column dimensions do not match.")
+	nr = NROW(original)
+    nc = if(row_index > NCOL(original)) row_index else NCOL(original)
 
-	# otherwise add dependent on case
-	if(row_index <= size(original)[2]) {
-		  original[row_index, ] <- new_object
-	} else if(row_index >= 2) { ## if greater or equal than 2
-		## if no matrix so far
-		if(is.null(nrow(original)))
-			original <- rbind(original, 0)
-		## add until index reached
-		while(nrow(original) < row_index - 1) {
-		  original <- rbind(original, 0)
-		}
-		# add new object
-	  original <- rbind(original, new_object)
-	}
-	else if(row_index == 2){
-		original <- rbind(original, new_object)
-	}	
-	else{
-	  original <- new_object
-	}
-	return(original);	
+    i1 = nr * (row_index - 1) + 1
+    i2 = i1 + length(new_object) - 1
+    original[i1:i2] = new_object
+
+    length(original) = nr * nc
+    dim(original) = c(nr, nc)
+
+    return(original)
 }

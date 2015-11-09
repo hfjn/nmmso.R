@@ -127,7 +127,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
 
 
   # merge those marked pairs, and flag the lower one for deletion
-  delete_index = matrix(0, dim(to_merge))
+  delete_index = matrix(0, size(to_merge)[1], size(to_merge)[2])
   for (i in 1:length(to_merge)) {
     # little sanity check
     if (to_compare[to_merge[i], 2] == to_compare[to_merge[i], 1]) {

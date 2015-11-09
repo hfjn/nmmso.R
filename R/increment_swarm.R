@@ -71,7 +71,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       reject = reject + 1;
       if (reject > 20) {
         # resolve if keep rejecting
-        temp_vel = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1] * (mx - mx) + mn;
+        temp_vel = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (mx - mx) + mn
       }
     }
     str(nmmso_state)
