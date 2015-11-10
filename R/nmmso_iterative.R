@@ -55,13 +55,18 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   }
   
   if (evaluations == 0) {
+    upperBound = max_evaluations + 500
     # preallocate matrices for speed
-    nmmso_state = list(X = matrix(0, max_evaluations + 500, length(mx)), Y = matrix(0, max_evaluations + 500, 1))
+    nmmso_state <- list()
+    nmmso_state$X = matrix(0, upperBound, length(mx))
+    nmmso_state$Y = matrix(0, upperBound, 1)
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
+    nmmso_state$mode_locations = 0
+    nmmso_state$mode_values = 0
 
-    ## TODO: This isn't exactly nice. But so far M_loc is never created
-    # nmmso_state$M_loc = matrix(0, max_evaluations + 500, length(mx))
+    ## TODO: This isn't exactly nice. But so far mode_locations is never created
+    # nmmso_state$mode_locations = matrix(0, max_evaluations + 500, length(mx))
     
     # initialize active modes as a list and give the sub "Modes" lists aswell
     #nmmso_state$active_modes <- list(list("swarm" = list()))
@@ -79,8 +84,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     evaluations = 1
     
     # keep modes in matrices for efficiency on some computations
-    nmmso_state$M_loc = nmmso_state$active_modes[[1]]$swarm$mode_location
-    nmmso_state$V_loc = nmmso_state$active_modes[[1]]$swarm$mode_value
+    nmmso_state$mode_locations = nmmso_state$active_modes[[1]]$swarm$mode_location
+    nmmso_state$mode_values = nmmso_state$active_modes[[1]]$swarm$mode_value
     nmmso_state$tol_val = tol_val
   }
   
@@ -104,12 +109,12 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     if (limit > max_evol){
       # select fittest
       if (runif(1) < 0.5){
-        result = sort(nmmso_state$V_loc, decreasing = TRUE, index.return = TRUE)
+        result = sort(nmmso_state$mode_values, decreasing = TRUE, index.return = TRUE)
         indices = result$ix
       }      
       # select at random
       else{
-        indices = sample(length(nmmso_state$V_loc))
+        indices = sample(length(nmmso_state$mode_values))
       }      
     }else{
       # increment all
@@ -149,7 +154,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
-    cat("Number of swarms", length(nmmso_state$active_modes)," evals ", evaluations, " max mode est. ", max(nmmso_state$V_loc))
+    cat("Number of swarms", length(nmmso_state$active_modes)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
     cat("\n")
         
   }else{
