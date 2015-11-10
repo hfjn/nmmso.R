@@ -28,8 +28,6 @@ merge_swarms_together <- function(swarm1, swarm2) {
     
     swarm1$number_of_particles = max_size
     temp_h_loc = rbind(swarm1$history_lcoations, swarm2$history_locations)
-    print(swarm1$history_values)
-    print(swarm2$history_values)
     temp_h_v = rbind(swarm1$history_values, swarm2$history_values)
     
     temp_p_loc = rbind(swarm1$pbest_locations, swarm2$pbest_locations)
