@@ -65,24 +65,21 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
     nmmso_state$active_modes[[index]]$swarm$number_of_particles = (number_of_particles + 1)
     nmmso_state$active_modes[[index]]$swarm$shifted_loc = nmmso_state$active_modes[[index]]$swarm$number_of_particles
     temp_vel = mn - 1
-    while (sum(temp_vel < mn) > 0 ||
-     sum(temp_vel > mx) > 0) {
-      temp_vel = uniform_sphere_points(1,length(new_location)) * (d / 2);
+    while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
+      temp_vel = uniform_sphere_points(1,length(new_location)) * (d / 2)
       reject = reject + 1;
       if (reject > 20) {
         # resolve if keep rejecting
         temp_vel = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (mx - mx) + mn
       }
     }
-    str(nmmso_state)
-    print(nmmso_state$active_modes[[index]]$swarm$velocities)
-    print(nmmso_state$active_modes[[index]]$swarm$shifted_loc)
-    print(temp_vel)
-    nmmso_state$active_modes[[index]]$swarm$velocities = add_row(nmmso_state$active_modes[[index]]$swarm$velocities,nmmso_state$active_modes[[index]]$swarm$shifted_loc ,temp_vel)
+   nmmso_state$active_modes[[index]]$swarm$velocities = add_row(nmmso_state$active_modes[[index]]$swarm$velocities,nmmso_state$active_modes[[index]]$swarm$shifted_loc ,temp_vel)
   }
   nmmso_state$active_modes[[index]]$swarm$new_location = new_location
   
   # return value
   list("nmmso_state" = nmmso_state)
+} 
   
-}
+
+

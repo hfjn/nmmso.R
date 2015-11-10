@@ -22,14 +22,14 @@ merge_swarms_together <- function(swarm1, swarm2) {
     swarm1$history_values = cbind(swarm1$history_values[1:n1], swarm2$history_values[1:n2]) # current values of swarm
     swarm1$pbest_locations = rbind(swarm1$pbest_locations[1:n1,], swarm2$pbest_locations[1:n2,]) # current best locations of swarm
     swarm1$pbest_values = cbind(swarm1$pbest_values[1:n1], swarm2$pbest_values[1:n2]) # current best locations of swarm
-    print(swarm1$velocities)
-    print(swarm2$velocities)
     swarm1$velocities = rbind(swarm1$velocities[1:n1,], swarm2$velocities[1:n2,]) # current velocities of swarm
   }else{
     # select best out of combined population, based on current location
     
     swarm1$number_of_particles = max_size
     temp_h_loc = rbind(swarm1$history_lcoations, swarm2$history_locations)
+    print(swarm1$history_values)
+    print(swarm2$history_values)
     temp_h_v = rbind(swarm1$history_values, swarm2$history_values)
     
     temp_p_loc = rbind(swarm1$pbest_locations, swarm2$pbest_locations)

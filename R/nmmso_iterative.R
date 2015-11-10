@@ -62,10 +62,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     nmmso_state$Y = matrix(0, upperBound, 1)
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
-    nmmso_state$mode_locations = matrix(0, upperBound, length(mx))
-    nmmso_state$mode_values = matrix(0, upperBound, length(mx))
-    nmmso_state$mode_locations_index = 1
-    nmmso_state$mode_values_index = 1
+    nmmso_state$mode_locations = 0
+    nmmso_state$mode_values = 0
 
     ## TODO: This isn't exactly nice. But so far mode_locations is never created
     # nmmso_state$mode_locations = matrix(0, max_evaluations + 500, length(mx))
@@ -86,10 +84,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     evaluations = 1
     
     # keep modes in matrices for efficiency on some computations
-    nmmso_state$mode_locations[nmmso_state$mode_locations_index,] = nmmso_state$active_modes[[1]]$swarm$mode_location
-    nmmso_state$mode_locations_index = nmmso_state$mode_locations_index + 1
-    nmmso_state$mode_values[nmmso_state$mode_values_index] = nmmso_state$active_modes[[1]]$swarm$mode_value
-    nmmso_state$mode_values_index = nmmso_state$mode_values_index + 1
+    nmmso_state$mode_locations = nmmso_state$active_modes[[1]]$swarm$mode_location
+    nmmso_state$mode_values = nmmso_state$active_modes[[1]]$swarm$mode_value
     nmmso_state$tol_val = tol_val
   }
   

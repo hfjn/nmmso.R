@@ -32,8 +32,7 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
       nmmso_state$active_modes[[I[II[1]]]]$swarm$mode_location, nmmso_state$active_modes[[I[II[2]]]]$swarm$mode_location
     )
     
-    nmmso_state$mode_locations[nmmso_state$mode_locations_index,,] = R
-    nmmso_state$mode_locations_index = nmmso_state$mode_locations_index + 1
+    nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
     
     swarm$new_location = R
     evaluate_first = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
