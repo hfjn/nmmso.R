@@ -30,7 +30,7 @@ random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
     nmmso_state$active_modes = rbind(nmmso_state$active_modes, list(list("swarm" = swarm)))
 
     nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, x)
-
+    
     nmmso_state$mode_values = rbind(nmmso_state$mode_value, nmmso_state$active_modes[[length(nmmso_state$active_modes)]]$swarm$mode_value)
     
 

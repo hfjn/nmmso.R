@@ -25,8 +25,9 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in 1:n) {      
       # calculate euclidean distance     
       to_compare = rbind(to_compare)
-      d = dist2(nmmso_state$mode_locations[I[i],], nmmso_state$mode_locations)   
-
+      #print(nmmso_state$mode_locations)
+      #print(I[i])
+      d = dist2(nmmso_state$mode_locations[I[i],], nmmso_state$mode_locations)
       # will be closes to itself, so need to get second closest
       d[I[i]] = Inf
       tmp = min(d)
@@ -83,8 +84,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       # Check for merging
 
   n = size(to_compare)[1]
-  to_merge = NA
   number_of_mid_evals = 0
+  to_merge = matrix()
   
   for (i in 1:n) {
 
@@ -94,7 +95,12 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     distance = dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)
     if (sqrt(distance) < nmmso_state$tol_val) {
       # can't preallocate, as don't know the size
-      to_merge = rbind(to_merge, i)
+      if(is.na(to_merge[1])){
+        to_merge = i
+      }
+      else{
+        to_merge = rbind(to_merge, i)
+      }
     } else {
           # evaluate exact mid point between modes, and add to mode 2
           # history
@@ -111,7 +117,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       y = evaluate_mid$y
 
       if (mode_shift == 1) {
-        nmmso_state$mode_locations[I[i]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location 
+        nmmso_state$mode_locations[I[i],] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location 
         nmmso_state$mode_values[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
         to_merge = rbind(to_merge, i)
             # track that the mode value has improved
@@ -125,9 +131,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     }
   }
 
-
   # merge those marked pairs, and flag the lower one for deletion
-  if(!is.na(to_merge)){
+  if(!is.na(to_merge[1])){
     delete_index = replicate(1, to_merge) * 0
     for (i in 1:length(to_merge)) {
     # little sanity check
@@ -154,8 +159,11 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in seq(length(delete_index), 1, -1)) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
-        nmmso_state$active_modes = nmmso_state$active_modes[-delete_index[i]]
-        nmmso_state$mode_locations = nmmso_state$mode_locations[-delete_index[i],] 
+        nmmso_state$active_modes = setdiff(nmmso_state$active_modes, nmmso_state$active_modes[[delete_index[i]]])
+        if(NCOL(nmmso_state$mode_locations) == 1)
+          nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
+        else
+          nmmso_state$mode_locations = nmmso_state$mode_locations[-(delete_index[i]),]
         nmmso_state$mode_values = nmmso_state$mode_values[-delete_index[i]]
         nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
         nmmso_state$active_modes_changed = nmmso_state$active_modes_changed[-delete_index[i]]
