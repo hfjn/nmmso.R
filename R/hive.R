@@ -13,6 +13,12 @@
 #'
 #' @export
 hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
+    # cat("hive \n")
+    # print(length(nmmso_state$active_modes))
+    # print(length(nmmso_state$mode_locations))
+    # print(length(nmmso_state$mode_values))
+    # print(length(nmmso_state$converged_modes))
+    # print(length(nmmso_state$active_modes_changed))
     number_of_new_samples = 0
     LL = length(nmmso_state$active_modes)
     fit_I = sample(LL)
@@ -36,7 +42,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
       r = CI[r[1]]
       
       # select and active swarm member at random
-      k = sample(nmmso_state$active_models[[r]]$swarm$number_of_particles)
+      k = sample(nmmso_state$active_modes[[r]]$swarm$number_of_particles)
       k = k[1]
       R = nmmso_state$active_modes[[r]]$swarm$history_locations[k,]
       R_v = nmmso_state$active_modes[[r]]$swarm$history_values[k,]
@@ -45,7 +51,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
       # distance away; otherwise will be merged riht in aigain at the next iteration
       if (sqrt(dist2(R, nmmso_state$active_modes[[r]]$swarm$mode_location)) > nmmso_state$tol_val) {
         mid_loc = 0.5 * (nmmso_state$active_modes[[r]]$swarm$mode_location - R) + R        
-        swarm$new_location = mid_loc
+        swarm = list("new_location" = mid_loc)
         result = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
         swarm = result$swarm
         nmmso_state = result$nmmso_state
@@ -103,5 +109,10 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         number_of_new_samples = number_of_new_samples + 1
       }      
     }
+    # print(length(nmmso_state$active_modes))
+    # print(length(nmmso_state$mode_locations))
+    # print(length(nmmso_state$mode_values))
+    # print(length(nmmso_state$converged_modes))
+    # print(length(nmmso_state$active_modes_changed))
     list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)
   }

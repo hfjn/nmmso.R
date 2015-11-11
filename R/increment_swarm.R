@@ -10,6 +10,12 @@
 #' 
 #' @export
 increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
+  # cat("increment_swarm \n")
+  # print(length(nmmso_state$active_modes))
+  # print(length(nmmso_state$mode_locations))
+  # print(length(nmmso_state$mode_values))
+  # print(length(nmmso_state$converged_modes))
+  # print(length(nmmso_state$active_modes_changed))
   cs = 0
   new_location = mn - 1
   d = nmmso_state$active_modes[[index]]$swarm$dist
@@ -22,6 +28,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   r = sample(swarm_size)
   
   while (sum(new_location < mn) > 0 || sum (new_location > mx) > 0) {
+    print("i")
     # if swarm not at maximum capacity add a new particle
     if (nmmso_state$active_modes[[index]]$swarm$number_of_particles < swarm_size) {
       new_location = nmmso_state$active_modes[[index]]$swarm$mode_location + uniform_sphere_points(1, length(new_location)) * (d / 2)
@@ -38,6 +45,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       x6 = nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
 
       temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4 + 2.0 * matrix(length(new_location)^2, length(new_location)) * (x5 - x6))
+      reject = reject + 1
       if (reject > 20) {
         # if we keep rejecting, then put at extreme any violating design patterns
         I_max = which(((nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,] + temp_velocity) > mx) == 1)
@@ -76,6 +84,12 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   }
   nmmso_state$active_modes[[index]]$swarm$new_location = new_location
   
+  # print(length(nmmso_state$active_modes))
+  # print(length(nmmso_state$mode_locations))
+  # print(length(nmmso_state$mode_values))
+  # print(length(nmmso_state$converged_modes))
+  # print(length(nmmso_state$active_modes_changed))
+
   # return value
   list("nmmso_state" = nmmso_state)
 } 
