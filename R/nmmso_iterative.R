@@ -72,11 +72,11 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     #nmmso_state$active_modes <- list(list("swarm" = list()))
     
     # get initial locations
-    print("get_initial_locations")
+    # print("get_initial_locations")
     nmmso_state = get_initial_locations(nmmso_state, mn, mx)
     
     # get first evaluation
-    print("get_evaluate_first")
+    # print("get_evaluate_first")
     result = evaluate_first(nmmso_state$active_modes[[1]]$swarm, problem_function, nmmso_state, swarm_size, mn, mx)
     nmmso_state = result$nmmso_state
     swarm = result$swarm
@@ -95,7 +95,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   if(evaluations < max_evaluations){
     # first see if modes should be merged together
     number_of_mid_evals = 0
-    print("been here")
+    # print("been here")
     while(sum(nmmso_state$active_modes_changed) > 0){
       result = merge_swarms(nmmso_state, problem_function, mn, mx)
       nmmso_state = result$nmmso_state
@@ -103,7 +103,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
-    print("done that")
+    # print("done that")
 
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
@@ -126,14 +126,14 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     I2 = indices
     # increment
     
-    print("for in")
+    # print("for in")
     for(jj in 1:length(I2)){
-      print(I2)
-      print(jj)
+      # print(I2)
+      # print(jj)
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
       nmmso_state = result$nmmso_state
     }
-    print("for out")
+    # print("for out")
     cs = result$cs
     # evaluate new member / new locations of swarm member
     result = evaluate_new_locations(nmmso_state, problem_function,  I2)

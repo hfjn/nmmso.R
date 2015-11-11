@@ -14,11 +14,11 @@
 #' @export
 hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     # cat("hive \n")
-    # print(length(nmmso_state$active_modes))
-    # print(length(nmmso_state$mode_locations))
-    # print(length(nmmso_state$mode_values))
-    # print(length(nmmso_state$converged_modes))
-    # print(length(nmmso_state$active_modes_changed))
+    # # print(length(nmmso_state$active_modes))
+    # # print(length(nmmso_state$mode_locations))
+    # # print(length(nmmso_state$mode_values))
+    # # print(length(nmmso_state$converged_modes))
+    # # print(length(nmmso_state$active_modes_changed))
     number_of_new_samples = 0
     LL = length(nmmso_state$active_modes)
     fit_I = sample(LL)
@@ -109,10 +109,10 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         number_of_new_samples = number_of_new_samples + 1
       }      
     }
-    # print(length(nmmso_state$active_modes))
-    # print(length(nmmso_state$mode_locations))
-    # print(length(nmmso_state$mode_values))
-    # print(length(nmmso_state$converged_modes))
-    # print(length(nmmso_state$active_modes_changed))
+    # # print(length(nmmso_state$active_modes))
+    # # print(length(nmmso_state$mode_locations))
+    # # print(length(nmmso_state$mode_values))
+    # # print(length(nmmso_state$converged_modes))
+    # # print(length(nmmso_state$active_modes_changed))
     list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)
   }

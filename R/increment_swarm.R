@@ -11,11 +11,11 @@
 #' @export
 increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   # cat("increment_swarm \n")
-  # print(length(nmmso_state$active_modes))
-  # print(length(nmmso_state$mode_locations))
-  # print(length(nmmso_state$mode_values))
-  # print(length(nmmso_state$converged_modes))
-  # print(length(nmmso_state$active_modes_changed))
+  # # print(length(nmmso_state$active_modes))
+  # # print(length(nmmso_state$mode_locations))
+  # # print(length(nmmso_state$mode_values))
+  # # print(length(nmmso_state$converged_modes))
+  # # print(length(nmmso_state$active_modes_changed))
   cs = 0
   new_location = mn - 1
   d = nmmso_state$active_modes[[index]]$swarm$dist
@@ -28,7 +28,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   r = sample(swarm_size)
   
   while (sum(new_location < mn) > 0 || sum (new_location > mx) > 0) {
-    print("i")
+    # print("i")
     # if swarm not at maximum capacity add a new particle
     if (nmmso_state$active_modes[[index]]$swarm$number_of_particles < swarm_size) {
       new_location = nmmso_state$active_modes[[index]]$swarm$mode_location + uniform_sphere_points(1, length(new_location)) * (d / 2)
@@ -84,11 +84,11 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   }
   nmmso_state$active_modes[[index]]$swarm$new_location = new_location
   
-  # print(length(nmmso_state$active_modes))
-  # print(length(nmmso_state$mode_locations))
-  # print(length(nmmso_state$mode_values))
-  # print(length(nmmso_state$converged_modes))
-  # print(length(nmmso_state$active_modes_changed))
+  # # print(length(nmmso_state$active_modes))
+  # # print(length(nmmso_state$mode_locations))
+  # # print(length(nmmso_state$mode_values))
+  # # print(length(nmmso_state$converged_modes))
+  # # print(length(nmmso_state$active_modes_changed))
 
   # return value
   list("nmmso_state" = nmmso_state)
