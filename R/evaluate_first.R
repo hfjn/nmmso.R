@@ -44,6 +44,9 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   ## pbest Locations
   swarm$pbest_locations[1,] = swarm$mode_location
   swarm$pbest_values[1] = y
+  
+  ## dist
+  swarm$dist = min(mx - mn)
 
   # track all the changes
   nmmso_state$X[nmmso_state$index,] = swarm$new_location

@@ -38,7 +38,6 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       x6 = nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
 
       temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4 + 2.0 * matrix(length(new_location)^2, length(new_location)) * (x5 - x6))
-      print(new_location)
       if (reject > 20) {
         # if we keep rejecting, then put at extreme any violating design patterns
         I_max = which(((nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,] + temp_velocity) > mx) == 1)
