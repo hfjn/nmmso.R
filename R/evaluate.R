@@ -22,7 +22,7 @@ evaluate <-
       nmmso_state$active_modes[[chg]]$swarm$mode_value = y
       mode_shift = 1
     }
-    
+
     nmmso_state$active_modes[[chg]]$swarm$history_locations = add_row(nmmso_state$active_modes[[chg]]$swarm$history_locations, nmmso_state$active_modes[[chg]]$swarm$shifted_loc, nmmso_state$active_modes[[chg]]$swarm$new_location)
     nmmso_state$active_modes[[chg]]$swarm$history_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc] = y
     

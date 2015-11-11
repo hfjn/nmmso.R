@@ -104,7 +104,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
     limit = min(max_evol, length(nmmso_state$active_modes))
-
     # have to select a subset
     if (limit > max_evol){
       # select fittest
@@ -121,13 +120,12 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       indices = 1:limit
     }
     I2 = indices
-
     # increment
+    
     for(jj in 1:length(I2)){
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
+      nmmso_state = result$nmmso_state
     }
-    
-    nmmso_state = result$nmmso_state
     cs = result$cs
     # evaluate new member / new locations of swarm member
     result = evaluate_new_locations(nmmso_state, problem_function,  I2)

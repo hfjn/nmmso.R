@@ -32,8 +32,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       to_compare[i, 2] = which.min(d)
       # track euclidean distance to nearest neighbour mode
       nmmso_state$active_modes[[I[i]]]$swarm$dist = sqrt(tmp)
-      print("tmp")
-      print(sqrt(tmp))
       
       if (nmmso_state$active_modes[[I[i]]]$swarm$number_of_particles == 1) {
         reject = 0

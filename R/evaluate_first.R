@@ -45,6 +45,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   swarm$pbest_locations[1,] = swarm$mode_location
   swarm$pbest_values[1] = y
   
+  ## TODO: Different to original. So we preallocate this.
   ## dist
   swarm$dist = min(mx - mn)
 
