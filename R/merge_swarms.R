@@ -149,7 +149,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       } else {
         delete_index[i] = to_compare[to_merge[i], 1]
         nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm)
-            # track that the mode value has merge and should be compared again
+        # track that the mode value has merge and should be compared again
         nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
       }
     }
