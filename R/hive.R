@@ -74,7 +74,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
           nmmso_state$mode_values = rbind(nmmso_state$mode_values,  R_v)
 
-          nmmso_state$active_modes[[end + 1]]$swarm = swarm_size
+          nmmso_state$active_modes[[length(nmmso_state$active_modes) + 1]]$swarm = swarm_size
           
           nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, 1)
           nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, 0)

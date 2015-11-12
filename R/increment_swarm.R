@@ -54,7 +54,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
           temp_velocity[I_max] = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc, I_max])
         }
         if (length(I_min) >= 0) {
-          temp_velocity[I_min] = runif(1, length(I_min)) * ((nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,I_min] - mn(I_min)) * -1)
+          temp_velocity[I_min] = runif(1, length(I_min)) * ((nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,I_min] - mn[I_min]) * -1)
         }
         new_location = nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,] + temp_velocity
         reject = reject + 1
