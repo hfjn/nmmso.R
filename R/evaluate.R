@@ -27,9 +27,9 @@ evaluate <-
     nmmso_state$active_modes[[chg]]$swarm$history_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc] = y
     
     # if better than personal best for swarm member - then replace
-    # print(nmmso_state$active_modes[[chg]]$swarm$pbest_values)
-    if (y > nmmso_state$active_modes[[chg]]$swarm$pbest_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc]) {
-      nmmso_state$active_modes[[chg]]$swarm$pbest_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc] = y
+    # str(nmmso_state$active_modes[[chg]]$swarm$pbest_values)
+    if (y > nmmso_state$active_modes[[chg]]$swarm$pbest_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc,]) {
+      nmmso_state$active_modes[[chg]]$swarm$pbest_values[nmmso_state$active_modes[[chg]]$swarm$shifted_loc, ] = y
       nmmso_state$active_modes[[chg]]$swarm$pbest_locations <- add_row(nmmso_state$active_modes[[chg]]$swarm$pbest_locations, nmmso_state$active_modes[[chg]]$swarm$shifted_loc, nmmso_state$active_modes[[chg]]$swarm$new_location)
     }
     

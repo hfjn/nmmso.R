@@ -39,11 +39,11 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
 
   ## History Locations
   swarm$history_locations[1,] = swarm$mode_location
-  swarm$history_values[1] = y
+  swarm$history_values[1,] = y
   
   ## pbest Locations
   swarm$pbest_locations[1,] = swarm$mode_location
-  swarm$pbest_values[1] = y
+  swarm$pbest_values[1,] = y
   
   ## TODO: Different to original. So we preallocate this.
   ## dist

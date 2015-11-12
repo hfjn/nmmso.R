@@ -44,11 +44,15 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
       # select and active swarm member at random
       k = sample(nmmso_state$active_modes[[r]]$swarm$number_of_particles)
       k = k[1]
+      print(r)
+      print(k)
       R = nmmso_state$active_modes[[r]]$swarm$history_locations[k,]
       R_v = nmmso_state$active_modes[[r]]$swarm$history_values[k,]
       
       # only look at splitting off member who is greater than tol_value
       # distance away; otherwise will be merged riht in aigain at the next iteration
+      str(R)
+      str(nmmso_state$active_modes[[r]]$swarm$mode_location)
       if (sqrt(dist2(R, nmmso_state$active_modes[[r]]$swarm$mode_location)) > nmmso_state$tol_val) {
         mid_loc = 0.5 * (nmmso_state$active_modes[[r]]$swarm$mode_location - R) + R        
         swarm = list("new_location" = mid_loc)
@@ -66,10 +70,10 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           swarm$mode_value = R_v # gbest value
           
           swarm$history_locations = add_row(swarm$history_locations, 1, R)
-          swarm$history_values[1] = R_v
+          swarm$history_values[1,] = R_v
           
           swarm$pbest_locations = add_row(swarm$pbest_locations, 1, R)
-          swarm$pbest_values[1] = R_v
+          swarm$pbest_values[1,] = R_v
           
           nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
           nmmso_state$mode_values = rbind(nmmso_state$mode_values,  R_v)
