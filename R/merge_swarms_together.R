@@ -11,10 +11,10 @@ merge_swarms_together <- function(swarm1, swarm2) {
   n1 = swarm1$number_of_particles
   n2 = swarm2$number_of_particles
 
-  print("swarm1")
-  str(swarm1)
-  print("swarm2")
-  str(swarm2)
+  # print("swarm1")
+  # str(swarm1)
+  # print("swarm2")
+  # str(swarm2)
 
   max_size = nrow(swarm1$history_locations)
   
@@ -36,24 +36,24 @@ merge_swarms_together <- function(swarm1, swarm2) {
     
     temp_p_loc = rbind(swarm1$pbest_locations, swarm2$pbest_locations)
     temp_p_v = rbind(swarm1$pbest_values, swarm2$pbest_values)
-    temp_vel = rbind(swarm1$velocities, swarm2$velocities)
+    temp_vel = add_row(swarm1$velocities, length(swarm1$history_locations) + 1, swarm2$velocities)
 
     result <- sort(temp_h_v, decreasing = TRUE, index.return = TRUE)
     indices = result$ix
 
     # check temp_h_v -> history values (could be =/)
     # check velocities
-    # check number of particles
+    # # check number of particles
 
-    print("h_v")
-    print(temp_h_v)
+    # print("h_v")
+    # print(temp_h_v)
 
-    print("indices")
-    str(indices[1:max_size])
-    print("velocities")
-    print(swarm1$velocities)
-    print("temp vel")
-    print(temp_vel)
+    # print("indices")
+    # str(indices[1:max_size])
+    # print("velocities")
+    # print(swarm1$velocities)
+    # print("temp vel")
+    # print(temp_vel)
 
     swarm1$history_locations = add_row(swarm1$history_locations , 1, temp_h_loc[indices[1:max_size],])
     swarm1$history_values = add_row(swarm1$history_values , 1, temp_h_v[indices[1:max_size],])
