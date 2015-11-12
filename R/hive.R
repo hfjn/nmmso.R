@@ -74,7 +74,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
           nmmso_state$mode_values = rbind(nmmso_state$mode_values,  R_v)
 
-          nmmso_state$active_modes[[length(nmmso_state$active_modes) + 1]]$swarm = swarm_size
+          nmmso_state$active_modes[[length(nmmso_state$active_modes) + 1]] = list("swarm" = swarm)
           
           nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, 1)
           nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, 0)
@@ -91,13 +91,13 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           
           temp_vel = mn - 1
           while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
-            temp  -  vel = uniform_sphere_pints(1, length(R)) * (d  /  2)
+            temp_vel = uniform_sphere_points(1, length(R)) * (d  /  2)
             reject = reject +  1
             if (reject > 20) {
               temp_vel = runif(size(R)) * (mx  -  mn) + mn
             } # resolve repeated rejection
           }
-          nmmso_state$active_modes[[r]]$swarm$velocities = add_row(nmmso_state$active_modes[[r]]$swarm$velocities, k, temp_velocity)
+          nmmso_state$active_modes[[r]]$swarm$velocities = add_row(nmmso_state$active_modes[[r]]$swarm$velocities, k, temp_vel)
           
         }else{
           if (swarm$mode_value > nmmso_state$active_modes[[r]]$swarm$mode_value) {

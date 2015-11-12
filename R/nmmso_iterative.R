@@ -173,30 +173,3 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
