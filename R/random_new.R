@@ -13,11 +13,11 @@
 #' @export
 random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
     # cat("random_new \n")
-    # # print(length(nmmso_state$active_modes))
-    # # print(length(nmmso_state$mode_locations))
-    # # print(length(nmmso_state$mode_values))
-    # # print(length(nmmso_state$converged_modes))
-    # # print(length(nmmso_state$active_modes_changed))
+    # # # print(length(nmmso_state$active_modes))
+    # # # print(length(nmmso_state$mode_locations))
+    # # # print(length(nmmso_state$mode_values))
+    # # # print(length(nmmso_state$converged_modes))
+    # # # print(length(nmmso_state$active_modes_changed))
     number_rand_modes = 1
 
     x = matrix(runif(size(mx)[1]*size(mx)[2]), size(mx)[1]) * (mx - mn) + mn

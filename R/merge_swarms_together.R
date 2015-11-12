@@ -10,8 +10,8 @@ merge_swarms_together <- function(swarm1, swarm2) {
   # merge swarm 1 and 2, while keeping best elements of both
   n1 = swarm1$number_of_particles
   n2 = swarm2$number_of_particles
-  str(swarm1)
-  str(swarm2)
+  # str(swarm1)
+  # str(swarm2)
 
   max_size = nrow(swarm1$history_locations)
   
@@ -41,11 +41,14 @@ merge_swarms_together <- function(swarm1, swarm2) {
     str(temp_vel)
     str(swarm1$velocities)
     str(swarm2$velocities)
-    swarm1$history_locations = temp_h_loc[result$ix[1:max_size],]
-    swarm1$history_values = temp_h_v[result$ix[1:max_size],]
-    swarm1$pbest_location = temp_p_loc[result$ix[1:max_size],]
-    swarm1$pbest_values = temp_p_v[result$ix[1:max_size],]
-    swarm1$velocities = temp_vel[result$ix[1:max_size],]
+    print(result$ix[1:max_size])
+    swarm1$history_locations = add_row(swarm1$history_locations , 1, temp_h_loc[result$ix[1:max_size],])
+    swarm1$history_values = add_row(swarm1$history_values , 1, temp_h_v[result$ix[1:max_size],])
+    swarm1$pbest_locations = add_row(swarm1$pbest_locations , 1, temp_p_loc[result$ix[1:max_size],])
+    swarm1$pbest_values = add_row(swarm1$pbest_values , 1, temp_p_v[result$ix[1:max_size],])
+    swarm1$velocities = add_row(swarm1$velocities , 1, temp_vel[result$ix[1:max_size],])
+
+
 
   }
   return(swarm1)
