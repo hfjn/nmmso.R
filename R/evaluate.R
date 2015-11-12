@@ -33,7 +33,7 @@ evaluate <-
       nmmso_state$active_modes[[chg]]$swarm$pbest_locations <- add_row(nmmso_state$active_modes[[chg]]$swarm$pbest_locations, nmmso_state$active_modes[[chg]]$swarm$shifted_loc, nmmso_state$active_modes[[chg]]$swarm$new_location)
     }
     
-    # change the x and y of the curren active mode
+    # change the x and y of the current active mode
     # check back with matlab
     nmmso_state$X[nmmso_state$index,] = nmmso_state$active_modes[[chg]]$swarm$new_location
     nmmso_state$Y[nmmso_state$index] = y

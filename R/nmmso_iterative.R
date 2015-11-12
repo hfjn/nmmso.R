@@ -42,7 +42,6 @@ source("./R/add_row.R")
 #'
 #' @export
 NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
-
   # test if all variables are correctly initialized
   if (evaluations < 0) {
     stop('A algorithm can only be run a positive number of times')
@@ -55,7 +54,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   }
   
   if (evaluations == 0) {
-    upperBound = max_evaluations + 500
+    upperBound = max_evaluations + 2000
     # preallocate matrices for speed
     nmmso_state <- list()
     nmmso_state$X = matrix(0, upperBound, length(mx))
@@ -65,9 +64,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     nmmso_state$mode_locations = 0
     nmmso_state$mode_values = 0
 
-    ## TODO: This isn't exactly nice. But so far mode_locations is never created
-    # nmmso_state$mode_locations = matrix(0, max_evaluations + 500, length(mx))
-    
     # initialize active modes as a list and give the sub "Modes" lists aswell
     #nmmso_state$active_modes <- list(list("swarm" = list()))
     
@@ -95,7 +91,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   if(evaluations < max_evaluations){
     # first see if modes should be merged together
     number_of_mid_evals = 0
-    # # print("been here")
     while(sum(nmmso_state$active_modes_changed) > 0){
       result = merge_swarms(nmmso_state, problem_function, mn, mx)
       nmmso_state = result$nmmso_state
@@ -103,8 +98,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
-    # # print("done that")
-
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
     limit = min(max_evol, length(nmmso_state$active_modes))
@@ -120,10 +113,10 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
         indices = sample(length(nmmso_state$mode_values))
       }      
     }else{
-      # increment all
+      # can increment all
       indices = 1:limit
     }
-    I2 = indices
+    I2 = indices[1:limit]
     # increment
     
     # # print("for in")
@@ -161,8 +154,9 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
     cat("Number of swarms", length(nmmso_state$active_modes)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
+      cat(" index ", nmmso_state$index)
     cat("\n")
-        
+
   }else{
     cat("Evaluations taken already exhausted! \n")
   }

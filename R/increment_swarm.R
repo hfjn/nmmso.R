@@ -10,12 +10,6 @@
 #' 
 #' @export
 increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
-  # cat("increment_swarm \n")
-  # # # print(length(nmmso_state$active_modes))
-  # # # print(length(nmmso_state$mode_locations))
-  # # # print(length(nmmso_state$mode_values))
-  # # # print(length(nmmso_state$converged_modes))
-  # # # print(length(nmmso_state$active_modes_changed))
   cs = 0
   new_location = mn - 1
   d = nmmso_state$active_modes[[index]]$swarm$dist
@@ -86,12 +80,6 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
     nmmso_state$active_modes[[index]]$swarm$velocities = add_row(nmmso_state$active_modes[[index]]$swarm$velocities, nmmso_state$active_modes[[index]]$swarm$shifted_loc, temp_vel)
   }
   nmmso_state$active_modes[[index]]$swarm$new_location = new_location
-  
-  # # # print(length(nmmso_state$active_modes))
-  # # # print(length(nmmso_state$mode_locations))
-  # # # print(length(nmmso_state$mode_values))
-  # # # print(length(nmmso_state$converged_modes))
-  # # # print(length(nmmso_state$active_modes_changed))
 
   # return value
   list("nmmso_state" = nmmso_state)
