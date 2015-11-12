@@ -10,8 +10,11 @@ merge_swarms_together <- function(swarm1, swarm2) {
   # merge swarm 1 and 2, while keeping best elements of both
   n1 = swarm1$number_of_particles
   n2 = swarm2$number_of_particles
-  # str(swarm1)
-  # str(swarm2)
+
+  print("swarm1")
+  str(swarm1)
+  print("swarm2")
+  str(swarm2)
 
   max_size = nrow(swarm1$history_locations)
   
@@ -36,20 +39,27 @@ merge_swarms_together <- function(swarm1, swarm2) {
     temp_vel = rbind(swarm1$velocities, swarm2$velocities)
 
     result <- sort(temp_h_v, decreasing = TRUE, index.return = TRUE)
-    print(length(result$ix))
-    print(max_size)
-    str(temp_vel)
-    str(swarm1$velocities)
-    str(swarm2$velocities)
-    print(result$ix[1:max_size])
-    swarm1$history_locations = add_row(swarm1$history_locations , 1, temp_h_loc[result$ix[1:max_size],])
-    swarm1$history_values = add_row(swarm1$history_values , 1, temp_h_v[result$ix[1:max_size],])
-    swarm1$pbest_locations = add_row(swarm1$pbest_locations , 1, temp_p_loc[result$ix[1:max_size],])
-    swarm1$pbest_values = add_row(swarm1$pbest_values , 1, temp_p_v[result$ix[1:max_size],])
-    swarm1$velocities = add_row(swarm1$velocities , 1, temp_vel[result$ix[1:max_size],])
+    indices = result$ix
 
+    # check temp_h_v -> history values (could be =/)
+    # check velocities
+    # check number of particles
 
+    print("h_v")
+    print(temp_h_v)
 
+    print("indices")
+    str(indices[1:max_size])
+    print("velocities")
+    print(swarm1$velocities)
+    print("temp vel")
+    print(temp_vel)
+
+    swarm1$history_locations = add_row(swarm1$history_locations , 1, temp_h_loc[indices[1:max_size],])
+    swarm1$history_values = add_row(swarm1$history_values , 1, temp_h_v[indices[1:max_size],])
+    swarm1$pbest_locations = add_row(swarm1$pbest_locations , 1, temp_p_loc[indices[1:max_size],])
+    swarm1$pbest_values = add_row(swarm1$pbest_values , 1, temp_p_v[indices[1:max_size],])
+    swarm1$velocities = add_row(swarm1$velocities , 1, temp_vel[indices[1:max_size],])
   }
   return(swarm1)
 }

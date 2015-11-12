@@ -46,8 +46,9 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       x5 = nmmso_state$active_modes[[index]]$swarm$pbest_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
       x6 = nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,]
 
-      temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4 + 2.0 * matrix(length(new_location)^2, length(new_location)) * (x5 - x6))
+      temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4) + 2.0 * matrix(length(new_location)^2, length(new_location)) * (x5 - x6)
       reject = reject + 1
+
       if (reject > 20) {
         # if we keep rejecting, then put at extreme any violating design patterns
         I_max = which(((nmmso_state$active_modes[[index]]$swarm$history_locations[nmmso_state$active_modes[[index]]$swarm$shifted_loc,] + temp_velocity) > mx) == 1)
@@ -82,7 +83,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
         temp_vel = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (mx - mx) + mn
       }
     }
-    nmmso_state$active_modes[[index]]$swarm$velocities = add_row(nmmso_state$active_modes[[index]]$swarm$velocities,nmmso_state$active_modes[[index]]$swarm$shifted_loc ,temp_vel)
+    nmmso_state$active_modes[[index]]$swarm$velocities = add_row(nmmso_state$active_modes[[index]]$swarm$velocities, nmmso_state$active_modes[[index]]$swarm$shifted_loc, temp_vel)
   }
   nmmso_state$active_modes[[index]]$swarm$new_location = new_location
   
