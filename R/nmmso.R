@@ -27,6 +27,7 @@
 #'
 #' @export
 NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol = 100, tol_val = 10 ^ -6) {
+  
   if(max_evol <= 0) {
     cat("Max_eval cannot be negative or zero, default max_eval used, set at 100 \n")
     max_evol = 100
@@ -45,11 +46,12 @@ NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol
     mode_y_before = mode_y_after
     evaluations_before = evaluations_after
     
-    nmmso_iterative = NMMSO_iterative(swarm_size, problem_function, max_evaluations, mn, mx, evaluations_after, nmmso_state, max_evol, tol_val)
+
+    nmmso_iterative = NMMSO_iterative(swarm_size, problem_function, max_evaluations, mn, mx, evaluations_after, nmmso_iterative$nmmso_state, max_evol, tol_val)
     mode_loc_after = nmmso_iterative$mode_loc
     mode_y_after = nmmso_iterative$mode_y
     evaluations_after = nmmso_iterative$evaluations
-    nmmso_state = nmmso_iterative$nmmso_state
+    print(object_size(nmmso_iterative$nmmso_state))
   }
   
   list("mode_loc_before" = mode_loc_before, "mode_y_before" = mode_y_before, "evaluations_before" = evaluations_before, 

@@ -166,6 +166,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         nmmso_state$mode_values = nmmso_state$mode_values[-delete_index[i]]
         nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
         nmmso_state$active_modes_changed = nmmso_state$active_modes_changed[-delete_index[i]]
+        gc()
       }
     }
   }
