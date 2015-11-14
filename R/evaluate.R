@@ -13,29 +13,29 @@
 evaluate <-
   function(nmmso_state, chg, problem_function) {
     y = feval(
-      problem_function, nmmso_state$swarms[chg]$new_location
+      problem_function, nmmso_state$swarms[[chg]]$new_location
     )
     mode_shift = 0
     
-    if (y > nmmso_state$swarms[chg]$mode_value) {
-      nmmso_state$swarms[chg]$mode_location = nmmso_state$swarms[chg]$new_location
-      nmmso_state$swarms[chg]$mode_value = y
+    if (y > nmmso_state$swarms[[chg]]$mode_value) {
+      nmmso_state$swarms[[chg]]$mode_location = nmmso_state$swarms[[chg]]$new_location
+      nmmso_state$swarms[[chg]]$mode_value = y
       mode_shift = 1
     }
 
-    nmmso_state$swarms[chg]$history_locations = add_row(nmmso_state$swarms[chg]$history_locations, nmmso_state$swarms[chg]$shifted_loc, nmmso_state$swarms[chg]$new_location)
-    nmmso_state$swarms[chg]$history_values[nmmso_state$swarms[chg]$shifted_loc] = y
+    nmmso_state$swarms[[chg]]$history_locations = add_row(nmmso_state$swarms[[chg]]$history_locations, nmmso_state$swarms[[chg]]$shifted_loc, nmmso_state$swarms[[chg]]$new_location)
+    nmmso_state$swarms[[chg]]$history_values[nmmso_state$swarms[[chg]]$shifted_loc] = y
     
     # if better than personal best for swarm member - then replace
-    # # str(nmmso_state$swarms[chg]$pbest_values)
-    if (y > nmmso_state$swarms[chg]$pbest_values[nmmso_state$swarms[chg]$shifted_loc,]) {
-      nmmso_state$swarms[chg]$pbest_values[nmmso_state$swarms[chg]$shifted_loc, ] = y
-      nmmso_state$swarms[chg]$pbest_locations <- add_row(nmmso_state$swarms[chg]$pbest_locations, nmmso_state$swarms[chg]$shifted_loc, nmmso_state$swarms[chg]$new_location)
+    # # str(nmmso_state$swarms[[chg]]$pbest_values)
+    if (y > nmmso_state$swarms[[chg]]$pbest_values[nmmso_state$swarms[[chg]]$shifted_loc,]) {
+      nmmso_state$swarms[[chg]]$pbest_values[nmmso_state$swarms[[chg]]$shifted_loc, ] = y
+      nmmso_state$swarms[[chg]]$pbest_locations <- add_row(nmmso_state$swarms[[chg]]$pbest_locations, nmmso_state$swarms[[chg]]$shifted_loc, nmmso_state$swarms[[chg]]$new_location)
     }
     
     # change the x and y of the current active mode
     # check back with matlab
-    nmmso_state$X[nmmso_state$index,] = nmmso_state$swarms[chg]$new_location
+    nmmso_state$X[nmmso_state$index,] = nmmso_state$swarms[[chg]]$new_location
     nmmso_state$Y[nmmso_state$index] = y
     nmmso_state$index = nmmso_state$index + 1
     

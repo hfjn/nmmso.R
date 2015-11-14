@@ -14,13 +14,13 @@
 #' @export
 hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     # cat("hive \n")
-    # # # print(length(nmmso_state$active_modes))
+    # # # print(length(nmmso_state$swarms))
     # # # print(length(nmmso_state$mode_locations))
     # # # print(length(nmmso_state$mode_values))
     # # # print(length(nmmso_state$converged_modes))
-    # # # print(length(nmmso_state$active_modes_changed))
+    # # # print(length(nmmso_state$swarms_changed))
     number_of_new_samples = 0
-    LL = length(nmmso_state$active_modes)
+    LL = length(nmmso_state$swarms)
     fit_I = sample(LL)
     
     limit = min(max_evol, LL)
@@ -30,7 +30,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     
     # first identify those swarms who are at capacity, and therefore maybe considered for splitting off a member
     for (i in 1:length(I2)) {
-      if (nmmso_state$swarms[i]$number_of_particles >= swarm_size) {
+      if (nmmso_state$swarms[[i]]$number_of_particles >= swarm_size) {
         CI[i] = 1
       }
     }
@@ -42,15 +42,15 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
       r = CI[r[1]]
       
       # select and active swarm member at random
-      k = sample(nmmso_state$swarms[r]$number_of_particles)
+      k = sample(nmmso_state$swarms[[r]]$number_of_particles)
       k = k[1]
-      R = nmmso_state$swarms[r]$history_locations[k,]
-      R_v = nmmso_state$swarms[r]$history_values[k,]
+      R = nmmso_state$swarms[[r]]$history_locations[k,]
+      R_v = nmmso_state$swarms[[r]]$history_values[k,]
       
       # only look at splitting off member who is greater than tol_value
       # distance away; otherwise will be merged riht in aigain at the next iteration
-      if (sqrt(dist2(R, nmmso_state$swarms[r]$mode_location)) > nmmso_state$tol_val) {
-        mid_loc = 0.5 * (nmmso_state$swarms[r]$mode_location - R) + R        
+      if (sqrt(dist2(R, nmmso_state$swarms[[r]]$mode_location)) > nmmso_state$tol_val) {
+        mid_loc = 0.5 * (nmmso_state$swarms[[r]]$mode_location - R) + R        
         swarm = list("new_location" = mid_loc)
         result = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
         swarm = result$swarm
@@ -74,20 +74,22 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
           nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
           nmmso_state$mode_values = rbind(nmmso_state$mode_values,  R_v)
 
-          nmmso_state$swarms[length(nmmso_state$active_modes) + 1] = list("swarm" = swarm)
+          nmmso_state$swarms = c(swarms, swarm)
+          str(nmmso_state)
+          stop()
           
-          nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, 1)
+          nmmso_state$swarms_changed = rbind(nmmso_state$swarms_changed, 1)
           nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, 0)
           
           # remove from existing swarm and replace with mid eval
           # see above, probably not the right distance function
-          d = sqrt(dist2(nmmso_state$swarms[r]$mode_location, R))
+          d = sqrt(dist2(nmmso_state$swarms[[r]]$mode_location, R))
           
-          nmmso_state$swarms[r]$history_locations[k,] = mid_loc
-          nmmso_state$swarms[r]$history_values[k,] = mid_loc_val
+          nmmso_state$swarms[[r]]$history_locations[k,] = mid_loc
+          nmmso_state$swarms[[r]]$history_values[k,] = mid_loc_val
           
-          nmmso_state$swarms[r]$pbest_locations[k,] = mid_loc
-          nmmso_state$swarms[r]$pbest_values[k,] = mid_loc_val
+          nmmso_state$swarms[[r]]$pbest_locations[k,] = mid_loc
+          nmmso_state$swarms[[r]]$pbest_values[k,] = mid_loc_val
           
           temp_vel = mn - 1
           while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
@@ -97,22 +99,22 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
               temp_vel = runif(size(R)) * (mx  -  mn) + mn
             } # resolve repeated rejection
           }
-          nmmso_state$swarms[r]$velocities = add_row(nmmso_state$swarms[r]$velocities, k, temp_vel)
+          nmmso_state$swarms[[r]]$velocities = add_row(nmmso_state$swarms[[r]]$velocities, k, temp_vel)
           
         }else{
-          if (swarm$mode_value > nmmso_state$swarms[r]$mode_value) {
+          if (swarm$mode_value > nmmso_state$swarms[[r]]$mode_value) {
             # discovered better than original, so replace more accordingly
-            nmmso_state$swarms[r]$mode_value = swarm$mode_value
-            nmmso_state$swarms[r]$mode_location = swarm$mode_location
+            nmmso_state$swarms[[r]]$mode_value = swarm$mode_value
+            nmmso_state$swarms[[r]]$mode_location = swarm$mode_location
           }
         }
         number_of_new_samples = number_of_new_samples + 1
       }      
     }
-    # # # print(length(nmmso_state$active_modes))
+    # # # print(length(nmmso_state$swarms))
     # # # print(length(nmmso_state$mode_locations))
     # # # print(length(nmmso_state$mode_values))
     # # # print(length(nmmso_state$converged_modes))
-    # # # print(length(nmmso_state$active_modes_changed))
+    # # # print(length(nmmso_state$swarms_changed))
     list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)
   }

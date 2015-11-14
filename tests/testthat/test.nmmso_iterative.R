@@ -16,7 +16,7 @@ nmmso_state$index = 1
 nmmso_state$converged_modes = 0
 
 # initialize active modes as a list and give the sub "Modes" lists aswell
-nmmso_state$active_modes <- list(list(swarm = list()))
+nmmso_state$swarms <- list(list(swarm = list()))
 
 #'
 #'
@@ -76,7 +76,7 @@ test_that("UNI", {
 test_that("get_initial_locations",{
   nmmso_state = get_initial_locations(nmmso_state, as.numeric(mn[2]), as.numeric(mx[2]))
   expect_true(length(nmmso_state$swarms[1]$new_location[1,1]) > 0)
-  expect_true(nmmso_state$active_modes_changed == 1)
+  expect_true(nmmso_state$swarms_changed == 1)
 })
 
 test_that("evaluate_first",{

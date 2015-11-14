@@ -16,7 +16,7 @@ random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
 
     x = matrix(runif(size(mx)[1]*size(mx)[2]), size(mx)[1]) * (mx - mn) + mn
 
-    nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, 1)
+    nmmso_state$swarms_changed = rbind(nmmso_state$swarms_changed, 1)
     nmmso_state$converged_modes = c(nmmso_state$converged_modes, 0)
     #create new swarm
     swarm <- list("new_location" = x[1,])

@@ -8,11 +8,12 @@
 #' 
 #' @export
 extract_modes <- function(nmmso_state) {
-  RES = matrix(0, length(nmmso_state$active_modes), length(nmmso_state$swarms[1]$mode_location))
-  RES_Y = matrix(0, length(nmmso_state$active_modes), 1)
-  for (i in 1:length(nmmso_state$active_modes)) {
-    RES <- add_row(RES, i, nmmso_state$swarms[i]$mode_location)
-    RES_Y[i] = nmmso_state$swarms[i]$mode_value
+  RES = matrix(0, length(nmmso_state$swarms), length(nmmso_state$swarms[[1]]$mode_location))
+  RES_Y = matrix(0, length(nmmso_state$swarms), 1)
+  str(nmmso_state)
+  for (i in 1:length(nmmso_state$swarms)) {
+    RES <- add_row(RES, i, nmmso_state$swarms[[i]]$mode_location)
+    RES_Y[i] = nmmso_state$swarms[[i]]$mode_value
   }
   
   list("RES" = RES, "RES_Y" = RES_Y)

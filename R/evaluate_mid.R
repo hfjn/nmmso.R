@@ -16,17 +16,17 @@ evaluate_mid <-
     # also the mode estimate, and the only history thus far
     
     y = feval(
-      problem_function, nmmso_state$swarms[chg]$new_location
+      problem_function, nmmso_state$swarms[[chg]]$new_location
     )
     mode_shift = 0
     
-    if (y > nmmso_state$swarms[chg]$mode_value) {
-      nmmso_state$swarms[chg]$mode_location = nmmso_state$swarms[chg]$new_location
-      nmmso_state$swarms[chg]$mode_value = y
+    if (y > nmmso_state$swarms[[chg]]$mode_value) {
+      nmmso_state$swarms[[chg]]$mode_location = nmmso_state$swarms[[chg]]$new_location
+      nmmso_state$swarms[[chg]]$mode_value = y
       mode_shift = mode_shift + 1
     }
     
-    nmmso_state$X[nmmso_state$index,] = nmmso_state$swarms[chg]$new_location
+    nmmso_state$X[nmmso_state$index,] = nmmso_state$swarms[[chg]]$new_location
     nmmso_state$Y[nmmso_state$index] = y
     nmmso_state$index = nmmso_state$index + 1
     

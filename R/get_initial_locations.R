@@ -13,8 +13,10 @@ get_initial_locations <- function(nmmso_state, mn, mx) {
   # TODO there was an assignment think about
   # [1]
   # create first stage of swarm
-  nmmso_state$swarms = list("swarm" = list("new_location" = new_location))
-  nmmso_state$active_modes_changed[1] = 1
+  swarm = list("new_location" = new_location)
+  nmmso_state$swarms = list(swarm)
+  str(nmmso_state$swarms)
+  nmmso_state$swarms_changed[1] = 1
   
   return(nmmso_state)
 }
