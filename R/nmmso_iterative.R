@@ -73,17 +73,19 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # get first evaluation
     # # print("get_evaluate_first")
-    result = evaluate_first(nmmso_state$active_modes[[1]]$swarm, problem_function, nmmso_state, swarm_size, mn, mx)
+    print(nmmso_state$swarms[1]$new_location)
+    result = evaluate_first(nmmso_state$swarms[1], problem_function, nmmso_state, swarm_size, mn, mx)
     nmmso_state = result$nmmso_state
     swarm = result$swarm
-    nmmso_state$active_modes[[1]]$swarm = swarm
+    nmmso_state$swarms[1] = swarm
     
     # track number of evaluations taken
     evaluations = 1
     
     # keep modes in matrices for efficiency on some computations
-    nmmso_state$mode_locations = nmmso_state$active_modes[[1]]$swarm$mode_location
-    nmmso_state$mode_values = nmmso_state$active_modes[[1]]$swarm$mode_value
+    
+    nmmso_state$mode_locations = nmmso_state$swarms[1]$mode_location
+    nmmso_state$mode_values = nmmso_state$swarms[1]$mode_value
     nmmso_state$tol_val = tol_val
   }
   
@@ -139,7 +141,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     number_of_hive_samples = result$number_of_new_samples
     
     # create speculative new swarm, either at random in design space, or via crossover
-    if(runif(1) < 0.5 || length(nmmso_state$active_modes) == 1 || length(mx) == 1){
+    if(runif(1) < 0.5 || length(nmmso_state$swarms) == 1 || length(mx) == 1){
       number_of_evol_modes = 0
       result = random_new(nmmso_state, problem_function, mn, mx, swarm_size)
       nmmso_state = result$nmmso_state
@@ -164,6 +166,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   result = extract_modes(nmmso_state)
   mode_loc = result$RES
   mode_y = result$RES_Y
+  print(sort( sapply(ls(),function(x){object.size(get(x))})))  
   
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }

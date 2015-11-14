@@ -26,4 +26,8 @@ state = list()
 evals = 0
 index = 2
 
-result = NMMSO(swarm_size = as.numeric(10*length(mx[2])), problem_function = fit, max_evaluations = 50000, mn = as.numeric(mn[2]), mx = as.numeric(mx[2]))
+Rprof("file.out", line.profiling=TRUE)
+result <- NMMSO(swarm_size = as.numeric(10*length(mx[2])), problem_function = fit, max_evaluations = 10000, mn = as.numeric(mn[2]), mx = as.numeric(mx[2]))
+
+Rprof(NULL)
+summaryRprof("file.out", lines="show")

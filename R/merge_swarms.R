@@ -19,7 +19,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
   number_of_mid_evals = 0
 
   # only compare if there is a changed mode, and more than on mode in system
-  if (n >= 1 && (length(nmmso_state$active_modes) > 1)) {
+  if (n >= 1 && (length(nmmso_state$swarms) > 1)) {
     to_compare = matrix(0, n, 2)
     to_compare[, 1] = I
     for (i in 1:n) {      
@@ -34,25 +34,25 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       tmp = min(d)
       to_compare[i, 2] = which.min(d)
       # track euclidean distance to nearest neighbour mode
-      nmmso_state$active_modes[[I[i]]]$swarm$dist = sqrt(tmp)
+      nmmso_state$swarms[I[i]]$dist = sqrt(tmp)
       
-      if (nmmso_state$active_modes[[I[i]]]$swarm$number_of_particles == 1) {
+      if (nmmso_state$swarms[I[i]]$number_of_particles == 1) {
         reject = 0
         # in situation where a new swarm, and therefore distance to neighbor swarm now calculated
         # so set the initial velocity at a more reasonable value for the first particle, rather than using the uniform in design space
         temp_vel = mn - 1
         while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
-          temp_vel = uniform_sphere_points(1, length(nmmso_state$active_modes[[I[i]]]$swarm$new_location))*(nmmso_state$active_modes[[I[i]]]$swarm$dist / 2)
+          temp_vel = uniform_sphere_points(1, length(nmmso_state$swarms[I[i]]$new_location))*(nmmso_state$swarms[I[i]]$dist / 2)
           reject = reject + 1
           
           # rejecting lots, so likely in a corner of design space where a significant volume of the sphere lies outside
           # the bounds, so will make do with a random legal velocity in bounds
           if (reject > 20) {
-            new_location_size = nmmso_state$active_modes[[I[i]]]$swarm$new_location
+            new_location_size = nmmso_state$swarms[I[i]]$new_location
             temp_vel = matrix(runif(size(new_location_size)[1]*size(new_location_size)[2]), size(new_location_size)[1]) * (mx-mn) + mn
           }
         }
-        nmmso_state$active_modes[[I[i]]]$swarm$velocities = add_row(nmmso_state$active_modes[[I[i]]]$swarm$velocities, 1, temp_vel)
+        nmmso_state$swarms[I[i]]$velocities = add_row(nmmso_state$swarms[I[i]]$velocities, 1, temp_vel)
       }
     }
     
@@ -93,33 +93,33 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     # merge if sufficiently close
     # # # print(to_compare)
     # # str(nmmso_state)
-    distance = dist2(nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location, nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)
+    distance = dist2(nmmso_state$swarms[to_compare[i, 1]]$mode_location, nmmso_state$swarms[to_compare[i, 2]]$mode_location)
     if (sqrt(distance) < nmmso_state$tol_val) {
       # can't preallocate, as don't know the size
       to_merge = c(to_merge, i)
     } else {
           # evaluate exact mid point between modes, and add to mode 2
           # history
-      mid_loc = 0.5 * (nmmso_state$active_modes[[to_compare[i, 1]]]$swarm$mode_location - nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location)+ nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location
+      mid_loc = 0.5 * (nmmso_state$swarms[to_compare[i, 1]]$mode_location - nmmso_state$swarms[to_compare[i, 2]]$mode_location)+ nmmso_state$swarms[to_compare[i, 2]]$mode_location
       # little sanity check
       if (sum(mid_loc < mn) > 0 || sum(mid_loc > mx) > 0) {
         warning("Mid point out of range!")
       }
 
-      nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$new_location = mid_loc
+      nmmso_state$swarms[to_compare[i, 2]]$new_location = mid_loc
       evaluate_mid = evaluate_mid(nmmso_state, to_compare[i, 2], problem_function)
       nmmso_state = evaluate_mid$nmmso_state
       mode_shift = evaluate_mid$mode_shift
       y = evaluate_mid$y
 
       if (mode_shift == 1) {
-        nmmso_state$mode_locations[I[i],] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_location 
-        nmmso_state$mode_values[to_compare[i, 2]] = nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value
+        nmmso_state$mode_locations[I[i],] = nmmso_state$swarms[to_compare[i, 2]]$mode_location 
+        nmmso_state$mode_values[to_compare[i, 2]] = nmmso_state$swarms[to_compare[i, 2]]$mode_value
         to_merge = rbind(to_merge, i)
             # track that the mode value has improved
         nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
             #better than mode 1 current mode, so merge
-      } else if (nmmso_state$active_modes[[to_compare[i, 2]]]$swarm$mode_value < y) {
+      } else if (nmmso_state$swarms[to_compare[i, 2]]$mode_value < y) {
         to_merge = rbind(to_merge, i)
       }
 
@@ -137,14 +137,14 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         stop('Indices should not be equal')
       }
     # if peak of mode 1 is higher than mode 2, then replace
-      if (nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm$mode_value > nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm$mode_value) {
+      if (nmmso_state$swarms[to_compare[to_merge[i], 1]]$mode_value > nmmso_state$swarms[to_compare[to_merge[i], 2]]$mode_value) {
         delete_index = c(delete_index, to_compare[to_merge[i], 2])
-        nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm)
+        nmmso_state$swarms[to_compare[to_merge[i], 1]] = merge_swarms_together(nmmso_state$swarms[to_compare[to_merge[i], 1]], nmmso_state$swarms[to_compare[to_merge[i], 2]])
       #track that the mode value has been merge and should be compared again
         nmmso_state$active_modes_changed[[to_compare[i, 1]]] = 1
       } else {
         delete_index = c(delete_index, to_compare[to_merge[i], 1])
-        nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm = merge_swarms_together(nmmso_state$active_modes[[to_compare[to_merge[i], 2]]]$swarm, nmmso_state$active_modes[[to_compare[to_merge[i], 1]]]$swarm)
+        nmmso_state$swarms[to_compare[to_merge[i], 2]] = merge_swarms_together(nmmso_state$swarms[to_compare[to_merge[i], 2]], nmmso_state$swarms[to_compare[to_merge[i], 1]])
         # track that the mode value has merge and should be compared again
         nmmso_state$active_modes_changed[to_compare[i, 2]] = 1
       }
@@ -158,7 +158,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in seq(length(delete_index), 1, -1)) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
-        nmmso_state$active_modes[[delete_index[i]]] <- NULL
+        nmmso_state$swarms[delete_index[i]] <- NULL
+        gc()
         if(NCOL(nmmso_state$mode_locations) == 1)
           nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
         else
@@ -166,7 +167,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         nmmso_state$mode_values = nmmso_state$mode_values[-delete_index[i]]
         nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
         nmmso_state$active_modes_changed = nmmso_state$active_modes_changed[-delete_index[i]]
-        gc()
       }
     }
   }
@@ -175,8 +175,10 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
 
   # only one mode, so choose dist for it (smallest design dimension)
 if (length(nmmso_state$active_modes) == 1) {
-  nmmso_state$active_modes[[1]]$swarm$dist = min(mx - mn)
+  nmmso_state$swarms[1]$dist = min(mx - mn)
 }
+
+
   # return the values
 list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
 }

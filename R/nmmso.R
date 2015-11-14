@@ -50,11 +50,13 @@ NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol
     nmmso_iterative = NMMSO_iterative(swarm_size, problem_function, max_evaluations, mn, mx, evaluations_after, nmmso_iterative$nmmso_state, max_evol, tol_val)
     mode_loc_after = nmmso_iterative$mode_loc
     mode_y_after = nmmso_iterative$mode_y
+    print(mode_loc_after)
+    print(mode_y_after)
     evaluations_after = nmmso_iterative$evaluations
     print(object_size(nmmso_iterative$nmmso_state))
   }
   
   list("mode_loc_before" = mode_loc_before, "mode_y_before" = mode_y_before, "evaluations_before" = evaluations_before, 
-       "nmmso_state" = nmmso_state, 
+       "nmmso_state" = nmmso_iterative$nmmso_state, 
        "mode_loc_after" = mode_loc_after, "mode_y_after" = mode_y_after, "evaluations_after" = evaluations_after)
 }

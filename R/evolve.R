@@ -29,7 +29,7 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     II = sample(n)
     # uniform crossover of two mode elements, either fittest two, or random two
     R = UNI(
-      nmmso_state$active_modes[[I[II[1]]]]$swarm$mode_location, nmmso_state$active_modes[[I[II[2]]]]$swarm$mode_location
+      nmmso_state$swarms[I[II[1]]]$mode_location, nmmso_state$swarms[I[II[2]]]$mode_location
     )
     
     nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)  
@@ -40,7 +40,7 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     nmmso_state = evaluate_first$nmmso_state
     
     nmmso_state$mode_values = rbind(nmmso_state$mode_values, swarm$mode_value)
-    nmmso_state$active_modes[[length(nmmso_state$active_modes) + 1]]$swarm = swarm
+    nmmso_state$swarms[length(nmmso_state$active_modes) + 1] = swarm
     
     # Mark these as new
     nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, 1)
