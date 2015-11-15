@@ -159,7 +159,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
         nmmso_state$active_modes[[delete_index[i]]] <- NULL
-        if(NCOL(nmmso_state$mode_locations) == 1)
+        if(ncol(nmmso_state$mode_locations) == 1)
           nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
         else
           nmmso_state$mode_locations = nmmso_state$mode_locations[-(delete_index[i]),]
