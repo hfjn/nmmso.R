@@ -15,7 +15,6 @@ get_initial_locations <- function(nmmso_state, mn, mx) {
   # create first stage of swarm
   swarm = list("new_location" = new_location)
   nmmso_state$swarms = list(swarm)
-  str(nmmso_state$swarms)
   nmmso_state$swarms_changed[1] = 1
   
   return(nmmso_state)

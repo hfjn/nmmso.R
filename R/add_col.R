@@ -13,8 +13,8 @@
 
 add_col <- function(original, row_index, new_object){
 
-	nr = NROW(original)
-    nc = if(NCOL(new_object) == 1 && row_index > NCOL(original)) row_index else if(row_index + NCOL(new_object) -1 > NCOL(original)) row_index + NCOL(new_object) -1 else NCOL(original)
+	nr = nrow(original)
+    nc = if(ncol(new_object) == 1 && row_index > ncol(original)) row_index else if(row_index + ncol(new_object) -1 > ncol(original)) row_index + ncol(new_object) -1 else ncol(original)
 
     i1 = nr * (row_index - 1) + 1
     i2 = i1 + length(new_object) - 1

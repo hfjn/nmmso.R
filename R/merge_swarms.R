@@ -25,7 +25,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     for (i in 1:n) {      
       # calculate euclidean distance     
       to_compare = rbind(to_compare)
-      str(nmmso_state)
       d = dist2(nmmso_state$mode_locations[I[i],], nmmso_state$mode_locations)
       # will be closest to itself, so need to get second closest
       d[I[i]] = Inf

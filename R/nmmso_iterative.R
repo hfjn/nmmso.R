@@ -68,12 +68,10 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     #nmmso_state$swarms <- list(list("swarm" = list()))
     
     # get initial locations
-    # # print("get_initial_locations")
     nmmso_state = get_initial_locations(nmmso_state, mn, mx)
-    
+
     # get first evaluation
-    # # print("get_evaluate_first")
-    result = evaluate_first(nmmso_state$swarms[1], problem_function, nmmso_state, swarm_size, mn, mx)
+    result = evaluate_first(nmmso_state$swarms[[1]], problem_function, nmmso_state, swarm_size, mn, mx)
     nmmso_state = result$nmmso_state
     swarm = result$swarm
     nmmso_state$swarms = list(swarm)
@@ -81,7 +79,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # track number of evaluations taken
     evaluations = 1
     
-    str(nmmso_state$swarms)
     # keep modes in matrices for efficiency on some computations
 
     nmmso_state$mode_locations = c(nmmso_state$swarms[[1]]$mode_location)
@@ -100,6 +97,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
+
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
     limit = min(max_evol, length(nmmso_state$swarms))
@@ -166,7 +164,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   result = extract_modes(nmmso_state)
   mode_loc = result$RES
   mode_y = result$RES_Y
-  print(sort(sapply(ls(),function(x){object.size(get(x))})))  
+  # print(sort(sapply(ls(),function(x){object.size(get(x))})))  
   
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
