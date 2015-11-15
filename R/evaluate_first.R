@@ -53,6 +53,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   nmmso_state$X[nmmso_state$index,] = swarm$new_location
   nmmso_state$Y[nmmso_state$index] = y
   nmmso_state$index = nmmso_state$index + 1
+  print("evaluate_first")
   # return the result
   list("nmmso_state" = nmmso_state, "swarm" = swarm)
 }

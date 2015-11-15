@@ -22,8 +22,9 @@ evaluate_new_locations <- function(nmmso_state, problem_function, I) {
         nmmso_state$swarms[[I[i]]]$less_fit_move = 0
       }
     }
+    print("number_of_new_locations")
     
     # return the values
-    list("nmmso_state" = nmmso_state, "number_of_new_location" = length(I))
+    list("nmmso_state" = nmmso_state, "number_of_new_locations" = length(I))
   }
 

@@ -41,7 +41,7 @@ NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol
   evaluations_after = 0
   
   while(evaluations_after < max_evaluations) {
-    cat("Evaluation: ", evaluations_after, "\n")
+    # cat("Evaluation: ", evaluations_after, "\n")
     mode_loc_before = mode_loc_after
     mode_y_before = mode_y_after
     evaluations_before = evaluations_after

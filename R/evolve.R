@@ -46,8 +46,10 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     nmmso_state$swarms_changed = rbind(nmmso_state$swarms_changed, 1)
     nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, 0)
     number_of_new_modes = 1
+
+    print("number_of_new_modes")
     
     # return values
-    list("nmmso_state" = nmmso_state)
+    list("nmmso_state" = nmmso_state, "number_of_new_modes" = number_of_new_modes)
   }
     

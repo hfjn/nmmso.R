@@ -69,7 +69,6 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         nmmso_state$mode_values = rbind(nmmso_state$mode_values,  R_v)
 
         nmmso_state$swarms = c(nmmso_state$swarms, list(swarm))
-        str(nmmso_state)
         
         nmmso_state$swarms_changed = rbind(nmmso_state$swarms_changed, 1)
         nmmso_state$converged_modes = rbind(nmmso_state$converged_modes, 0)
@@ -102,6 +101,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         }
       }
       number_of_new_samples = number_of_new_samples + 1
+      print("number_of_new_samples")
     }      
   }
 
