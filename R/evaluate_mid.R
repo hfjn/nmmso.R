@@ -26,7 +26,7 @@ evaluate_mid <- function(nmmso_state, chg, problem_function) {
     nmmso_state$X[nmmso_state$index,] = nmmso_state$swarms[[chg]]$new_location
     nmmso_state$Y[nmmso_state$index] = y
     nmmso_state$index = nmmso_state$index + 1
-    print("evaluate_mid")
+    #print("evaluate_mid")
     
     # return the values
     list("nmmso_state" = nmmso_state, "mode_shift" = mode_shift, "y" = y)

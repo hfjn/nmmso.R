@@ -10,7 +10,7 @@
 #' number_of_mid_evals = Number of evaluations done for the merging.
 #' 
 #' @export
-merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
+merge_swarms <- function(nmmso_state, problem_function, mn, mx) {  
   # only concern ourselves with modes that have actually shifted, or are new
   # since the last generation, as no need to check others
   I = which(nmmso_state$swarms_changed == 1)
@@ -119,7 +119,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       }
 
       number_of_mid_evals = number_of_mid_evals + 1
-      print("number_of_mid_evals")
+      #print("number_of_mid_evals")
     }
   }
 
@@ -173,8 +173,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
 if (length(nmmso_state$swarms) == 1) {
   nmmso_state$swarms[[1]]$dist = min(mx - mn)
 }
-
-
   # return the values
 list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
 }

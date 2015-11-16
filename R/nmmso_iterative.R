@@ -42,6 +42,7 @@ source("./R/add_row.R")
 #'
 #' @export
 NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
+  
   # test if all variables are correctly initialized
   if (evaluations < 0) {
     stop('A algorithm can only be run a positive number of times')
@@ -78,7 +79,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     
     # track number of evaluations taken
     evaluations = 1
-    print("evaluations")
+    #print("evaluations")
     
     # keep modes in matrices for efficiency on some computations
     nmmso_state$mode_locations = c(nmmso_state$swarms[[1]]$mode_location)
@@ -147,20 +148,11 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       nmmso_state = result$nmmso_state
       number_of_evol_modes = result$number_of_new_modes
     }
-
-    print(evaluations) # 1
-    print(number_of_mid_evals) # 0
-    print(number_of_new_locations) # 1
-    print(number_of_evol_modes) # 0
-    print(number_rand_modes) # 1
-    print(number_of_hive_samples) # 0
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
     cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
     cat(" index ", nmmso_state$index, "\n")
-    str(nmmso_state)
-    stop()
 
   }else{
     cat("Evaluations taken already exhausted! \n")
@@ -169,7 +161,5 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   result = extract_modes(nmmso_state)
   mode_loc = result$RES
   mode_y = result$RES_Y
-  # print(sort(sapply(ls(),function(x){object.size(get(x))})))  
-  
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
