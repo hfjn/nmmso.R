@@ -79,7 +79,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       }
     }
   }
-      # Check for merging
+  # Check for merging
 
   n = size(to_compare)[1]
   number_of_mid_evals = 0
@@ -167,14 +167,16 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     }
   }
   
-}
+
 
   # only one mode, so choose dist for it (smallest design dimension)
-if (length(nmmso_state$swarms) == 1) {
-  nmmso_state$swarms[[1]]$dist = min(mx - mn)
-if (length(nmmso_state$active_modes) == 1) {
-  nmmso_state$active_modes[[1]]$swarm$dist = min(mx - mn)
-}
+  if (length(nmmso_state$swarms) == 1) {
+    nmmso_state$swarms[[1]]$dist = min(mx - mn)
+    if (length(nmmso_state$active_modes) == 1) {
+      nmmso_state$active_modes[[1]]$swarm$dist = min(mx - mn)
+    }
   # return the values
-list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
+    list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
+  }
+}
 }
