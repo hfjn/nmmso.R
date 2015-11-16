@@ -100,7 +100,6 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         }
       }
       number_of_new_samples = number_of_new_samples + 1
-      #print("number_of_new_samples")
     }      
   }
   list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)

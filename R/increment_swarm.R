@@ -22,7 +22,6 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   r = sample(swarm_size)
   
   while (sum(new_location < mn) > 0 || sum (new_location > mx) > 0) {
-    # # #print("i")
     # if swarm not at maximum capacity add a new particle
     if (nmmso_state$swarms[[index]]$number_of_particles < swarm_size) {
       new_location = nmmso_state$swarms[[index]]$mode_location + uniform_sphere_points(1, length(new_location)) * (d / 2)
@@ -30,8 +29,6 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       # otherwise move an existing particle
       shifted = 1
       nmmso_state$swarms[[index]]$shifted_loc = r[1]
-      # #print(r[1])
-      # str(nmmso_state$swarms[[index]]$velocities)
       # splitted up the crazy temp_velocity calculation in 6 parts
       x1 = nmmso_state$swarms[[index]]$velocities[nmmso_state$swarms[[index]]$shifted_loc,]
       x2 = matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1])

@@ -119,7 +119,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       }
 
       number_of_mid_evals = number_of_mid_evals + 1
-      #print("number_of_mid_evals")
     }
   }
 
@@ -176,7 +175,8 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       nmmso_state$active_modes[[1]]$swarm$dist = min(mx - mn)
     }
   # return the values
-    list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
+    
   }
 }
+list("nmmso_state" = nmmso_state, "number_of_merge_evals" = number_of_mid_evals)
 }
