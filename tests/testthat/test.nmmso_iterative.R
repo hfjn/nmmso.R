@@ -1,5 +1,16 @@
 context("nmmso_iterative")
-("../R/cec_2015_problem_data.R")
+
+gens = c(50000 * matrix(1, 1, 5), 20000, 20000, 40000, 40000, 20000*matrix(1,1, 4), 40000 * matrix(1, 1, 7))
+
+nopt = c(2, 5, 1, 4, 2, 18, 36, 81, 216, 12, 6, 8, 6, 6, 8, 6, 8, 6, 6, 8)
+
+dims = c(1, 1, 1, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 3, 3, 5, 5, 10, 10, 20)
+
+mn = list(0, 0, 0, c(-6, -6), c(-1.9, -1.9), c(-10, -10), c(0.25, 0.25), c(-10, -10, -10), c(0.25, 0.25, 0.25), c(0,0), -5*matrix(1, 1, 2), -5*matrix(1, 1, dims[12]), -5*matrix(1, 1, dims[13]), -5*matrix(1, 1, dims[14]), -5*matrix(1, 1, dims[15]), -5*matrix(1, 1, dims[16]), -5*matrix(1, 1, dims[17]), -5*matrix(1, 1, dims[18]), -5*matrix(1, 1, dims[19]), -5*matrix(1, 1, dims[20]))
+
+mx = list(30, 1, 1, c(6, 6), c(1.9, 1.1), c(10,10), c(10, 10), c(10, 10, 10), c(10, 10, 10), c(1, 1), 5*matrix(1,1,2), 5*matrix(1, 1, dims[12]), 5*matrix(1, 1, dims[13]), 5*matrix(1, 1, dims[14]), 5*matrix(1,1,dims[15]), matrix(1,1,dims[16]), 5*matrix(1,1,dims[17]), 5*matrix(1,1,dims[18]), 5*matrix(1,1,dims[19]), 5*matrix(1,1,dims[20]))
+
+max_evaluations = 100
 
 nmmso_state = list()
 fit <- function(x) sin(5 * pi * x)^6
@@ -47,9 +58,6 @@ test_that("nmmso_iterative main function is working correctly", {
   expect_error(NMMSO_iterative())
   # Test that evaluations can not be < 0 
   expect_error(NMMSO_iterative(100, sqrt, 100, max_evaluations = 100, mn = 1, mx = 2, evaluations = -1))
-  
-  # Test that max_evol can not be <= 0
-  expect_error(NMMSO_iterative(100, sqrt, 100, max_evaluations = 100, mn = 1, mx = 2, evaluations = 0, max_evol = -1))
 })
 
 #'
@@ -75,29 +83,15 @@ test_that("UNI", {
 #'
 test_that("get_initial_locations",{
   nmmso_state = get_initial_locations(nmmso_state, as.numeric(mn[2]), as.numeric(mx[2]))
-  expect_true(length(nmmso_state$swarms[1]$new_location[1,1]) > 0)
+  str(nmmso_state)
+  expect_true(nmmso_state$swarms[[1]]$new_location[1,1] > 0)
   expect_true(nmmso_state$swarms_changed == 1)
 })
 
 test_that("evaluate_first",{
-  result <- evaluate_first(nmmso_state$swarms[1], fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
+  #result <- evaluate_first(nmmso_state$swarms[1], fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
   #nmmso_state = result$nmmso_state
   #swarm = result$swarm
   
   #swarm$mode_location
 })
-
-nmmso_state = result$nmmso_state
-swarm = result$swarm
-nmmso_state$swarms[1] = swarm
-
-# track number of evaluations taken
-evaluations = 1
-
-# keep modes in matrices for efficiency on some computations
-nmmso_state$mode_locations = nmmso_state$swarms[1]$mode_location
-nmmso_state$mode_values = nmmso_state$swarms[1]$mode_value
-nmmso_state$tol_val = 10^-6
-
-result = merge_swarms(nmmso_state, fit, as.numeric(mn[2]), as.numeric(mx[2]))
-#result
