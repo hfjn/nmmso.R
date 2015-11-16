@@ -12,17 +12,11 @@
 #'
 #' @export
 random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
-    # cat("random_new \n")
-    # # # print(length(nmmso_state$active_modes))
-    # # # print(length(nmmso_state$mode_locations))
-    # # # print(length(nmmso_state$mode_values))
-    # # # print(length(nmmso_state$converged_modes))
-    # # # print(length(nmmso_state$active_modes_changed))
     number_rand_modes = 1
 
     x = matrix(runif(size(mx)[1]*size(mx)[2]), size(mx)[1]) * (mx - mn) + mn
 
-    nmmso_state$active_modes_changed = rbind(nmmso_state$active_modes_changed, 1)
+    nmmso_state$swarms_changed = rbind(nmmso_state$swarms_changed, 1)
     nmmso_state$converged_modes = c(nmmso_state$converged_modes, 0)
     #create new swarm
     swarm <- list("new_location" = x[1,])
@@ -31,12 +25,14 @@ random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
 
     swarm = result$swarm
     nmmso_state = result$nmmso_state
-    
-    nmmso_state$active_modes[[length(nmmso_state$active_modes) + 1]] = list("swarm" = swarm)
+
+    nmmso_state$swarms = c(nmmso_state$swarms, list(swarm))
 
     nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, x)
     
     nmmso_state$mode_values = c(nmmso_state$mode_values, swarm$mode_value)   
-    
+
+    #print("number_rand_modes")
     list("nmmso_state" = nmmso_state, "number_rand_modes" = number_rand_modes)
+
 }

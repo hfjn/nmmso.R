@@ -42,6 +42,7 @@ source("./R/add_row.R")
 #'
 #' @export
 NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
+  
   # test if all variables are correctly initialized
   if (evaluations < 0) {
     stop('A algorithm can only be run a positive number of times')
@@ -65,25 +66,24 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     nmmso_state$mode_values = 0
 
     # initialize active modes as a list and give the sub "Modes" lists aswell
-    #nmmso_state$active_modes <- list(list("swarm" = list()))
+    #nmmso_state$swarms <- list(list("swarm" = list()))
     
     # get initial locations
-    # # print("get_initial_locations")
     nmmso_state = get_initial_locations(nmmso_state, mn, mx)
-    
+
     # get first evaluation
-    # # print("get_evaluate_first")
-    result = evaluate_first(nmmso_state$active_modes[[1]]$swarm, problem_function, nmmso_state, swarm_size, mn, mx)
+    result = evaluate_first(nmmso_state$swarms[[1]], problem_function, nmmso_state, swarm_size, mn, mx)
     nmmso_state = result$nmmso_state
     swarm = result$swarm
-    nmmso_state$active_modes[[1]]$swarm = swarm
+    nmmso_state$swarms = list(swarm)
     
     # track number of evaluations taken
     evaluations = 1
+    #print("evaluations")
     
     # keep modes in matrices for efficiency on some computations
-    nmmso_state$mode_locations = nmmso_state$active_modes[[1]]$swarm$mode_location
-    nmmso_state$mode_values = nmmso_state$active_modes[[1]]$swarm$mode_value
+    nmmso_state$mode_locations = c(nmmso_state$swarms[[1]]$mode_location)
+    nmmso_state$mode_values = nmmso_state$swarms[[1]]$mode_value
     nmmso_state$tol_val = tol_val
   }
   
@@ -91,16 +91,17 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   if(evaluations < max_evaluations){
     # first see if modes should be merged together
     number_of_mid_evals = 0
-    while(sum(nmmso_state$active_modes_changed) > 0){
+    while(sum(nmmso_state$swarms_changed) > 0){
       result = merge_swarms(nmmso_state, problem_function, mn, mx)
       nmmso_state = result$nmmso_state
-      merge_evals = result$merge_evals
+      merge_evals = result$number_of_merge_evals
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
+
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
-    limit = min(max_evol, length(nmmso_state$active_modes))
+    limit = min(max_evol, length(nmmso_state$swarms))
     # have to select a subset
     if (limit > max_evol){
       # select fittest
@@ -119,14 +120,11 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     I2 = indices[1:limit]
     # increment
     
-    # # print("for in")
     for(jj in 1:length(I2)){
-      # # print(I2)
-      # # print(jj)
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
       nmmso_state = result$nmmso_state
     }
-    # # print("for out")
+
     cs = result$cs
     # evaluate new member / new locations of swarm member
     result = evaluate_new_locations(nmmso_state, problem_function,  I2)
@@ -139,7 +137,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     number_of_hive_samples = result$number_of_new_samples
     
     # create speculative new swarm, either at random in design space, or via crossover
-    if(runif(1) < 0.5 || length(nmmso_state$active_modes) == 1 || length(mx) == 1){
+    if(runif(1) < 0.5 || length(nmmso_state$swarms) == 1 || length(mx) == 1){
       number_of_evol_modes = 0
       result = random_new(nmmso_state, problem_function, mn, mx, swarm_size)
       nmmso_state = result$nmmso_state
@@ -148,14 +146,13 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       number_rand_modes = 0
       result = evolve(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
       nmmso_state = result$nmmso_state
-      number_of_evol_modes = result$number_of_evol_modes
+      number_of_evol_modes = result$number_of_new_modes
     }
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
-    cat("Number of swarms", length(nmmso_state$active_modes)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
-      cat(" index ", nmmso_state$index)
-    cat("\n")
+    cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
+    cat(" index ", nmmso_state$index, "\n")
 
   }else{
     cat("Evaluations taken already exhausted! \n")
@@ -164,6 +161,5 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
   result = extract_modes(nmmso_state)
   mode_loc = result$RES
   mode_y = result$RES_Y
-  
   list("mode_loc" = mode_loc, "mode_y" = mode_y, "evaluations" = evaluations, "nmmso_state" = nmmso_state)
 }
