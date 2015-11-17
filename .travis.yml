@@ -2,8 +2,8 @@ language: r
 compiler: gcc
 sudo: required
 env:
-	- secure: "VPYAbAOwM8nbEkukFF7ktU4EqrkoNxXBns+d5XZ6lcGD88x3P2OidFJyWHmk/ZLZCGqaRJPcHB9SkddivuJF+JYkvMEVLAf+sEl2btQZmaco8mHvSTalxm8WPgpbZ8vuaaaxQpAvajBSLiY7Dh6Go5qZmR/gvRotiDAQbC5/YRYuc4nn/iLLyGGN24Z9Kw3V3edxPfBKTHY2Ar0/mBtX49BuYd7EnWc/xiVnX4kjm/Pud7PMS/MUxWTI9DavjlC20C3JXcAtvvw/deCXXtPZTiRT7pp02+1n5nI7VIRNVXYHdMW3niRq8CNm8Xii+//SMzmaB2gbDVSTWQg0vsToss566jGJ4iJtU+CJi/bjWpm0LwpUQKwFa6ImQGmD+dgs/pN9sm39QJJYZsm4dUvkE1fLZT/72vNqvTLblKXfZHdv06WzS3lmI88/yw+kYBcomYw/FGnU/JTawLd58r4v2e7aNMI/8TSsS852qN+ZdeeUCXDv45prOVnBsO3+nLsAerEMIbzBwfseh6zR27gUOtPrJTydY/jzcM95y4zONYSxPN7QFp2Sq+onu4T2R3L7IpSghz12gwDGiMTlrhQUE28ij1bidr6audeyHfWREqAeX/FBa5vecY106WQzdmadZYwVHnVk12SNWfNiWdHwWb4Nxl/UXUvajgSPvffTGyE="
+  - secure: "VPYAbAOwM8nbEkukFF7ktU4EqrkoNxXBns+d5XZ6lcGD88x3P2OidFJyWHmk/ZLZCGqaRJPcHB9SkddivuJF+JYkvMEVLAf+sEl2btQZmaco8mHvSTalxm8WPgpbZ8vuaaaxQpAvajBSLiY7Dh6Go5qZmR/gvRotiDAQbC5/YRYuc4nn/iLLyGGN24Z9Kw3V3edxPfBKTHY2Ar0/mBtX49BuYd7EnWc/xiVnX4kjm/Pud7PMS/MUxWTI9DavjlC20C3JXcAtvvw/deCXXtPZTiRT7pp02+1n5nI7VIRNVXYHdMW3niRq8CNm8Xii+//SMzmaB2gbDVSTWQg0vsToss566jGJ4iJtU+CJi/bjWpm0LwpUQKwFa6ImQGmD+dgs/pN9sm39QJJYZsm4dUvkE1fLZT/72vNqvTLblKXfZHdv06WzS3lmI88/yw+kYBcomYw/FGnU/JTawLd58r4v2e7aNMI/8TSsS852qN+ZdeeUCXDv45prOVnBsO3+nLsAerEMIbzBwfseh6zR27gUOtPrJTydY/jzcM95y4zONYSxPN7QFp2Sq+onu4T2R3L7IpSghz12gwDGiMTlrhQUE28ij1bidr6audeyHfWREqAeX/FBa5vecY106WQzdmadZYwVHnVk12SNWfNiWdHwWb4Nxl/UXUvajgSPvffTGyE="
 after_success:
- 	- "curl -o /tmp/travis-automerge https://raw.githubusercontent.com/cdown/travis-automerge/master/travis-automerge"
- 	- "chmod a+x /tmp/travis-automerge"
- 	- "BRANCHES_TO_MERGE_REGEX='dev' BRANCH_TO_MERGE_INTO=main GITHUB_REPO=jhoffjann/nmmso /tmp/travis-automerge"
+  - "curl -o /tmp/travis-automerge https://raw.githubusercontent.com/cdown/travis-automerge/master/travis-automerge"
+  - "chmod a+x /tmp/travis-automerge"
+  - "BRANCHES_TO_MERGE_REGEX='dev' BRANCH_TO_MERGE_INTO=main GITHUB_REPO=jhoffjann/nmmso /tmp/travis-automerge"
