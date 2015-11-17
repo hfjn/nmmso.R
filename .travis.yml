@@ -5,4 +5,4 @@ secure: "VPYAbAOwM8nbEkukFF7ktU4EqrkoNxXBns+d5XZ6lcGD88x3P2OidFJyWHmk/ZLZCGqaRJP
 after_success:
   - "curl -o /tmp/travis-automerge https://raw.githubusercontent.com/cdown/travis-automerge/master/travis-automerge"
   - "chmod a+x /tmp/travis-automerge"
-  - "BRANCH_TO_MERGE_INTO=main GITHUB_REPO=jhoffjann/nmmso /tmp/travis-automerge"
+  - BRANCES_TO_MERGE_REGEX='dev' BRANCH_TO_MERGE_INTO=main GITHUB_REPO=jhoffjann/nmmso /tmp/travis-automerge"
