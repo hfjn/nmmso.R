@@ -24,11 +24,13 @@ random_new <- function(nmmso_state, problem_function, mn, mx, swarm_size) {
     result = evaluate_first(swarm, problem_function, nmmso_state, swarm_size, mn, mx)
 
     swarm = result$swarm
+
     nmmso_state = result$nmmso_state
 
     nmmso_state$swarms = c(nmmso_state$swarms, list(swarm))
 
-    nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, x)
+    
+    nmmso_state$mode_locations = add_row(nmmso_state$mode_locations, size(nmmso_state$mode_locations)[1] + 1, x)
     
     nmmso_state$mode_values = c(nmmso_state$mode_values, swarm$mode_value) 
     
