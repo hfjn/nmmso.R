@@ -31,12 +31,14 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     R = UNI(
       nmmso_state$swarms[[I[II[1]]]]$mode_location, nmmso_state$swarms[[I[II[2]]]]$mode_location
     )
+
+    R = R$x_c
     
     nmmso_state$mode_locations = add_row(nmmso_state$mode_locations,size(nmmso_state$mode_locations)[1] + 1, R)  
     
     swarm = list()
     swarm$new_location = R
-    evaluate_first = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
+    evaluate_first = evaluate_first(swarm, problem_function, nmmso_state, swarm_size, mn, mx)
     swarm = evaluate_first$swarm
     nmmso_state = evaluate_first$nmmso_state
     
