@@ -39,7 +39,7 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     evaluate_first = evaluate_first(swarm, problem_function, nmmso_state, swarm_size, mn, mx)
     swarm = evaluate_first$swarm
     nmmso_state = evaluate_first$nmmso_state
-    nmmso_state$mode_values = rbind(nmmso_state$mode_values, swarm$mode_value)
+    nmmso_state$mode_values = c(nmmso_state$mode_values, swarm$mode_value)
 
     nmmso_state$swarms[[length(nmmso_state$swarms) + 1]] = swarm
     

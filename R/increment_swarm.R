@@ -36,7 +36,6 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       x4 = nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,]
       x5 = nmmso_state$swarms[[index]]$pbest_locations[nmmso_state$swarms[[index]]$shifted_loc,]
       x6 = nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,]
-
       temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4) + 2.0 * matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (x5 - x6)
 
       reject = reject + 1
@@ -44,12 +43,12 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       if (reject > 20) {
         # if we keep rejecting, then put at extreme any violating design patterns
         I_max = which(((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity) > mx) == 1)
-        I_min = which(((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity) < mn) == 1)        
-        if (length(I_max) >= 0) {
-          temp_velocity[I_max] = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc, I_max])
+        I_min = which(((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity) < mn) == 1) 
+        if (length(I_max) > 0) {
+          temp_velocity[I_max] = runif(length(I_max)) * (mx[I_max] - nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc, I_max])         
         }
-        if (length(I_min) >= 0) {
-          temp_velocity[I_min] = runif(1, length(I_min)) * ((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,I_min] - mn[I_min]) * -1)
+        if (length(I_min) > 0) {
+          temp_velocity[I_min] = runif(length(I_min)) * ((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,I_min] - mn[I_min]) * -1)
         }
         new_location = nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity
         reject = reject + 1
