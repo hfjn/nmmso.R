@@ -24,8 +24,9 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   # str(new_location)
   # print(mn)
   # print(mx)
+  
   while (sum(new_location < mn) > 0 || sum (new_location > mx) > 0) {
-
+    
     # if swarm not at maximum capacity add a new particle
     if (nmmso_state$swarms[[index]]$number_of_particles < swarm_size) {
       new_location = nmmso_state$swarms[[index]]$mode_location + uniform_sphere_points(1, length(new_location)) * (d / 2)
@@ -62,7 +63,9 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
     # str(new_location)
   }
   reject = 0
-  
+  print("increment_swarm")
+  print(nmmso_state$swarms[[index]]$number_of_particles)
+  print(size(nmmso_state$swarms[[index]]$velocities))
   if (shifted == 1) {
     #if moved, update velocity with that used
     nmmso_state$swarms[[index]]$velocities = add_row(nmmso_state$swarms[[index]]$velocities, nmmso_state$swarms[[index]]$shifted_loc, temp_velocity)
@@ -82,6 +85,8 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
     nmmso_state$swarms[[index]]$velocities = add_row(nmmso_state$swarms[[index]]$velocities, nmmso_state$swarms[[index]]$shifted_loc, temp_vel)
   }
   nmmso_state$swarms[[index]]$new_location = new_location
+  print(nmmso_state$swarms[[index]]$number_of_particles)
+  print(size(nmmso_state$swarms[[index]]$velocities))
 
   # return value
   list("nmmso_state" = nmmso_state)

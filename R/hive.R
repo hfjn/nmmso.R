@@ -31,9 +31,13 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
   CI = which(CI == 1)
   # only check on full swarms
   if (length(CI) != 0) {
+    
     # select swarm at random
     r = sample(length(CI))
     r = CI[r[1]]
+    print("hive")
+    print(nmmso_state$swarms[[r]]$number_of_particles)
+    print(size(nmmso_state$swarms[[r]]$velocities))
     
     # select and active swarm member at random
     k = sample(nmmso_state$swarms[[r]]$number_of_particles)
@@ -100,7 +104,9 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         }
       }
       number_of_new_samples = number_of_new_samples + 1
-    }      
+    }
+    print(nmmso_state$swarms[[r]]$number_of_particles)
+    print(size(nmmso_state$swarms[[r]]$velocities))      
   }
   list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)
 }
