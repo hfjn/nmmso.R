@@ -97,7 +97,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       # track function evals used
       number_of_mid_evals = number_of_mid_evals + merge_evals 
     }
-
     # Now increment the swarms
     # if we have more than max_evol, then only increment a subset
     limit = min(max_evol, length(nmmso_state$swarms))

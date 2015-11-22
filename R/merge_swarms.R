@@ -13,22 +13,24 @@
 merge_swarms <- function(nmmso_state, problem_function, mn, mx) {  
   # only concern ourselves with modes that have actually shifted, or are new
   # since the last generation, as no need to check others
+  str(nmmso_state$swarms_changed) 
   I = which(nmmso_state$swarms_changed == 1)
   nmmso_state$swarms_changed = nmmso_state$swarms_changed * 0 # reset
   n = length(I)
+  print("I")
+  print(I)
+  print(length(I))
   number_of_mid_evals = 0
-
+  print(n)
   # only compare if there is a changed mode, and more than on mode in system
   if (n >= 1 && (length(nmmso_state$swarms) > 1)) {
     to_compare = matrix(0, n, 2)
     to_compare[, 1] = I
+    str(to_compare)
     for (i in 1:n) {      
       # calculate euclidean distance     
       to_compare = rbind(to_compare)
-      str(nmmso_state)
-      str(nmmso_state$mode_locations)
 
-      str(nmmso_state)
       d = dist2(rbind(nmmso_state$mode_locations[I[i],]), nmmso_state$mode_locations)
       # will be closest to itself, so need to get second closest
       d[I[i]] = Inf
@@ -65,18 +67,18 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     to_compare = apply(to_compare, 2, sort)
     to_compare = rbind(to_compare)
     
+    # TODO: this is weird
     # column elements on same row
     # Remove duplicates for matrices with more than one row
     if(n >= 2){
       for (i in seq(n, 2, -1)) { #change in the decrement for (from n to 2 by -2)
-          # get indices of all with first index element same
-        I = which(to_compare[, 1] == to_compare[i, 1])
-
-          # replicate matrix
+        # get indices of all with first index element same
+        I = which(to_compare[, 1] == to_compare[, 1])
+        # replicate matrix
       repeat_matrix = repmat(to_compare[i, ], length(I), 1)
-          # compare to matlab line 259, reconstructed it due to complications
+        # compare to matlab line 259, reconstructed it due to complications
       inner = apply((repeat_matrix == to_compare[I, ]), 2, sum)
-          # if more than one vector duplication
+        # if more than one vector duplication
       if (sum(inner == 2) > 1) {
         to_compare = to_compare[-i, ]
         to_compare = rbind(to_compare)
@@ -84,16 +86,13 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     }
   }
   # Check for merging
-
+  str(to_compare)
   n = size(to_compare)[1]
   number_of_mid_evals = 0
   to_merge = 0
   
   for (i in 1:n) {
-
     # merge if sufficiently close
-    str(to_compare)
-    print(i)
     distance = dist2(nmmso_state$swarms[[to_compare[i, 1]]]$mode_location, nmmso_state$swarms[[to_compare[i, 2]]]$mode_location)
     if (sqrt(distance) < nmmso_state$tol_val) {
       # can't preallocate, as don't know the size
@@ -114,7 +113,12 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       y = evaluate_mid$y
 
       if (mode_shift == 1) {
-        nmmso_state$mode_locations = add_row(nmmso_state$mode_locations,I[i], nmmso_state$swarms[[to_compare[i, 2]]]$mode_location) 
+        str(t(nmmso_state$mode_locations))
+        str(I)
+        print(i)
+        print(I[i])
+        str(t(nmmso_state$swarms[[to_compare[i, 2]]]$mode_location))
+        nmmso_state$mode_locations = add_row(nmmso_state$mode_locations, I[i], nmmso_state$swarms[[to_compare[i, 2]]]$mode_location) 
         nmmso_state$mode_values[to_compare[i, 2]] = nmmso_state$swarms[[to_compare[i, 2]]]$mode_value
         to_merge = rbind(to_merge, i)
         # track that the mode value has improved
@@ -161,10 +165,10 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
         prev_merge = delete_index[i]
         nmmso_state$swarms[[delete_index[i]]] <- NULL
         gc()
-        if(ncol(nmmso_state$mode_locations) == 1)
-          nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
-        else
-          nmmso_state$mode_locations = nmmso_state$mode_locations[-(delete_index[i]),]
+        # if(ncol(nmmso_state$mode_locations) == 1)
+        #   nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
+        # else
+        nmmso_state$mode_locations = nmmso_state$mode_locations[-(delete_index[i]),]
         nmmso_state$mode_values = nmmso_state$mode_values[-delete_index[i]]
         nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
         nmmso_state$swarms_changed = nmmso_state$swarms_changed[-delete_index[i]]

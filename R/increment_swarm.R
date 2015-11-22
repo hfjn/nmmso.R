@@ -21,7 +21,11 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
   # select a particle at randome to move
   r = sample(swarm_size)
   
+  # str(new_location)
+  # print(mn)
+  # print(mx)
   while (sum(new_location < mn) > 0 || sum (new_location > mx) > 0) {
+
     # if swarm not at maximum capacity add a new particle
     if (nmmso_state$swarms[[index]]$number_of_particles < swarm_size) {
       new_location = nmmso_state$swarms[[index]]$mode_location + uniform_sphere_points(1, length(new_location)) * (d / 2)
@@ -38,12 +42,13 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       x6 = nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,]
 
       temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4) + 2.0 * matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (x5 - x6)
+
       reject = reject + 1
 
       if (reject > 20) {
         # if we keep rejecting, then put at extreme any violating design patterns
         I_max = which(((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity) > mx) == 1)
-        I_min = which(((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity) < mn) == 1)          
+        I_min = which(((nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,] + temp_velocity) < mn) == 1)        
         if (length(I_max) >= 0) {
           temp_velocity[I_max] = runif(1, length(I_max)) * (mx[I_max] - nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc, I_max])
         }
@@ -54,6 +59,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
         reject = reject + 1
       }
     }
+    # str(new_location)
   }
   reject = 0
   
@@ -62,8 +68,7 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
     nmmso_state$swarms[[index]]$velocities = add_row(nmmso_state$swarms[[index]]$velocities, nmmso_state$swarms[[index]]$shifted_loc, temp_velocity)
   }else{
     # otherwise initialise velocity in sphere based on distance from gbest to next closest mode
-    number_of_particles = nmmso_state$swarms[[index]]$number_of_particles
-    nmmso_state$swarms[[index]]$number_of_particles = (number_of_particles + 1)
+    nmmso_state$swarms[[index]]$number_of_particles = (nmmso_state$swarms[[index]]$number_of_particles + 1)
     nmmso_state$swarms[[index]]$shifted_loc = nmmso_state$swarms[[index]]$number_of_particles
     temp_vel = mn - 1
     while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0){
