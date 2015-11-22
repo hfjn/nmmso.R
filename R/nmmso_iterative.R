@@ -1,23 +1,6 @@
 library(flexclust)
 library(pracma)
 
-source("./R/evaluate.R")
-source("./R/evaluate_first.R")
-source("./R/evaluate_mid.R")
-source("./R/evaluate_new_locations.R")
-source("./R/evolve.R")
-source("./R/extract_modes.R")
-source("./R/feval.R")
-source("./R/get_initial_locations.R")
-source("./R/hive.R")
-source("./R/increment_swarm.R")
-source("./R/merge_swarms.R")
-source("./R/merge_swarms_together.R")
-source("./R/random_new.R")
-source("./R/uniform_sphere_points.R")
-source("./R/UNI.R")
-source("./R/add_row.R")
-
 #' @title NMMSO_iterative
 #' @description Implementation of the Niching Migratory Multi-Swarm Optimser.
 #'
@@ -62,7 +45,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     nmmso_state$Y = matrix(0, upperBound, 1)
     nmmso_state$index = 1
     nmmso_state$converged_modes = 0
-    nmmso_state$mode_locations = 0
+    #nmmso_state$mode_locations = 0
     nmmso_state$mode_values = 0
 
     # initialize active modes as a list and give the sub "Modes" lists aswell
@@ -81,7 +64,9 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     evaluations = 1
     
     # keep modes in matrices for efficiency on some computations
+
     nmmso_state$mode_locations = nmmso_state$swarms[[1]]$mode_location
+    str(nmmso_state$mode_locations)
     nmmso_state$mode_values = nmmso_state$swarms[[1]]$mode_value
     nmmso_state$tol_val = tol_val
   }

@@ -13,20 +13,14 @@
 merge_swarms <- function(nmmso_state, problem_function, mn, mx) {  
   # only concern ourselves with modes that have actually shifted, or are new
   # since the last generation, as no need to check others
-  str(nmmso_state$swarms_changed) 
   I = which(nmmso_state$swarms_changed == 1)
   nmmso_state$swarms_changed = nmmso_state$swarms_changed * 0 # reset
   n = length(I)
-  print("I")
-  print(I)
-  print(length(I))
   number_of_mid_evals = 0
-  print(n)
     # only compare if there is a changed mode, and more than on mode in system
   if (n >= 1 && (length(nmmso_state$swarms) > 1)) {
     to_compare = matrix(0, n, 2)
     to_compare[, 1] = I
-    str(to_compare)
     for (i in 1:n) {      
       # calculate euclidean distance     
       to_compare = rbind(to_compare)
@@ -86,7 +80,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
     }
   }
   # Check for merging
-  str(to_compare)
   n = size(to_compare)[1]
   number_of_mid_evals = 0
   to_merge = 0
@@ -113,12 +106,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       y = evaluate_mid$y
 
       if (mode_shift == 1) {
-        str(t(nmmso_state$mode_locations))
-        str(I)
-        print(i)
-        print(I[i])
-        str(t(nmmso_state$swarms[[to_compare[i, 2]]]$mode_location))
-        nmmso_state$mode_locations = add_row(nmmso_state$mode_locations, I[i], nmmso_state$swarms[[to_compare[i, 2]]]$mode_location) 
+        nmmso_state$mode_locations = add_row(nmmso_state$mode_locations, I[i], nmmso_state$swarms[[to_compare[i, 2]]]$mode_location)   
         nmmso_state$mode_values[to_compare[i, 2]] = nmmso_state$swarms[[to_compare[i, 2]]]$mode_value
         to_merge = rbind(to_merge, i)
         # track that the mode value has improved
@@ -143,18 +131,12 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       }
       # if peak of mode 1 is higher than mode 2, then replace
       if (nmmso_state$swarms[[to_compare[to_merge[i], 1]]]$mode_value > nmmso_state$swarms[[to_compare[to_merge[i], 2]]]$mode_value) {
-        print("merge_swarms if")
-        print(nmmso_state$swarms[[to_compare[to_merge[i], 2]]]$number_of_particles)
-        print(size(nmmso_state$swarms[[to_compare[to_merge[i], 2]]]$velocities))
         delete_index = c(delete_index, to_compare[to_merge[i], 2])
         nmmso_state$swarms[[to_compare[to_merge[i], 1]]] = merge_swarms_together(nmmso_state$swarms[[to_compare[to_merge[i], 1]]], nmmso_state$swarms[[to_compare[to_merge[i], 2]]])
       #track that the mode value has been merge and should be compared again
         nmmso_state$swarms_changed[[to_compare[i, 1]]] = 1
       } else {
         delete_index = c(delete_index, to_compare[to_merge[i], 1])
-        print("merge_swarms else")
-        print(nmmso_state$swarms[[to_compare[to_merge[i], 2]]]$number_of_particles)
-        print(size(nmmso_state$swarms[[to_compare[to_merge[i], 2]]]$velocities))
         nmmso_state$swarms[[to_compare[to_merge[i], 2]]] = merge_swarms_together(nmmso_state$swarms[[to_compare[to_merge[i], 2]]], nmmso_state$swarms[[to_compare[to_merge[i], 1]]])
         # track that the mode value has merge and should be compared again
         nmmso_state$swarms_changed[to_compare[i, 2]] = 1
@@ -170,7 +152,6 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
         nmmso_state$swarms[[delete_index[i]]] <- NULL
-        gc()
         # if(ncol(nmmso_state$mode_locations) == 1)
         #   nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
         # else

@@ -18,7 +18,7 @@ evaluate <-
     mode_shift = 0
     
     if (y > nmmso_state$swarms[[chg]]$mode_value) {
-      nmmso_state$swarms[[chg]]$mode_location = nmmso_state$swarms[[chg]]$new_location
+      nmmso_state$swarms[[chg]]$mode_location = rbind(nmmso_state$swarms[[chg]]$new_location)
       nmmso_state$swarms[[chg]]$mode_value = y
       mode_shift = 1
     }

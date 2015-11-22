@@ -35,9 +35,6 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     # select swarm at random
     r = sample(length(CI))
     r = CI[r[1]]
-    print("hive")
-    print(nmmso_state$swarms[[r]]$number_of_particles)
-    print(size(nmmso_state$swarms[[r]]$velocities))
     
     # select and active swarm member at random
     k = sample(nmmso_state$swarms[[r]]$number_of_particles)
@@ -60,7 +57,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
       if (swarm$mode_value < R_v) {
         reject = 0
         # allocate new swarm into the nmmso_state
-        swarm$mode_location = R # gbest location
+        swarm$mode_location = rbind(R) # gbest location
         swarm$mode_value = R_v # gbest value
         
         swarm$history_locations = add_row(swarm$history_locations, 1, R)
@@ -69,7 +66,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         swarm$pbest_locations = add_row(swarm$pbest_locations, 1, R)
         swarm$pbest_values[1,] = R_v
         
-        nmmso_state$mode_locations = add_row(nmmso_state$mode_locations, size(nmmso_state$mode_locations)[1] + 1, R)
+        nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
         nmmso_state$mode_values = add_row(nmmso_state$mode_values, size(nmmso_state$mode_values)[1] + 1, R_v)
         
         nmmso_state$swarms = c(nmmso_state$swarms, list(swarm))
@@ -89,7 +86,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         
         temp_vel = mn - 1
         while (sum(temp_vel < mn) > 0 || sum(temp_vel > mx) > 0) {
-          temp_vel = uniform_sphere_points(1, length(R)) * (d  /  2)
+          temp_vel = uniform_sphere_points(1, length(R)) * (as.numeric(d)  /  2)
           reject = reject +  1
           if (reject > 20) {
             temp_vel = runif(size(R)) * (mx  -  mn) + mn
@@ -104,9 +101,7 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         }
       }
       number_of_new_samples = number_of_new_samples + 1
-    }
-    print(nmmso_state$swarms[[r]]$number_of_particles)
-    print(size(nmmso_state$swarms[[r]]$velocities))      
+    }     
   }
   list("nmmso_state" = nmmso_state, "number_of_new_samples" = number_of_new_samples)
 }

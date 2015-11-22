@@ -16,8 +16,7 @@ evaluate_new_locations <- function(nmmso_state, problem_function, I) {
     nmmso_state = evaluate$nmmso_state
     mode_shift = evaluate$mode_shift
     if (mode_shift == 1) {
-      nmmso_state$swarms_changed[I[i]] = 1
-      nmmso_state$mode_locations <- add_row(nmmso_state$mode_locations, I[i], nmmso_state$swarms[[I[i]]]$new_location)
+      nmmso_state$mode_locations <- add_row(nmmso_state$mode_locations, I[i], rbind(nmmso_state$swarms[[I[i]]]$new_location))
       nmmso_state$mode_values[I[i]] = nmmso_state$swarms[[I[i]]]$mode_value
       nmmso_state$swarms[[I[i]]]$less_fit_move = 0
     }

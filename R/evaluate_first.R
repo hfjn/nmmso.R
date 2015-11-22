@@ -21,7 +21,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   y = feval(problem_function, swarm$new_location)
 
   #gbest location
-  swarm$mode_location = swarm$new_location
+  swarm$mode_location = rbind(swarm$new_location)
   #gbest value
   swarm$mode_value = y
   # intialize containers for swarm elements

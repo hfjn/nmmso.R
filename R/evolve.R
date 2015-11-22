@@ -33,16 +33,14 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     )
 
     R = R$x_c
-    nmmso_state$mode_locations = add_row(nmmso_state$mode_locations,size(nmmso_state$mode_locations)[1] + 1, R) 
-    # TODO:I get NA's here. So I omit them. We should have a look into this.
-    nmmso_state$mode_locations = na.omit(nmmso_state$mode_locations)
+    nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, as.numeric(R)) 
     swarm = list()
     swarm$new_location = R
     evaluate_first = evaluate_first(swarm, problem_function, nmmso_state, swarm_size, mn, mx)
     swarm = evaluate_first$swarm
     nmmso_state = evaluate_first$nmmso_state
-    
     nmmso_state$mode_values = rbind(nmmso_state$mode_values, swarm$mode_value)
+
     nmmso_state$swarms[[length(nmmso_state$swarms) + 1]] = swarm
     
     # Mark these as new
