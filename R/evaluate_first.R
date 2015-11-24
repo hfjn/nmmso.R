@@ -39,6 +39,7 @@ evaluate_first <- function(swarm, problem_function, nmmso_state, swarm_size, mn,
   swarm$number_of_particles = 1
 
   ## History Locations
+
   swarm$history_locations[1,] = swarm$mode_location
   swarm$history_values[1,] = y
   

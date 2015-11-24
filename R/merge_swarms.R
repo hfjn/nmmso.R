@@ -105,6 +105,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       mode_shift = evaluate_mid$mode_shift
       y = evaluate_mid$y
 
+      # if a swarm was shifted
       if (mode_shift == 1) {
         nmmso_state$mode_locations = add_row(nmmso_state$mode_locations, I[i], nmmso_state$swarms[[to_compare[i, 2]]]$mode_location)   
         nmmso_state$mode_values[to_compare[i, 2]] = nmmso_state$swarms[[to_compare[i, 2]]]$mode_value
@@ -152,10 +153,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
         nmmso_state$swarms[[delete_index[i]]] <- NULL
-        # if(ncol(nmmso_state$mode_locations) == 1)
-        #   nmmso_state$mode_locations = t(t(nmmso_state$mode_locations[-(delete_index[i]),])) 
-        # else
-        nmmso_state$mode_locations = nmmso_state$mode_locations[-(delete_index[i]),]
+        nmmso_state$mode_locations = rbind(nmmso_state$mode_locations[-(delete_index[i]),])
         nmmso_state$mode_values = nmmso_state$mode_values[-delete_index[i]]
         nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
         nmmso_state$swarms_changed = nmmso_state$swarms_changed[-delete_index[i]]

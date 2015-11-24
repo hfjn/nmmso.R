@@ -64,9 +64,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     evaluations = 1
     
     # keep modes in matrices for efficiency on some computations
-
     nmmso_state$mode_locations = nmmso_state$swarms[[1]]$mode_location
-    str(nmmso_state$mode_locations)
     nmmso_state$mode_values = nmmso_state$swarms[[1]]$mode_value
     nmmso_state$tol_val = tol_val
   }
