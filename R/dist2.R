@@ -1,10 +1,10 @@
-dist2 <-
+new_dist2 <-
 function (x, c)
 {
-# % DIST2 Calculates squared distance between two sets of points.
+# % new_dist2 Calculates squared distance between two sets of points.
 # % FORMAT
 # % DESC
-# % D = DIST2(X, C) takes two matrices of vectors and calculates the
+# % D = new_dist2(X, C) takes two matrices of vectors and calculates the
 # % squared Euclidean distance between them.  Both matrices must be of
 # % the same column dimension.  If X has M rows and N columns, and C has
 # % L rows and N columns, then the result has M rows and L columns.  The
@@ -34,5 +34,5 @@ n2 <- t(matrix(1, ncentres[1], 1) %*% colSums(t(x^2))) +
 if (any(n2<0))
   n2[which(n2<0)] <- 0
 
-return (n2)
+return (n2)^2
 }

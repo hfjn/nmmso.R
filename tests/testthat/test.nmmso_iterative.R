@@ -33,7 +33,7 @@ nmmso_state$swarms <- list(list(swarm = list()))
 #'
 #'
 test_that("add_row", {
-  
+
 })
 
 #'
@@ -65,7 +65,26 @@ test_that("nmmso_iterative main function is working correctly", {
 #'
 #'
 test_that("random_new", {
-  
+
+})
+
+#'
+#'
+test_that("new_dist2", {
+  x = rbind(c(1, 2, 3), 
+            c(4, 5, 6),
+            c(7, 8 ,9))
+
+  c = rbind(c(9, 8, 7), 
+            c(6, 5, 4), 
+            c(3, 2, 1))
+
+  r = rbind(c(116, 35,  8),
+            c(35, 8,  35),
+            c(8, 35, 116))
+
+  expect_true(new_dist2(x, c) == r)
+
 })
 
 
@@ -93,6 +112,6 @@ test_that("evaluate_first",{
   #result <- evaluate_first(nmmso_state$swarms[1], fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
   #nmmso_state = result$nmmso_state
   #swarm = result$swarm
-  
+
   #swarm$mode_location
 })
