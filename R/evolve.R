@@ -20,7 +20,7 @@ evolve <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
       } else {
         I = 1:n
       }
-      I = I[i:max_evol]
+      I = I[1:max_evol]
       n = max_evol
     } else {
       I = 1:n

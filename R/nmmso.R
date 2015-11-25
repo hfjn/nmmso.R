@@ -12,7 +12,7 @@
 #' @param mn Minimum design parameter values (a vector with param_num elements).
 #' @param mx Maximum design parameter values (a vector with param_num elements).
 #' @param max_evoluations Maximum number of swarms to update in a generation. If not provided this is set at 100.
-#' @param tol_val Tolerance value for merging automatically (default 10^-6).
+#' @param tolerance_value Tolerance value for merging automatically (default 10^-6).
 #' @return
 #' mode_loc_before = Design space location of current mode estimates (swarm gbests), note that at least one is likely to be very poor due to the 
 #' new swarm spawning at the end of each generation, and that these will be a combination of both global and local mode estimate.
@@ -26,7 +26,7 @@
 #' evaluations_after = Number of problem function evaluationsat end.
 #'
 #' @export
-NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol = 100, tol_val = 10 ^ -6) {
+NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol = 100, tolerance_value = 10 ^ -6) {
   
   if(max_evol <= 0) {
     cat("Max_eval cannot be negative or zero, default max_eval used, set at 100 \n")
@@ -45,7 +45,7 @@ NMMSO = function(swarm_size, problem_function, max_evaluations, mn, mx, max_evol
     mode_y_before = mode_y_after
     evaluations_before = evaluations_after   
 
-    nmmso_iterative = NMMSO_iterative(swarm_size, problem_function, max_evaluations, mn, mx, evaluations_after, nmmso_state, max_evol, tol_val)
+    nmmso_iterative = NMMSO_iterative(swarm_size, problem_function, max_evaluations, mn, mx, evaluations_after, nmmso_state, max_evol, tolerance_value)
     mode_loc_after = nmmso_iterative$mode_loc
     mode_y_after = nmmso_iterative$mode_y
     evaluations_after = nmmso_iterative$evaluations

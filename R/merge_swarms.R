@@ -87,7 +87,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
   for (i in 1:n) {
     # merge if sufficiently close
     distance = dist2(nmmso_state$swarms[[to_compare[i, 1]]]$mode_location, nmmso_state$swarms[[to_compare[i, 2]]]$mode_location)
-    if (sqrt(distance) < nmmso_state$tol_val) {
+    if (sqrt(distance) < nmmso_state$tolerance_value) {
       # can't preallocate, as don't know the size
       to_merge = c(to_merge, i)
     } else {
@@ -153,7 +153,7 @@ merge_swarms <- function(nmmso_state, problem_function, mn, mx) {
       if (delete_index[i] != prev_merge) {
         prev_merge = delete_index[i]
         nmmso_state$swarms[[delete_index[i]]] <- NULL
-        nmmso_state$mode_locations = rbind(nmmso_state$mode_locations[-(delete_index[i]),])
+        nmmso_state$mode_locations = nmmso_state$mode_locations[-(delete_index[i]), ,drop = FALSE]
         nmmso_state$mode_values = nmmso_state$mode_values[-delete_index[i]]
         nmmso_state$converged_modes = nmmso_state$converged_modes[-delete_index[i]]
         nmmso_state$swarms_changed = nmmso_state$swarms_changed[-delete_index[i]]

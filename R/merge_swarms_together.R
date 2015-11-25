@@ -25,12 +25,12 @@ merge_swarms_together <- function(swarm1, swarm2) {
   }else{
   # select best out of combined population, based on current location
     swarm1$number_of_particles = max_size
-    temp_h_loc = rbind(as.matrix(swarm1$history_locations[1:n1,]), as.matrix(swarm2$history_locations[1:n2,]))
+    temp_h_loc = rbind(as.matrix(swarm1$history_locations[1:n1, ,drop=FALSE]), as.matrix(swarm2$history_locations[1:n2, ,drop=FALSE]))
     temp_h_v = c(swarm1$history_values[1:n1], swarm2$history_values[1:n2])
     
-    temp_p_loc = rbind(as.matrix(swarm1$pbest_locations[1:n1,]), as.matrix(swarm2$pbest_locations[1:n2,]))
+    temp_p_loc = rbind(as.matrix(swarm1$pbest_locations[1:n1, ,drop=FALSE]), as.matrix(swarm2$pbest_locations[1:n2, ,drop=FALSE]))
     temp_p_v = c(swarm1$pbest_values[1:n1], swarm2$pbest_values[1:n2])
-    temp_vel = rbind(as.matrix(swarm1$velocities[1:n1,]), as.matrix(swarm2$velocities[1:n2,]))
+    temp_vel = rbind(as.matrix(swarm1$velocities[1:n1, ,drop=FALSE]), as.matrix(swarm2$velocities[1:n2, ,drop=FALSE]))
 
     result <- sort(temp_h_v, decreasing = TRUE, index.return = TRUE)
     indices = result$ix
@@ -39,11 +39,11 @@ merge_swarms_together <- function(swarm1, swarm2) {
     # check velocities
     # # check number of particles
 
-    swarm1$history_locations = add_row(swarm1$history_locations , 1, temp_h_loc[indices[1:max_size],])
+    swarm1$history_locations = add_row(swarm1$history_locations , 1, temp_h_loc[indices[1:max_size], ,drop=FALSE])
     swarm1$history_values = add_row(swarm1$history_values , 1, temp_h_v[indices[1:max_size]])
-    swarm1$pbest_locations = add_row(swarm1$pbest_locations , 1, temp_p_loc[indices[1:max_size],])
+    swarm1$pbest_locations = add_row(swarm1$pbest_locations , 1, temp_p_loc[indices[1:max_size], ,drop=FALSE])
     swarm1$pbest_values = add_row(swarm1$pbest_values , 1, temp_p_v[indices[1:max_size]])
-    swarm1$velocities = add_row(swarm1$velocities , 1, temp_vel[indices[1:max_size],])
+    swarm1$velocities = add_row(swarm1$velocities , 1, temp_vel[indices[1:max_size], ,drop=FALSE])
   }
   return(swarm1)
 }

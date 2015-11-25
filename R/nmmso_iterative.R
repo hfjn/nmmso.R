@@ -13,7 +13,7 @@ library(pracma)
 #' algorithm for a single generation, otherwise it will run it for a single generation from the evaluations number inputted.
 #' @param nmmso_state Structure holding state of swarm. Can be empty or omitted if evaluations set at zero, must be provided if evals > 0.
 #' @param max_evol Maximum number of swarms to update in a generation. If not provided this is set at 100.
-#' @param tol_val Tolerance value for merging automatically (default 10^-6).
+#' @param tolerance_value Tolerance value for merging automatically (default 10^-6).
 #' @return
 #' mode_loc = Design space location of current mode estimates (swarm gbests), note that at least one is likely to be very poor due to the 
 #' new swarm spawning at the end of each generation, and that these will be a combination of both global and local mode estimate.
@@ -24,7 +24,7 @@ library(pracma)
 #' (therefore nmmso_state.X(1:evaluations,:) will hold all the design space locations visited by the optimiser thus far.
 #'
 #' @export
-NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tol_val = (10 ^ -6)) {
+NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tolerance_value = (10 ^ -6)) {
   
   # test if all variables are correctly initialized
   if (evaluations < 0) {
@@ -66,7 +66,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # keep modes in matrices for efficiency on some computations
     nmmso_state$mode_locations = nmmso_state$swarms[[1]]$mode_location
     nmmso_state$mode_values = nmmso_state$swarms[[1]]$mode_value
-    nmmso_state$tol_val = tol_val
+    nmmso_state$tolerance_value = tolerance_value
   }
   
   # only run when limited evaluations is not already done

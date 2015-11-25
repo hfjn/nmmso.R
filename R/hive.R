@@ -31,7 +31,6 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
   CI = which(CI == 1)
   # only check on full swarms
   if (length(CI) != 0) {
-    
     # select swarm at random
     r = sample(length(CI))
     r = CI[r[1]]
@@ -42,9 +41,9 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
     R = nmmso_state$swarms[[r]]$history_locations[k,]
     R_v = nmmso_state$swarms[[r]]$history_values[k,]
     
-    # only look at splitting off member who is greater than tol_value
-    # distance away; otherwise will be merged riht in aigain at the next iteration
-    if (sqrt(dist2(rbind(R), nmmso_state$swarms[[r]]$mode_location)) > nmmso_state$tol_val) {
+    # only look at splitting off member who is greater than tolerance_value
+    # distance away; otherwise will be merged right in aigain at the next iteration
+    if (sqrt(dist2(rbind(R), nmmso_state$swarms[[r]]$mode_location)) > nmmso_state$tolerance_value) {
       mid_loc = 0.5 * (nmmso_state$swarms[[r]]$mode_location - R) + R        
       swarm = list("new_location" = mid_loc)
       result = evaluate_first(swarm, problem_function,  nmmso_state, swarm_size, mn, mx)
@@ -77,7 +76,9 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         
         # remove from existing swarm and replace with mid eval
         # see above, probably not the right distance function
-        d = sqrt(dist2(rbind(nmmso_state$swarms[[r]]$mode_location), R))
+        str(nmmso_state$swarms[[r]]$mode_location)
+        str(rbind(R))
+        d = sqrt(dist2(rbind(nmmso_state$swarms[[r]]$mode_location), rbind(R)))
         nmmso_state$swarms[[r]]$history_locations =  add_row(nmmso_state$swarms[[r]]$history_locations, k, mid_loc)
         nmmso_state$swarms[[r]]$history_values = add_row(nmmso_state$swarms[[r]]$history_values, k, mid_loc_val)
         
