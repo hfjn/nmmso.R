@@ -15,6 +15,7 @@ evaluate <-
     y = feval(
       problem_function, nmmso_state$swarms[[chg]]$new_location
     )
+
     mode_shift = 0
     
     if (y > nmmso_state$swarms[[chg]]$mode_value) {

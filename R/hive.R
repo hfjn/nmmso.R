@@ -65,7 +65,6 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         swarm$pbest_locations = add_row(swarm$pbest_locations, 1, R)
         swarm$pbest_values[1,] = R_v
         nmmso_state$mode_locations = rbind(nmmso_state$mode_locations, R)
-        
         nmmso_state$mode_values = add_row(nmmso_state$mode_values, size(nmmso_state$mode_values)[1] + 1, R_v)
         
         nmmso_state$swarms = c(nmmso_state$swarms, list(swarm))
@@ -76,8 +75,6 @@ hive <- function(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size) {
         
         # remove from existing swarm and replace with mid eval
         # see above, probably not the right distance function
-        str(nmmso_state$swarms[[r]]$mode_location)
-        str(rbind(R))
         d = sqrt(new_dist2(rbind(nmmso_state$swarms[[r]]$mode_location), rbind(R)))
         nmmso_state$swarms[[r]]$history_locations =  add_row(nmmso_state$swarms[[r]]$history_locations, k, mid_loc)
         nmmso_state$swarms[[r]]$history_values = add_row(nmmso_state$swarms[[r]]$history_values, k, mid_loc_val)

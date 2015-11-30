@@ -12,12 +12,13 @@ evaluate_new_locations <- function(nmmso_state, problem_function, I) {
     # at this point should be unflagged
   nmmso_state$swarms_changed = matrix(0, length(nmmso_state$swarms), 1)
   for (i in 1:length(I)) {
-    evaluate = evaluate(nmmso_state, I[i], problem_function)
-    nmmso_state = evaluate$nmmso_state
-    mode_shift = evaluate$mode_shift
+    result = evaluate(nmmso_state, I[i], problem_function)
+    nmmso_state = result$nmmso_state
+    mode_shift = result$mode_shift
+    y = result$y
     if (mode_shift == 1) {
       nmmso_state$mode_locations <- add_row(nmmso_state$mode_locations, I[i], t(t(nmmso_state$swarms[[I[i]]]$new_location)))
-      nmmso_state$mode_values[I[i]] = nmmso_state$swarms[[I[i]]]$mode_value
+      nmmso_state$mode_values[[I[i]]] = nmmso_state$swarms[[I[i]]]$mode_value
       nmmso_state$swarms[[I[i]]]$less_fit_move = 0
     }
   }

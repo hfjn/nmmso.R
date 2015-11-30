@@ -132,6 +132,9 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # update the total number of function evaluations used, with those required at each of the algorithm stages
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
     cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
+
+    # just to be sure
+
     cat(" index ", nmmso_state$index, "\n")
 
   }else{

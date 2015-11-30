@@ -8,9 +8,7 @@
 #' 
 #' @export
 extract_modes <- function(nmmso_state) {
-	print("extract_modes")
-	print(nmmso_state$mode_values)
-	print(nmmso_state$mode_locations)
+	
 	RES = matrix(0, length(nmmso_state$swarms), length(nmmso_state$swarms[[1]]$mode_location))
 	RES_Y = matrix(0, length(nmmso_state$swarms), 1)
 
