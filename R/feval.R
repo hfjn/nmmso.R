@@ -6,5 +6,5 @@
 #'
 #' @export
 feval <- function(f,...) {
-  f(...), digits = 5
+  f(...)
 }
