@@ -1,6 +1,6 @@
 context("Add Row")
 
-test_that("add_row is working fine for rows mit n values", {
+test_that("add_row is working fine for rows with n values", {
 	a <- 1:3
 	b <- 3:1
 	c <- rbind(a, NA, b)
