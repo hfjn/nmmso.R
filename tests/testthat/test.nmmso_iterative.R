@@ -30,78 +30,9 @@ nmmso_state$converged_modes = 0
 # initialize active modes as a list and give the sub "Modes" lists aswell
 nmmso_state$swarms <- list(list(swarm = list()))
 
-
-
-
-
-#'
-#'
-#'
-test_that("feval is working",{
-  expect_equal(sqrt(10), feval(sqrt, 10))
-})
-
-
-#'
-#'
-#'
 test_that("nmmso_iterative main function is working correctly", {
   expect_error(NMMSO_iterative())
   # Test that evaluations can not be < 0 
   expect_error(NMMSO_iterative(100, sqrt, 100, max_evaluations = 100, mn = 1, mx = 2, evaluations = -1))
 })
 
-#'
-#'
-#'
-test_that("random_new", {
-
-})
-
-#'
-#'
-test_that("new_dist2", {
-  x = rbind(c(1, 2, 3), 
-            c(4, 5, 6),
-            c(7, 8 ,9))
-
-  c = rbind(c(9, 8, 7), 
-            c(6, 5, 4), 
-            c(3, 2, 1))
-
-  r = rbind(c(116, 35,  8),
-            c(35, 8,  35),
-            c(8, 35, 116))
-
-  expect_true(new_dist2(x, c) == r)
-
-})
-
-
-#'
-#'
-#'
-test_that("UNI", {
-  x1 <- (1:5)
-  x2 <- (6:10)
-  result <- UNI(x1, x2)
-  expect_true(any(result$x_c > 5) && any(result$x_d < 6))
-})
-
-#'
-#'
-#'
-test_that("get_initial_locations",{
-  nmmso_state = get_initial_locations(nmmso_state, as.numeric(mn[2]), as.numeric(mx[2]))
-  str(nmmso_state)
-  expect_true(nmmso_state$swarms[[1]]$new_location[1,1] > 0)
-  expect_true(nmmso_state$swarms_changed == 1)
-})
-
-test_that("evaluate_first",{
-  #result <- evaluate_first(nmmso_state$swarms[1], fit, nmmso_state, swarm_size = 10*length(mx[2]), as.numeric(mn[2]), as.numeric(mx[2]))
-  #nmmso_state = result$nmmso_state
-  #swarm = result$swarm
-
-  #swarm$mode_location
-})
