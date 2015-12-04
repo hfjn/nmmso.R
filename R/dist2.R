@@ -16,11 +16,6 @@ function (x, c)
 # %
 # 
 # % COPYRIGHT (c) Ian T Nabney (1996-2001)
-#   cat("x is")
-#   print(dim(x))
-#   print(class(x))
-#x <- matrix(x, dim(x)[1], dim(x)[2])
-#c <- matrix(c, dim(c)[1], dim(c)[2])
 ndata <- dim(x)
 ncentres <- dim(c)
 if (ndata[2] != ncentres[2])

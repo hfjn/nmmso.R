@@ -1,7 +1,7 @@
 #' @title evaluate_mid
 #' 
 #' @param nmmso_state Structure holding state of swarm.
-#' @param chg
+#' @param chg current index
 #' @param problem_function String containing name of function to be optimised.
 #' @param test_function_params Meta-parameters needed by problem function.
 #' @return 

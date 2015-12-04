@@ -30,19 +30,9 @@ nmmso_state$converged_modes = 0
 # initialize active modes as a list and give the sub "Modes" lists aswell
 nmmso_state$swarms <- list(list(swarm = list()))
 
-#'
-#'
-test_that("add_row", {
 
-})
 
-#'
-#'
-test_that("uniform sphere points is working correctly", {
-  Y <- uniform_sphere_points(10, 10)
-  expect_equal(length(Y), 100)
-  expect_equal(typeof(Y), "double")
-})
+
 
 #'
 #'

@@ -1,8 +1,8 @@
 #' @title uniform_sphere_points
 #' @descripction Function that generates n points uniformly within the unit sphere in d dimensions.
 #'
-#' @param n
-#' @param d
+#' @param n number of points
+#' @param d dimension
 #' @return X = the matrix generated
 #'
 #' @export
