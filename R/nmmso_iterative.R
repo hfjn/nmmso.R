@@ -47,9 +47,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     nmmso_state$converged_modes = 0
     #nmmso_state$mode_locations = 0
     nmmso_state$mode_values = 0
-
-    # initialize active modes as a list and give the sub "Modes" lists aswell
-    #nmmso_state$swarms <- list(list("swarm" = list()))
     
     # get initial locations
     nmmso_state = get_initial_locations(nmmso_state, mn, mx)
@@ -115,7 +112,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     result = hive(nmmso_state, problem_function, mn, mx,  max_evol, swarm_size)
     nmmso_state = result$nmmso_state
     number_of_hive_samples = result$number_of_new_samples
-    
     # create speculative new swarm, either at random in design space, or via crossover
     if(runif(1) < 0.5 || length(nmmso_state$swarms) == 1 || length(mx) == 1){
       number_of_evol_modes = 0
