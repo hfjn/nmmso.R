@@ -1,11 +1,9 @@
 #' @title uniform_sphere_points
-#' @descripction Function that generates n points uniformly within the unit sphere in d dimensions.
-#'
+#' @description Function that generates n points uniformly within the unit sphere in d dimensions.#'
 #' @param n number of points
 #' @param d dimension
-#' @return X = the matrix generated
-#'
-#' @export
+#' @return X = the matrix generated#'
+#' @export the newly generated points
 # Refer to: http://stackoverflow.com/questions/33350190/pointwise-multiplication-and-right-matrix-division
 uniform_sphere_points <- function(n, d) {
   z <- matrix(rnorm(n * d), nrow = n, ncol = d)

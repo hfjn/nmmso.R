@@ -130,7 +130,6 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
 
     # just to be sure
-
     cat(" index ", nmmso_state$index, "\n")
 
   }else{
