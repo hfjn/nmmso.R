@@ -95,7 +95,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       # can increment all
       indices = 1:limit
     }
-    I2 = indices[1:limit]
+    I2 = indices
     # increment  
     for(jj in 1:length(I2)){
       result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
@@ -106,6 +106,8 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # evaluate new member / new locations of swarm member
     result = evaluate_new_locations(nmmso_state, problem_function,  I2)
     nmmso_state = result$nmmso_state
+    print("number_of_new_locations")
+    print(result$number_of_new_locations)
     number_of_new_locations = result$number_of_new_locations
     
     # attempt to split off a member of one of the swarms to seed a new swarm (if detected to be on another peak)
@@ -124,9 +126,20 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
       nmmso_state = result$nmmso_state
       number_of_evol_modes = result$number_of_new_modes
     }
+    print("number_rand_modes")
+    print(number_rand_modes)
+    print("number_of_evol_modes")
+    print(number_of_evol_modes)
+    print("number_of_merge_evals")
+    print(number_of_mid_evals)
+    print("number_of_hive_samples")
+    print(number_of_hive_samples)
     
     # update the total number of function evaluations used, with those required at each of the algorithm stages
+    print("final evaluations")
+    print(sum(number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE))
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
+    print(evaluations)
     cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
 
     # just to be sure
