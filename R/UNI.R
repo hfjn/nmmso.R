@@ -15,7 +15,7 @@ UNI <- function(x1, x2) {
   r = which(runif(l) > 0.5)
 
   # ensures at least one swapped
-  if (!(length(r) >= 0)) {
+  if (!(length(r) > 0)) {
     r = sample(1)
     r = r[1]
   }
