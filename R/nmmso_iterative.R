@@ -14,6 +14,9 @@ library(pracma)
 #' @param nmmso_state Structure holding state of swarm. Can be empty or omitted if evaluations set at zero, must be provided if evals > 0.
 #' @param max_evol Maximum number of swarms to update in a generation. If not provided this is set at 100.
 #' @param tolerance_value Tolerance value for merging automatically (default 10^-6).
+#' @param c_1 constraint 1 on velocity (default 2.0)
+#' @param c_2 constraint 2 on velocity (default 2.0)
+#' @param omega inertia of a particle (default 0.1)
 #' @return
 #' mode_loc = Design space location of current mode estimates (swarm gbests), note that at least one is likely to be very poor due to the 
 #' new swarm spawning at the end of each generation, and that these will be a combination of both global and local mode estimate.
@@ -24,7 +27,7 @@ library(pracma)
 #' (therefore nmmso_state.X(1:evaluations,:) will hold all the design space locations visited by the optimiser thus far.
 #'
 #' @export
-NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tolerance_value = (10 ^ -6)) {
+NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, mx, evaluations, nmmso_state, max_evol = 100, tolerance_value = (10 ^ -6), c_1 = 2.0, c_2 = 2.0, omega = 0.1) {
   
   # test if all variables are correctly initialized
   if (evaluations < 0) {
@@ -98,7 +101,7 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     I2 = indices
     # increment  
     for(jj in 1:length(I2)){
-      result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size)
+      result = increment_swarm(nmmso_state, I2[jj], mn, mx, swarm_size, c_1 = c_1, c_2 = c_2, omega = omega)
       nmmso_state = result$nmmso_state
     }
 

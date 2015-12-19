@@ -1,21 +1,22 @@
-#' TODO: This need to be documented extensively
 #' @title increment_swarm
 #'
 #' @param nmmso_state Structure holding state of swarm.
 #' @param index index of the current
 #' @param mn Minimum design parameter values (a vector with param_num elements).
 #' @param swarm_size Maximum number of elements (particles) per swarm.
+#' @param c_1 constraint 1 on velocity
+#' @param c_2 constraint 2 on velocity
+#' @param omega inertia of a particle
 #' @return
 #' nmmso_state = Structure holding state of swarm.
 #' 
 #' @export
-increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
+increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size, c_1, c_2, omega) {
   cs = 0
   new_location = mn - 1
   d = nmmso_state$swarms[[index]]$dist
   
   shifted = 0
-  omega = 0.1
   reject = 0
   
   # select a particle at randome to move
@@ -36,7 +37,8 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size) {
       x4 = nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,]
       x5 = nmmso_state$swarms[[index]]$pbest_locations[nmmso_state$swarms[[index]]$shifted_loc,]
       x6 = nmmso_state$swarms[[index]]$history_locations[nmmso_state$swarms[[index]]$shifted_loc,]
-      temp_velocity = omega * x1 + 2.0 * x2 * (x3 - x4) + 2.0 * matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (x5 - x6)
+      # calculate the single parts together
+      temp_velocity = omega * x1 + c_1 * x2 * (x3 - x4) + c_2 * matrix(runif(size(new_location)[1]*size(new_location)[2]), size(new_location)[1]) * (x5 - x6)
       reject = reject + 1
       if (reject > 20) {
         # if we keep rejecting, then put at extreme any violating design patterns
