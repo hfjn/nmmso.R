@@ -54,7 +54,6 @@ increment_swarm <- function(nmmso_state, index, mn, mx, swarm_size, c_1, c_2, om
         reject = reject + 1
       }
     }
-    # str(new_location)
   }
   reject = 0
   if (shifted == 1) {
