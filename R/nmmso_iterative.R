@@ -143,13 +143,13 @@ NMMSO_iterative <- function(swarm_size, problem_function, max_evaluations, mn, m
     # print(sum(number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE))
     evaluations = sum(evaluations, number_of_mid_evals, number_of_new_locations, number_of_evol_modes, number_rand_modes, number_of_hive_samples, na.rm = TRUE)
     # print(evaluations)
-    cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
+#    cat("Number of swarms", length(nmmso_state$swarms)," evals ", evaluations, " max mode est. ", max(nmmso_state$mode_values))
 
     # just to be sure
-    cat(" index ", nmmso_state$index, "\n")
+ #   cat(" index ", nmmso_state$index, "\n")
 
   }else{
-    cat("Evaluations taken already exhausted! \n")
+  #  cat("Evaluations taken already exhausted! \n")
   }
   
   result = extract_modes(nmmso_state)
