@@ -1,4 +1,4 @@
-Package: nmmso
+Package: nmmso.R
 Type: Package
 Title: R Implementation of the NMMSO algorithm
 Version: 1.0
