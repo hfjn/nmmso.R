@@ -1,4 +1,4 @@
-![](https://travis-ci.com/jhoffjann/nmmso.R.svg?token=imi5cHJsx6HiEHuZxgrB&branch=master)
+[![Build Status](https://travis-ci.org/jhoffjann/nmmso.R.svg)](https://travis-ci.org/jhoffjann/nmmso.R)
 # nmmso.R
 Multimodal Optimization Method - R Seminar Project
 An attempt to implement the [NMMSO Algorithm by Jonathan E. Fieldsend](https://github.com/fieldsend/ieee_cec_2014_nmmso) in R.
