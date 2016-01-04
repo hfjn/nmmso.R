@@ -1,10 +1,8 @@
 language: r
 compiler: gcc
 sudo: required
-env:
-- secure: "b9NJbmz+bajm+hX2NwoBrW8OiHCVV1xZmLmALhrrkDJTb3Bb0YmOZgooLC9cHsnwxex0oCKMvPCsNKo8ScVJG2/dKBJl7qTEry1Z1v/WLSG1LEg67CrrKKmOzF5gfcHOoLw+UQUtbykV8SbvXqoiPQ9+8hfWEimZQbmo+ZSxTmX6C/oC/RcPgmIrzu3wUPWzwOKIP1Yr/YOq94ACbgu/+0CcQsryK0VrK7/AT1NNkdcQPpRUkts/vJ6UMBFrv5LFGEycTXZVVzqFYrky80rjG0awdEdA3inKtyrD8abB+Rp0iKBZzPIBmvW9dJGOosophRtfglygF/7lMQP71Sejf9AJTCL8aIM8l3xsvDFvrgpudXDo9AMojwjOZg+DPeBmfzqE7yb9zILVjwL3yYabV1Y35hXafAPy0m9k+82PFgQJEBDp0Ko1HOt1dmM8mJzB2Ifm9Pb9MGcz+D7B+vQudVjiduNHuFANohwy/UwZBdtGS7/Fe/r9Cl4wuJJkRpVI56bczTCl70iDj2nfoq9/gXItR0f8JMHuJegTSKZQfyv1dgHFLnbnSl1BcQuJMNd0cTZ1mJzTB6xogsGK2y/1PIsMz4IKpdso1kf/U/2AJLUETI1s9eq1WLQHALj/3C5n3RpYl2ym9GwklbQCmoN6AOxaknYWkT32ZA5UpX/lReE="
+r_github_packages:
+  - jimhester/covr
 after_success:
-- "curl -o /tmp/travis-automerge https://raw.githubusercontent.com/cdown/travis-automerge/master/travis-automerge"
-- "chmod a+x /tmp/travis-automerge"
-- "BRANCHES_TO_MERGE_REGEX='dev' BRANCH_TO_MERGE_INTO=main GITHUB_REPO=jhoffjann/nmmso  /tmp/travis-automerge"
+  - Rscript -e 'library(covr);coveralls()'
   
