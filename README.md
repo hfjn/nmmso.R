@@ -14,6 +14,9 @@ Alternatively you can of course just clone this and load it yourself and start c
 ## Test Suite
 We also reimplemented the CEC Benchmarking Suite in R which can be used to test this algorithm. You can find it [here](https://github.com/jhoffjann/nmmso_benchmark)
 
+### Usage
+An examplary use case can be seen in the benchmark repository. The short way there is [here](https://github.com/jhoffjann/nmmso_benchmark/blob/master/R/benchmark.R).
+
 ## Technical Documentation
 The Technical Documentation of this can be found in the benchmarking repository. Or just [here](https://github.com/jhoffjann/nmmso_benchmark/blob/master/documentation/doc.pdf)
 
