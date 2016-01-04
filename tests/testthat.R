@@ -1,4 +1,4 @@
 library(testthat)
 library(nmmso.R)
 
-test_check("nmmso")
+test_check("nmmso.R")
