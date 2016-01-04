@@ -1,5 +1,4 @@
 context("nmmso_iterative")
-library(pracma)
 
 gens = c(50000 * matrix(1, 1, 5), 20000, 20000, 40000, 40000, 20000*matrix(1,1, 4), 40000 * matrix(1, 1, 7))
 
